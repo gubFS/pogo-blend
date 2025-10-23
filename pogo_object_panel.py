@@ -50,18 +50,18 @@ class PogoObjectPanel(bpy.types.Panel):
         if entity.action in entity.actions:
             currentConfig = entity.actions.get(entity.action)
 
-            if "flags" in currentConfig:
+            if "flags" in currentConfig and len(currentConfig.get("flags")) != 0:
                 row = layout.row()
                 colLeft = row.column()
                 colRight = row.column()
                 for i, flag in enumerate(currentConfig["flags"]):
                     col = colLeft if i % 2 == 0 else colRight
                     # entity[flag["identifier"]] = flag["default"] # TODO: change value to default when action is changed (not on every draw)
-                    col.prop(entity, flag["identifier"], text=flag["name"])
+                    col.prop(entity, flag.get("identifier"), text=flag.get("name", flag.get("identifier")))
 
-            if "skills" in currentConfig:
+            if "skills" in currentConfig and len(currentConfig.get("skills")) != 0:
                 for i, skill in enumerate(currentConfig["skills"]):
-                    layout.row().prop(entity, skill["identifier"], text=skill["name"])
+                    layout.row().prop(entity, skill.get("identifier"), text=skill.get("name", skill.get("identifier")))
 
-            if "path" in currentConfig and currentConfig["path"] == True:
+            if "path" in currentConfig and currentConfig.get("path") == True:
                 layout.row().prop(entity, "path")
