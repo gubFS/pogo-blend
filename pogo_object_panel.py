@@ -47,8 +47,8 @@ class PogoObjectPanel(bpy.types.Panel):
         col.prop(entity, "flag_7")
 
         layout.row().prop(entity, "action")
-        if entity.action in entity.action_config:
-            currentConfig = entity.action_config.get(entity.action)
+        if entity.action in entity.actions:
+            currentConfig = entity.actions.get(entity.action)
 
             if "flags" in currentConfig:
                 row = layout.row()
@@ -65,7 +65,3 @@ class PogoObjectPanel(bpy.types.Panel):
 
             if "path" in currentConfig and currentConfig["path"] == True:
                 layout.row().prop(entity, "path")
-
-        # for property in [attr for attr in dir(entity) if not attr.startswith("__") and not attr in ["bl_rna", "name", "rna_type"]]:
-        #     row = layout.row()
-        #     row.prop(entity, property)
