@@ -1,10 +1,22 @@
 import bpy
+from .wmb_classes import PogoEntity
 
 def register():
+    bpy.utils.register_class(AddPogoEntityData)
     bpy.utils.register_class(PogoObjectPanel)
 
 def unregister():
+    bpy.utils.unregister_class(AddPogoEntityData)
     bpy.utils.unregister_class(PogoObjectPanel)
+
+class AddPogoEntityData(bpy.types.Operator):
+    bl_idname = "object.add_pogo_entity_data"
+    bl_label = "Add pogo data"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        context.object.pogo_entity
+        return {'FINISHED'}
 
 class PogoObjectPanel(bpy.types.Panel):
     """Creates a Panel in the Object properties window"""
@@ -17,7 +29,19 @@ class PogoObjectPanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         obj = context.object
-        if obj.type != 'MESH': return
+
+        match obj.type:
+            case 'MESH':
+                self.draw_mesh_panel(obj, layout)
+            case _:
+                layout.label(text="This object type has no relevant pogo data")
+                return
+
+    def draw_mesh_panel(self, obj, layout):
+        try: obj["pogo_entity"]
+        except KeyError:
+            layout.operator("object.add_pogo_entity_data")
+            return
 
         entity = obj.pogo_entity
 
@@ -65,3 +89,4 @@ class PogoObjectPanel(bpy.types.Panel):
 
             if "path" in currentConfig and currentConfig.get("path") == True:
                 layout.row().prop(entity, "path")
+
