@@ -1,5 +1,4 @@
 import bpy
-from .wmb_classes import PogoEntity
 
 def register():
     bpy.utils.register_class(AddPogoEntityData)
@@ -10,7 +9,7 @@ def unregister():
     bpy.utils.unregister_class(PogoObjectPanel)
 
 class AddPogoEntityData(bpy.types.Operator):
-    bl_idname = "object.add_pogo_entity_data"
+    bl_idname = "pogo_blend.add_pogo_entity_data"
     bl_label = "Add pogo data"
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -19,9 +18,8 @@ class AddPogoEntityData(bpy.types.Operator):
         return {'FINISHED'}
 
 class PogoObjectPanel(bpy.types.Panel):
-    """Creates a Panel in the Object properties window"""
     bl_label = "Pogo Blend"
-    bl_idname = "OBJECT_PT_pogo_blend"
+    bl_idname = "OBJECT_PT_object_pogo_blend"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = "object"
@@ -40,16 +38,16 @@ class PogoObjectPanel(bpy.types.Panel):
     def draw_mesh_panel(self, obj, layout):
         try: obj["pogo_entity"]
         except KeyError:
-            layout.operator("object.add_pogo_entity_data")
+            layout.operator("pogo_blend.add_pogo_entity_data")
             return
 
         entity = obj.pogo_entity
 
-        layout.row().prop(obj, "name")
-        layout.row().prop(obj, "location")
-        layout.row().prop(obj, "rotation_euler", text="Rotation")
-        layout.row().prop(obj, "scale")
-        layout.row().prop(entity, "material")
+        layout.prop(obj, "name")
+        layout.prop(obj, "location")
+        layout.prop(obj, "rotation_euler", text="Rotation")
+        layout.prop(obj, "scale")
+        layout.prop(entity, "material")
 
         row = layout.row()
         row.prop(entity, "ambient")
@@ -85,8 +83,8 @@ class PogoObjectPanel(bpy.types.Panel):
 
             if "skills" in currentConfig and len(currentConfig.get("skills")) != 0:
                 for i, skill in enumerate(currentConfig["skills"]):
-                    layout.row().prop(entity, skill.get("identifier"), text=skill.get("name", skill.get("identifier")))
+                    layout.prop(entity, skill.get("identifier"), text=skill.get("name", skill.get("identifier")))
 
             if "path" in currentConfig and currentConfig.get("path") == True:
-                layout.row().prop(entity, "path")
+                layout.prop(entity, "path")
 
