@@ -5,12 +5,20 @@ import json
 def register():
     bpy.utils.register_class(PogoEntity)
     bpy.types.Object.pogo_entity = bpy.props.PointerProperty(type=PogoEntity)
+
+    bpy.utils.register_class(PogoPath)
+    bpy.types.Object.pogo_path = bpy.props.PointerProperty(type=PogoPath)
+
     bpy.utils.register_class(PogoCustomMap)
     bpy.types.Collection.custom_map = bpy.props.PointerProperty(type=PogoCustomMap)
 
 def unregister():
     bpy.utils.unregister_class(PogoEntity)
     del bpy.types.Object.pogo_entity
+
+    bpy.utils.unregister_class(PogoPath)
+    del bpy.types.Object.pogo_path
+
     bpy.utils.unregister_class(PogoCustomMap)
     del bpy.types.Collection.custom_map
 
@@ -27,7 +35,7 @@ class PogoEntity(bpy.types.PropertyGroup):
         ("ndef", "", ""),
         ("appAGeoDefault_mat", "appAGeoDefault_mat", ""), # albedo changes greyscale of object, 50 albedo is 50% greyscale. 100 albedo is no greyscale
         ("appAGeoXRay_mat", "appAGeoXRay_mat", ""),
-        ("anvil_mat", "anvil_mat", ""),
+        ("anvil_mat", "Anvil", ""),
         ("mat_bug", "mat_bug", ""), # similar to traffic cone
         ("characterSimple_mat", "characterSimple_mat", ""),
         ("cloud_mat", "cloud_mat", ""),
@@ -115,6 +123,35 @@ class PogoEntity(bpy.types.PropertyGroup):
     skill_18: bpy.props.FloatProperty(name="skill_18")
     skill_19: bpy.props.FloatProperty(name="skill_19")
     skill_20: bpy.props.FloatProperty(name="skill_20")
+
+    def get_skills(self):
+        skills = []
+        for i in range(1, 21):
+            skills.append(getattr(self, f"skill_{i}"))
+        return skills
+
+    def get_flags(self):
+        flags = 0
+        if self.flag_1: flags |= 1 << 0
+        if self.flag_2: flags |= 1 << 1
+        if self.flag_3: flags |= 1 << 2
+        if self.flag_4: flags |= 1 << 3
+        if self.flag_5: flags |= 1 << 4
+        if self.flag_6: flags |= 1 << 5
+        if self.flag_7: flags |= 1 << 6
+        if self.flag_8: flags |= 1 << 7
+
+        if self.flag_invisible: flags |= 1 << 8
+        if self.flag_transparent: flags |= 1 << 10
+        if self.flag_unlit: flags |= 1 << 17
+        if self.flag_shadow: flags |= 1 << 18
+        if self.flag_metal: flags |= 1 << 22
+        if self.flag_cast: flags |= 1 << 23
+        if self.flag_polygon: flags |= 1 << 26
+        else: flags |= 1 << 9 # flag_passable
+
+        return flags
+
 
 class PogoPath(bpy.types.PropertyGroup):
     pass

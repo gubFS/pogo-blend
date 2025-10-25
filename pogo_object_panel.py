@@ -2,11 +2,23 @@ import bpy
 
 def register():
     bpy.utils.register_class(AddPogoEntityData)
+    bpy.utils.register_class(AddPogoPathData)
     bpy.utils.register_class(PogoObjectPanel)
+
 
 def unregister():
     bpy.utils.unregister_class(AddPogoEntityData)
+    bpy.utils.unregister_class(AddPogoPathData)
     bpy.utils.unregister_class(PogoObjectPanel)
+
+class AddPogoPathData(bpy.types.Operator):
+    bl_idname = "pogo_blend.add_pogo_path_data"
+    bl_label = "Add pogo data"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        context.object.pogo_path
+        return {'FINISHED'}
 
 class AddPogoEntityData(bpy.types.Operator):
     bl_idname = "pogo_blend.add_pogo_entity_data"
@@ -31,9 +43,18 @@ class PogoObjectPanel(bpy.types.Panel):
         match obj.type:
             case 'MESH':
                 self.draw_mesh_panel(obj, layout)
+            case 'CURVE':
+                self.draw_curve_panel(obj, layout)
             case _:
                 layout.label(text="This object type has no relevant pogo data")
                 return
+
+    def draw_curve_panel(self, obj, layout):
+        try: obj["pogo_path"]
+        except KeyError:
+            layout.operator("pogo_blend.add_pogo_path_data")
+            return
+        layout.label(text="This curve is a Pogo Path")
 
     def draw_mesh_panel(self, obj, layout):
         try: obj["pogo_entity"]
