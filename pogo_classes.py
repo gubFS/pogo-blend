@@ -66,6 +66,7 @@ class PogoEntity(bpy.types.PropertyGroup):
         ("pogostick_mat", "pogostick_mat", ""),
         ("pogostickGold_mat", "pogostickGold_mat", ""),
         ("slime_mat", "slime_mat", ""), 
+        ("startFinish_mat", "startFinish_mat", ""), 
         ("toggleBlock_mat", "toggleBlock_mat", ""), 
         ("mat_trafficCone", "mat_trafficCone", ""), 
         ("mat_ushanka", "mat_ushanka", ""),
