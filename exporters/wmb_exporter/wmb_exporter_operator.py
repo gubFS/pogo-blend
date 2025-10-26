@@ -1,8 +1,10 @@
 import bpy
 from .wmb_exporter import WMBExporter
+from ..mdl_exporter.mdl_exporter import MDLExporter
 from .wmb_objects.wmb_entity import *
 from .wmb_objects.wmb_path import *
 from .wmb_objects.wmb_info import WMBInfo
+import os
 
 def export_to_wmb(context, filepath, global_scale):
     custom_map_collection = None
@@ -22,29 +24,33 @@ def export_to_wmb(context, filepath, global_scale):
     start_line = custom_map.start_line
 
     undo_map_scale_args = apply_map_scale(custom_map_collection, global_scale)
+    try:
+        wmb_objects = [
+            WMBInfo(),
+            PogoSpawn(spawn),
+            PogoPathProgress(path_progress),
+            PogoStartLine(start_line)
+        ]
+        meshes = {}
+        for obj in custom_map_collection.objects:
+            if obj in [spawn, path_progress, start_line]: continue
+            match obj.type:
+                case 'MESH':
+                    try: obj["pogo_entity"]
+                    except KeyError: continue
+                    entity = WMBEntity(obj)
+                    mesh = obj.to_mesh()
+                    if obj.pogo_entity.filename_override == "":
+                        if mesh not in meshes: meshes[mesh] = (entity, obj)
+                    wmb_objects.append(entity)
 
-    wmb_objects = [
-        WMBInfo(),
-        PogoSpawn(spawn),
-        PogoPathProgress(path_progress),
-        PogoStartLine(start_line)
-    ]
-    meshes = {}
-    for obj in custom_map_collection.objects:
-        if obj in [spawn, path_progress, start_line]: continue
-        match obj.type:
-            case 'MESH':
-                try: obj["pogo_entity"]
-                except KeyError: continue
-                entity = WMBEntity(obj)
-                mesh = obj.to_mesh()
-                if obj.pogo_entity.filename_override == "":
-                    if mesh not in meshes: meshes[mesh] = entity.filename
-                wmb_objects.append(entity)
-
-    WMBExporter(filepath, wmb_objects).export()
-
-    unapply_map_scale(*undo_map_scale_args)
+        for entity, obj in meshes.values():
+            mdlpath = os.path.join(os.path.dirname(filepath), entity.filename)
+            if os.path.exists(mdlpath): print(f"WARNING: Overwriting '{mdlpath}'")
+            MDLExporter(mdlpath, [obj], global_scale).export()
+        WMBExporter(filepath, wmb_objects).export()
+    finally:
+        unapply_map_scale(*undo_map_scale_args)
 
 def apply_map_scale(custom_map_collection, scale):
     layer_collection = bpy.context.view_layer.layer_collection.children['CustomMap']
@@ -88,8 +94,8 @@ class WMBExporterOperator(bpy.types.Operator, ExportHelper):
     global_scale: bpy.props.FloatProperty(
             name="Scale Multiplier",
             description="Use this to scale on export",
-            min=0.0, max=100.0,
-            default=100.0,
+            min=0.0, max=1000.0,
+            default=50.0,
     )
 
     # List of operator properties, the attributes will be assigned to the class instance from the operator settings before calling.

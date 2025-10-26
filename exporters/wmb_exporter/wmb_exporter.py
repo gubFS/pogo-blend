@@ -25,13 +25,10 @@ class WMBExporter():
         header.store_32_at(len(header), object_list_offset)
         header.store_32_at(len(objects_header) + len(encoded_objects), object_list_offset + 4)
 
-        f = open(self.filepath, "wb")
-
-        f.write(header)
-        f.write(objects_header)
-        f.write(encoded_objects)
-
-        f.close()
+        with open(self.filepath, "wb") as f:
+            f.write(header)
+            f.write(objects_header)
+            f.write(encoded_objects)
 
     def get_header_bytes(self):
         header = GubByteArray()

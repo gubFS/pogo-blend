@@ -84,7 +84,6 @@ class MDLExporter:
         mdl.store_32_at(mdl.get_position(), file_size_pos)
         mdl.store_32_at(mdl.get_position() - group_pos, group_size_pos)
 
-        f = open(self.filepath, "wb")
-        f.write(mdl)
-        f.close()
+        with open(self.filepath, "wb") as f:
+            f.write(mdl)
 

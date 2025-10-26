@@ -38,8 +38,8 @@ class MDLExporterOperator(bpy.types.Operator, ExportHelper):
     global_scale: bpy.props.FloatProperty(
             name="Scale Multiplier",
             description="Use this to scale on export",
-            min=0.0, max=100.0,
-            default=100.0,
+            min=0.0, max=1000.0,
+            default=50.0,
     )
 
     def execute(self, context):

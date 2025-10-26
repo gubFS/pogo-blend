@@ -82,8 +82,8 @@ class PogoObjectPanel(bpy.types.Panel):
         col.prop(entity, "flag_unlit")
         col.prop(entity, "flag_transparent")
         col.prop(entity, "flag_polygon")
-        if entity.flag_polygon == True:
-            col.prop(entity, "flag_auto_collision")
+        # if entity.flag_polygon == True:
+        #     col.prop(entity, "flag_auto_collision")
 
         col = row.column()
         col.prop(entity, "flag_shadow")
@@ -123,8 +123,10 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         obj = context.object
-        entity = obj.pogo_entity
+        try: obj["pogo_entity"]
+        except KeyError: return
 
+        entity = obj.pogo_entity
         layout.prop(entity, "name_override")
         layout.prop(entity, "filename_override")
         layout.prop(entity, "material_override")

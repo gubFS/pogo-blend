@@ -9,11 +9,11 @@ class WMBEntity:
         self.origin = obj.matrix_world.to_translation().to_3d()
         rotation = obj.matrix_world.to_euler()
         self.angle = (math.degrees(rotation.z), math.degrees(-rotation.y), math.degrees(rotation.x))
-        self.scale = (1,1,1) # obj.matrix_world.to_scale().to_3d()
+        self.scale = obj.scale if entity.filename_override == "" else (1,1,1)
         self.name = obj.name if entity.name_override == "" else entity.name_override
 
         # TODO: write real filename when converted to .mdl
-        self.filename = f"{obj.name}.mdl" if entity.filename_override == ""\
+        self.filename = f"{obj.to_mesh().name}.mdl" if entity.filename_override == ""\
             else entity.filename_override
 
         #TODO: figure out if all objects should just use two actions
