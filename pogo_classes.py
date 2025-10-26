@@ -112,7 +112,7 @@ class PogoEntity(bpy.types.PropertyGroup):
     flag_5: bpy.props.BoolProperty(name="flag_5") # = 4,
     flag_6: bpy.props.BoolProperty(name="flag_6") # = 5,
     flag_7: bpy.props.BoolProperty(name="Ice") # = 6, # ICE
-    flag_8: bpy.props.BoolProperty(name="flag_8") # = 7,
+    flag_8: bpy.props.BoolProperty(name="Bonk") # = 7,
 
     flag_auto_collision: bpy.props.BoolProperty(name="Auto Collision")
 

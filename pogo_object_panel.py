@@ -90,6 +90,7 @@ class PogoObjectPanel(bpy.types.Panel):
         col.prop(entity, "flag_cast")
         col.prop(entity, "flag_metal")
         col.prop(entity, "flag_7")
+        col.prop(entity, "flag_8")
 
         layout.row().prop(entity, "action")
         if entity.action in entity.actions:
