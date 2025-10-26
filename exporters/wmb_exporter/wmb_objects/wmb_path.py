@@ -1,4 +1,4 @@
-from ..gub_byte_array import GubByteArray
+from ...gub_byte_array import GubByteArray
 import mathutils
 
 class WMBPath:

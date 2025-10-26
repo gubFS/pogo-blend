@@ -1,4 +1,5 @@
-from ..gub_byte_array import GubByteArray
+from ...gub_byte_array import GubByteArray
+import math
 
 class WMBEntity:
     def __init__(self, obj):
@@ -6,8 +7,9 @@ class WMBEntity:
 
         self.type = 7 # 7 is the ID for entity types
         self.origin = obj.matrix_world.to_translation().to_3d()
-        self.angle = obj.matrix_world.to_euler() # TODO: check the rotation is right format
-        self.scale = obj.matrix_world.to_scale().to_3d()
+        rotation = obj.matrix_world.to_euler()
+        self.angle = (math.degrees(rotation.z), math.degrees(-rotation.y), math.degrees(rotation.x))
+        self.scale = (1,1,1) # obj.matrix_world.to_scale().to_3d()
         self.name = obj.name
         self.filename = f"{obj.name}.mdl" # TODO: write real filename when converted to .mdl
         self.action = "" if entity.action == "ndef" else entity.action #TODO: figure out if all objects should just use two actions
