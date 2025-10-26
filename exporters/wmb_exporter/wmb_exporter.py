@@ -1,4 +1,3 @@
-import bpy
 from ..gub_byte_array import GubByteArray
 
 class WMBExporter():

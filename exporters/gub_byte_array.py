@@ -17,6 +17,9 @@ class GubByteArray(bytearray):
         for _ in range(amount):
             self.store_8(value)
 
+    def store_16(self, value):
+        self.pack("H", value)
+
     def store_32(self, value):
         self.pack("I", value)
 

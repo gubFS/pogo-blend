@@ -1,0 +1,67 @@
+// specific to caterpillar pogostuck map editor, supports verts, tris, textures and UVs
+
+typedef struct {
+	char	ident[4];		// "MDL7"
+	long	version;		// '0', 'sub'- version number;
+	long	bones_num;
+	long	groups_num;
+	long	mdl7data_size;	// this file size (head included), except entlump and medlump. 
+	long	entlump_size;	// entity info size (not yet used, always 0)
+	long	medlump_size;	// size of data for MED in bytes
+
+	unsigned short md7_bone_stc_size; // 0x24, but unused
+	unsigned short md7_skin_stc_size; // 0x1C if name is 16 bytes and filename is excluded
+	unsigned short md7_colorvalue_stc_size; // 0x10, but unused
+	unsigned short md7_material_stc_size; // 0x44, but unused
+	unsigned short md7_skinpoint_stc_size; // 0x08
+	unsigned short md7_triangle_stc_size; // 0x1A
+	unsigned short md7_mainvertex_stc_size; // 0x1A, but unused
+	unsigned short md7_framevertex_stc_size; // 0x1A, but unused
+	unsigned short md7_bonetrans_stc_size; // 0x44, but unused
+	unsigned short md7_frame_stc_size; // 0x14, but unused
+} MD7_HEADER;
+
+#define MAX_GROUPNAMESIZE	16
+typedef struct {
+	unsigned char	typ;		// = '1' -> triangle based Mesh <- untrue its 1 as a byte not char
+
+	//ws, 26.04.2006 max weights per vertex
+	//	BYTE	_unused_[3];
+	BYTE	deformers;
+	BYTE	max_weights;
+	BYTE	_unused_;
+
+	long	groupdata_size; // size of data for this group in bytes ( MD7_GROUP stc. included).
+	char	name[MAX_GROUPNAMESIZE];
+	long	numskins;
+	long	num_stpts;	// number of 2D skin vertices
+	long	numtris;
+	long	numverts;
+	long	numframes;
+} MD7_GROUP;
+
+
+#define MAX_TEXNAMESIZE		16  <- not true, it's saved dynamically. probably very old format
+typedef struct {
+	unsigned char	typ;
+	BYTE			_unused_[3];
+	long			width;
+	long			height;
+	char			texture_name[MAX_TEXNAMESIZE];	//Skin bzw. Texture oder Material Name
+	char			texture_file_name[*]; // the end of the name is denoted by an empty byte
+} MD7_SKIN;
+
+typedef struct {
+	float 			uv_point[2]; // index matches associated vert index
+} MD7_UV_POINT;
+
+typedef struct {
+	short			vert_indecies[3];
+	byte			unused[20]; // i think, filled with 0xFF
+} MD7_TRI;
+
+typedef struct {
+	float 			position[3];
+	short 			bone_index; // 0xFFFF = none
+	float			normal[3];
+} MD7_VERTEX;
