@@ -31,6 +31,11 @@ class PogoCustomMap(bpy.types.PropertyGroup):
     start_line: bpy.props.PointerProperty(type=bpy.types.Object, name="Start Line", poll=lambda prop, obj: obj.type == 'MESH')
 
 class PogoEntity(bpy.types.PropertyGroup):
+    name_override: bpy.props.StringProperty()
+    filename_override: bpy.props.StringProperty()
+    material_override: bpy.props.StringProperty()
+    action_override: bpy.props.StringProperty()
+
     material: bpy.props.EnumProperty(items=[
         ("ndef", "", ""),
         ("appAGeoDefault_mat", "appAGeoDefault_mat", ""), # albedo changes greyscale of object, 50 albedo is 50% greyscale. 100 albedo is no greyscale
@@ -79,6 +84,15 @@ class PogoEntity(bpy.types.PropertyGroup):
     flag_metal: bpy.props.BoolProperty(name="Kill") # = 22, # kill
     flag_cast: bpy.props.BoolProperty(name="Cast") # = 23, # 
     flag_polygon: bpy.props.BoolProperty(name="Collision") # = 26, # collision. if polygon isn't set then its passable
+
+    flag_overlay: bpy.props.BoolProperty() # = 12,
+    flag_flare: bpy.props.BoolProperty() # = 15,
+    flag_nofilter: bpy.props.BoolProperty() # = 16,
+    flag_nofog: bpy.props.BoolProperty() # = 20, # 
+    flag_bright: bpy.props.BoolProperty() # = 21, # 
+    flag_local: bpy.props.BoolProperty() # = 25, # 
+    flag_bbox: bpy.props.BoolProperty() # = 29, # 
+
     ambient: bpy.props.FloatProperty(name="Ambient")
     albedo: bpy.props.FloatProperty(name="Albedo", default=50.0)
 
@@ -143,12 +157,19 @@ class PogoEntity(bpy.types.PropertyGroup):
 
         if self.flag_invisible: flags |= 1 << 8
         if self.flag_transparent: flags |= 1 << 10
+        if self.flag_overlay: flags |= 1 << 12
+        if self.flag_flare: flags |= 1 << 15
+        if self.flag_nofilter: flags |= 1 << 16
         if self.flag_unlit: flags |= 1 << 17
         if self.flag_shadow: flags |= 1 << 18
+        if self.flag_nofog: flags |= 1 << 20
+        if self.flag_bright: flags |= 1 << 21
         if self.flag_metal: flags |= 1 << 22
         if self.flag_cast: flags |= 1 << 23
+        if self.flag_local: flags |= 1 << 25
         if self.flag_polygon: flags |= 1 << 26
         else: flags |= 1 << 9 # flag_passable
+        if self.flag_bbox: flags |= 1 << 27
 
         return flags
 

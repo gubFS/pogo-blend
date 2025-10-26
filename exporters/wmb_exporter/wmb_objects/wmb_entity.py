@@ -10,16 +10,23 @@ class WMBEntity:
         rotation = obj.matrix_world.to_euler()
         self.angle = (math.degrees(rotation.z), math.degrees(-rotation.y), math.degrees(rotation.x))
         self.scale = (1,1,1) # obj.matrix_world.to_scale().to_3d()
-        self.name = obj.name
-        self.filename = f"{obj.name}.mdl" # TODO: write real filename when converted to .mdl
-        self.action = "" if entity.action == "ndef" else entity.action #TODO: figure out if all objects should just use two actions
+        self.name = obj.name if entity.name_override == "" else entity.name_override
+
+        # TODO: write real filename when converted to .mdl
+        self.filename = f"{obj.name}.mdl" if entity.filename_override == ""\
+            else entity.filename_override
+
+        #TODO: figure out if all objects should just use two actions
+        self.action = ("" if entity.action == "ndef" else entity.action) if entity.action_override == ""\
+            else entity.action_override
+
         self.skills = entity.get_skills()
         self.flags = entity.get_flags()
         self.ambient = entity.ambient
         self.albedo = entity.albedo
         self.path = 0
         self.entity2 = 0
-        self.material = entity.material
+        self.material = entity.material if entity.material_override == "" else entity.material_override
         self.string1 = ""
         self.string2 = ""
 

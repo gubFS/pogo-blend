@@ -29,12 +29,18 @@ def export_to_wmb(context, filepath, global_scale):
         PogoPathProgress(path_progress),
         PogoStartLine(start_line)
     ]
+    meshes = {}
     for obj in custom_map_collection.objects:
         if obj in [spawn, path_progress, start_line]: continue
-        try: obj["pogo_entity"]
-        except KeyError: continue
-        entity = WMBEntity(obj)
-        wmb_objects.append(entity)
+        match obj.type:
+            case 'MESH':
+                try: obj["pogo_entity"]
+                except KeyError: continue
+                entity = WMBEntity(obj)
+                mesh = obj.to_mesh()
+                if obj.pogo_entity.filename_override == "":
+                    if mesh not in meshes: meshes[mesh] = entity.filename
+                wmb_objects.append(entity)
 
     WMBExporter(filepath, wmb_objects).export()
 

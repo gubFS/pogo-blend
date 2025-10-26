@@ -4,12 +4,14 @@ def register():
     bpy.utils.register_class(AddPogoEntityData)
     bpy.utils.register_class(AddPogoPathData)
     bpy.utils.register_class(PogoObjectPanel)
+    bpy.utils.register_class(PogoObjectPanelOverrides)
 
 
 def unregister():
     bpy.utils.unregister_class(AddPogoEntityData)
     bpy.utils.unregister_class(AddPogoPathData)
     bpy.utils.unregister_class(PogoObjectPanel)
+    bpy.utils.unregister_class(PogoObjectPanelOverrides)
 
 class AddPogoPathData(bpy.types.Operator):
     bl_idname = "pogo_blend.add_pogo_path_data"
@@ -108,4 +110,56 @@ class PogoObjectPanel(bpy.types.Panel):
 
             if "path" in currentConfig and currentConfig.get("path") == True:
                 layout.prop(entity, "path")
+
+class PogoObjectPanelOverrides(bpy.types.Panel):
+    bl_label = "Overrides"
+    bl_idname = "OBJECT_PT_object_pogo_blend_override"
+    bl_parent_id = "OBJECT_PT_object_pogo_blend"
+    bl_options = {'DEFAULT_CLOSED'}
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_context = "object"
+
+    def draw(self, context):
+        layout = self.layout
+        obj = context.object
+        entity = obj.pogo_entity
+
+        layout.prop(entity, "name_override")
+        layout.prop(entity, "filename_override")
+        layout.prop(entity, "material_override")
+
+        row = layout.row()
+        col = row.column()
+        col.prop(entity, "flag_invisible", text="flag_invisible")
+        col.prop(entity, "flag_unlit", text="flag_unlit")
+        col.prop(entity, "flag_transparent", text="flag_transparent")
+        col.prop(entity, "flag_overlay", text="flag_overlay")
+        col.prop(entity, "flag_shadow", text="flag_shadow")
+        col.prop(entity, "flag_cast", text="flag_cast")
+        col.prop(entity, "flag_metal", text="flag_metal")
+
+        col = row.column()
+        col.prop(entity, "flag_flare", text="flag_flare")
+        col.prop(entity, "flag_bright", text="flag_bright")
+        col.prop(entity, "flag_nofilter", text="flag_nofilter")
+        col.prop(entity, "flag_nofog", text="flag_nofog")
+        col.prop(entity, "flag_passable", text="flag_passable")
+        col.prop(entity, "flag_bbox", text="flag_bbox")
+        col.prop(entity, "flag_polygon", text="flag_polygon")
+        col.prop(entity, "flag_local", text="flag_local")
+
+        layout.prop(entity, "action_override")
+        row = layout.row()
+        col = row.column()
+        col.prop(entity, "flag_1", text="flag_1")
+        col.prop(entity, "flag_2", text="flag_2")
+        col.prop(entity, "flag_3", text="flag_3")
+        col.prop(entity, "flag_4", text="flag_4")
+
+        col = row.column()
+        col.prop(entity, "flag_5", text="flag_5")
+        col.prop(entity, "flag_6", text="flag_6")
+        col.prop(entity, "flag_7", text="flag_7")
+        col.prop(entity, "flag_8", text="flag_8")
 
