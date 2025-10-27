@@ -55,7 +55,8 @@ def export_to_wmb(context, filepath, global_scale):
 def apply_map_scale(custom_map_collection, scale):
     layer_collection = bpy.context.view_layer.layer_collection.children['CustomMap']
     bpy.context.view_layer.active_layer_collection = layer_collection
-    bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
+    if bpy.ops.object.mode_set.poll():
+        bpy.ops.object.mode_set(mode='OBJECT')
     bpy.ops.object.add(type='EMPTY')
     scale_root = bpy.context.object
 

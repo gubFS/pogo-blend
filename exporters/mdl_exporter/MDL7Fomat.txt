@@ -45,8 +45,8 @@ typedef struct {
 typedef struct {
 	unsigned char	typ;
 	BYTE			_unused_[3];
-	long			width;
-	long			height;
+	long			width; // NOT width, actually the length of the texture_file_name + 1 nul byte
+	long			height; // idk what height means, but this is always 1
 	char			texture_name[MAX_TEXNAMESIZE];	//Skin bzw. Texture oder Material Name
 	char			texture_file_name[*]; // the end of the name is denoted by an empty byte
 } MD7_SKIN;
@@ -57,7 +57,10 @@ typedef struct {
 
 typedef struct {
 	short			vert_indecies[3];
-	byte			unused[20]; // i think, filled with 0xFF
+	short			uv_indecies[3];
+	byte			unused[4]; Filled with 0x00, might indicate which skin the tri is part of
+	byte			unused[6]; // i think, filled with 0xFF
+	byte			unused[4]; // i think, filled with either 0x00 or 0xFF ???
 } MD7_TRI;
 
 typedef struct {

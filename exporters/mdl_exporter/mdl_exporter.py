@@ -5,6 +5,7 @@ class MDLExporter:
     def __init__(self, filepath, objs, scale=1.0):
         self.filepath = filepath
         if len(objs) == 0: raise Exception("No objects selected")
+        if len(objs) > 1: raise Exception("Multiple objects is not currently supported")
         self.objs = objs
 
         sum = Vector((0,0,0))
@@ -12,21 +13,54 @@ class MDLExporter:
             sum += obj.matrix_world.translation * scale
         center = sum / len(objs)
 
+        self.skins = []
+        self.uvs = []
+        self.tris = []
         self.verts = []
         self.vert_normals = []
-        self.tris = []
+
         obj_verts_index = 0
         for obj in self.objs:
             mesh = obj.to_mesh()
+
+            # Find the first image texture in the materials
+            found = False
+            for mat_slot in obj.material_slots:
+                if found: break
+                if mat_slot.material and mat_slot.material.node_tree:
+                    for node in mat_slot.material.node_tree.nodes:
+                        if found: break
+                        if node.type == 'TEX_IMAGE':
+                            self.skins.append(node.image.name)
+                            found = True
+
+            for uv in mesh.uv_layers[0].uv:
+                self.uvs.append(Vector((uv.vector.x, 1 - uv.vector.y)))
+
             for vert in mesh.vertices:
                 self.verts.append((obj.matrix_world.translation * scale - center) + vert.co * scale)
                 self.vert_normals.append(vert.normal)
 
-            for tri in mesh.loop_triangles:
+            total_uvs = 0
+            uvkeys = {}
+            for poly in mesh.polygons:
+                uvkeys[poly.index] = {}
+                for vert_idx in poly.vertices:
+                    uv_idx = total_uvs
+                    uvkeys[poly.index][vert_idx] = uv_idx
+                    total_uvs += 1
+
+            for i, tri in enumerate(mesh.loop_triangles):
+                poly_idx = mesh.loop_triangle_polygons[i].value
+
                 vert_indecies = []
+                uv_indecies = []
                 for i in range(2, -1, -1): # loop in reverse because the normals are flipped in mdl files compared to blend
                     vert_indecies.append(obj_verts_index + tri.vertices[i])
-                self.tris.append(vert_indecies)
+                for vert_idx in tri.vertices:
+                    uv_indecies.append(uvkeys[poly_idx][vert_idx])
+                uv_indecies.reverse()
+                self.tris.append((vert_indecies, uv_indecies))
 
             obj_verts_index += len(mesh.vertices)
 
@@ -61,18 +95,33 @@ class MDLExporter:
         group_size_pos = mdl.get_position()
         mdl.store_32(0) # size of group, store later
         mdl.store_string("Group", 16)
-        mdl.store_32(0) # num of skins, currently not supported TODO: do this
-        mdl.store_32(0) # num of uv points, TODO: do this
+        mdl.store_32(len(self.skins))
+        mdl.store_32(len(self.uvs))
         mdl.store_32(len(self.tris))
         mdl.store_32(len(self.verts))
         mdl.store_32(0)
 
-        # TODO: skin and UV points
+        # Skin
+        for i, skin in enumerate(self.skins):
+            mdl.store_8(7) # type?
+            mdl.store_8s(0, 3) # unused
+            mdl.store_32(len(skin) + 1)
+            mdl.store_32(1)
+            mdl.store_string(f"Skin{i + 1}", 16)
+            mdl.store_string(skin); mdl.store_8(0)
 
-        for tri in self.tris:
+        for uv in self.uvs:
+            for i in range(2):
+                mdl.store_float(uv[i])
+
+        for tri, uv in self.tris:
             for i in range(3):
                 mdl.store_16(tri[i])
-            mdl.store_8s(0xFF, 20)
+            for i in range(3):
+                mdl.store_16(uv[i])
+            mdl.store_8s(0, 4)
+            mdl.store_8s(0xFF, 6)
+            mdl.store_8s(0xFF, 4)
 
         for vert_idx in range(len(self.verts)):
             for i in range(3):
