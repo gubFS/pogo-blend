@@ -16,9 +16,18 @@ class WMBEntity:
         self.filename = f"{obj.to_mesh().name}.mdl" if entity.filename_override == ""\
             else entity.filename_override
 
-        #TODO: figure out if all objects should just use two actions
-        self.action = ("" if entity.action == "ndef" else entity.action) if entity.action_override == ""\
-            else entity.action_override
+        if entity.action_override != "":
+            self.action = entity.action_override
+            self.string1 = entity.string1_override
+            self.string2 = entity.string2_override
+        elif entity.action2 == "ndef" or entity.string1_override != "" or entity.string2_override != "":
+            self.action = entity.action1
+            self.string1 = entity.string1_override
+            self.string2 = entity.string2_override
+        else:
+            self.action = "execString12acts"
+            self.string1 = entity.action1
+            self.string2 = entity.action2
 
         self.skills = entity.get_skills()
         self.flags = entity.get_flags()
@@ -27,8 +36,6 @@ class WMBEntity:
         self.path = 0
         self.entity2 = 0
         self.material = entity.material if entity.material_override == "" else entity.material_override
-        self.string1 = ""
-        self.string2 = ""
 
     def to_bytes(self):
         is_old = self.is_old() # 'old' entity types use less space

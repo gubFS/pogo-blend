@@ -98,25 +98,31 @@ class PogoObjectPanel(bpy.types.Panel):
         col.prop(entity, "flag_7")
         col.prop(entity, "flag_8")
 
-        layout.row().prop(entity, "action")
-        if entity.action in entity.actions:
-            currentConfig = entity.actions.get(entity.action)
+        layout.row().prop(entity, "action1")
+        if entity.action1 in entity.actions:
+            self.draw_action_panel(entity, entity.action1, layout)
+            layout.row().prop(entity, "action2")
+            if entity.action2 in entity.actions:
+                self.draw_action_panel(entity, entity.action2, layout)
 
-            if "flags" in currentConfig and len(currentConfig.get("flags")) != 0:
-                row = layout.row()
-                colLeft = row.column()
-                colRight = row.column()
-                for i, flag in enumerate(currentConfig["flags"]):
-                    col = colLeft if i % 2 == 0 else colRight
-                    # entity[flag["identifier"]] = flag["default"] # TODO: change value to default when action is changed (not on every draw)
-                    col.prop(entity, flag.get("identifier"), text=flag.get("name", flag.get("identifier")))
+    def draw_action_panel(self, entity, action, layout):
+        currentConfig = entity.actions.get(action)
 
-            if "skills" in currentConfig and len(currentConfig.get("skills")) != 0:
-                for i, skill in enumerate(currentConfig["skills"]):
-                    layout.prop(entity, skill.get("identifier"), text=skill.get("name", skill.get("identifier")))
+        if "flags" in currentConfig and len(currentConfig.get("flags")) != 0:
+            row = layout.row()
+            colLeft = row.column()
+            colRight = row.column()
+            for i, flag in enumerate(currentConfig["flags"]):
+                col = colLeft if i % 2 == 0 else colRight
+                # entity[flag["identifier"]] = flag["default"] # TODO: change value to default when action is changed (not on every draw)
+                col.prop(entity, flag.get("identifier"), text=flag.get("name", flag.get("identifier")))
 
-            if "path" in currentConfig and currentConfig.get("path") == True:
-                layout.prop(entity, "path", placeholder="Path", icon='OUTLINER_OB_CURVE')
+        if "skills" in currentConfig and len(currentConfig.get("skills")) != 0:
+            for i, skill in enumerate(currentConfig["skills"]):
+                layout.prop(entity, skill.get("identifier"), text=skill.get("name", skill.get("identifier")))
+
+        if "path" in currentConfig and currentConfig.get("path") == True:
+            layout.prop(entity, "path", placeholder="Path", icon='OUTLINER_OB_CURVE')
 
     def draw_empty_panel(self, obj, layout):
         try: obj["pogo_reigon"]
@@ -180,4 +186,7 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
         col.prop(entity, "flag_6", text="flag_6")
         col.prop(entity, "flag_7", text="flag_7")
         col.prop(entity, "flag_8", text="flag_8")
+
+        layout.prop(entity, "string1_override", text="string1")
+        layout.prop(entity, "string2_override", text="string2")
 

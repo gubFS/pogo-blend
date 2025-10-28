@@ -15,6 +15,8 @@ class PogoEntity(bpy.types.PropertyGroup):
     filename_override: bpy.props.StringProperty()
     material_override: bpy.props.StringProperty()
     action_override: bpy.props.StringProperty()
+    string1_override: bpy.props.StringProperty()
+    string2_override: bpy.props.StringProperty()
 
     material: bpy.props.EnumProperty(items=[
         ("ndef", "", ""),
@@ -83,7 +85,14 @@ class PogoEntity(bpy.types.PropertyGroup):
         for action, config in actions.items():
             if "disable" in config and config["disable"] == True: continue
             action_enums.append((action, config["name"] if "name" in config else action, config["description"] if "description" in config else ""))
-    action: bpy.props.EnumProperty(items=action_enums,name="Action", default="ndef")
+
+    def on_action1_change(self, context):
+        value = self.action1
+        if value == "ndef" and self.action2 != "ndef":
+            self.action1 = self.action2
+            self.action2 = "ndef"
+    action1: bpy.props.EnumProperty(items=action_enums,name="Action", default="ndef", update=on_action1_change)
+    action2: bpy.props.EnumProperty(items=action_enums,name="Action2", default="ndef")
 
     flag_1: bpy.props.BoolProperty(name="flag_1") # = 0,
     flag_2: bpy.props.BoolProperty(name="flag_2") # = 1,

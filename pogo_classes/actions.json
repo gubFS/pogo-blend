@@ -20,7 +20,7 @@
     ]
   },
   "execString12acts": {
-    "disable": false,
+    "disable": true,
     "flags": [
 
     ],
