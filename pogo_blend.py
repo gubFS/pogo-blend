@@ -1,6 +1,6 @@
 import bpy
 
-from . import pogo_classes
+from .pogo_classes import pogo_classes
 from . import pogo_object_panel
 from . import pogo_collection_panel
 from .exporters.mdl_exporter import mdl_exporter_operator

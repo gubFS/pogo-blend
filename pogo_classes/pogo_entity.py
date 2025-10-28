@@ -6,29 +6,9 @@ def register():
     bpy.utils.register_class(PogoEntity)
     bpy.types.Object.pogo_entity = bpy.props.PointerProperty(type=PogoEntity)
 
-    bpy.utils.register_class(PogoPath)
-    bpy.types.Object.pogo_path = bpy.props.PointerProperty(type=PogoPath)
-
-    bpy.utils.register_class(PogoCustomMap)
-    bpy.types.Collection.custom_map = bpy.props.PointerProperty(type=PogoCustomMap)
-
 def unregister():
     bpy.utils.unregister_class(PogoEntity)
     del bpy.types.Object.pogo_entity
-
-    bpy.utils.unregister_class(PogoPath)
-    del bpy.types.Object.pogo_path
-
-    bpy.utils.unregister_class(PogoCustomMap)
-    del bpy.types.Collection.custom_map
-
-class PogoCustomMap(bpy.types.PropertyGroup):
-    map_name: bpy.props.StringProperty(name="Map Name")
-    map_image: bpy.props.StringProperty(name="Map Image")
-
-    spawn: bpy.props.PointerProperty(type=bpy.types.Object, name="Spawn", poll=lambda prop, obj: obj.type == 'EMPTY')
-    path_progress: bpy.props.PointerProperty(type=bpy.types.Object, name="Progress Path", poll=lambda prop, obj: obj.type == 'CURVE')
-    start_line: bpy.props.PointerProperty(type=bpy.types.Object, name="Start Line", poll=lambda prop, obj: obj.type == 'MESH')
 
 class PogoEntity(bpy.types.PropertyGroup):
     name_override: bpy.props.StringProperty()
@@ -174,9 +154,3 @@ class PogoEntity(bpy.types.PropertyGroup):
 
         return flags
 
-
-class PogoPath(bpy.types.PropertyGroup):
-    pass
-
-class PogoArea(bpy.types.PropertyGroup):
-    area_type: bpy.props.EnumProperty(["KILL", "CHECKPOINT", "MODE_DOUBLE", "MODE_PUZZLE", "MODE_NOBONK", "MODE_NOBOOST", "GRAVITY"])
