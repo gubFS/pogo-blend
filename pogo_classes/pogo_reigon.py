@@ -11,6 +11,7 @@ def unregister():
 class PogoReigon(bpy.types.PropertyGroup):
     reigon_type: bpy.props.EnumProperty(
         items=[
+            ("ndef", "", ""),
             ("kill", "Kill", ""), 
             ("CP_", "Checkpoint", ""), 
             ("mode_double", "Double jump", ""), 

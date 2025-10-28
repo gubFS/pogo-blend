@@ -47,9 +47,15 @@ class PogoObjectPanel(bpy.types.Panel):
                 self.draw_mesh_panel(obj, layout)
             case 'CURVE':
                 self.draw_curve_panel(obj, layout)
+            case 'EMPTY':
+                self.draw_empty_panel(obj, layout)
             case _:
-                layout.label(text="This object type has no relevant pogo data")
+                self.draw_not_relevant(layout)
                 return
+
+    def draw_not_relevant(self, layout):
+        layout.label(text="This object type has no relevant pogo data")
+
 
     def draw_curve_panel(self, obj, layout):
         try: obj["pogo_path"]
@@ -111,6 +117,12 @@ class PogoObjectPanel(bpy.types.Panel):
 
             if "path" in currentConfig and currentConfig.get("path") == True:
                 layout.prop(entity, "path")
+
+    def draw_empty_panel(self, obj, layout):
+        try: obj["pogo_reigon"]
+        except BaseException: self.draw_not_relevant(layout)
+        else:
+            layout.prop(obj.pogo_reigon, "reigon_type")
 
 class PogoObjectPanelOverrides(bpy.types.Panel):
     bl_label = "Overrides"
