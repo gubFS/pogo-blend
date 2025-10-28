@@ -120,9 +120,12 @@ class PogoObjectPanel(bpy.types.Panel):
 
     def draw_empty_panel(self, obj, layout):
         try: obj["pogo_reigon"]
-        except BaseException: self.draw_not_relevant(layout)
+        except KeyError: self.draw_not_relevant(layout)
         else:
             layout.prop(obj.pogo_reigon, "reigon_type")
+            if obj.pogo_reigon.reigon_type == "gravityReg_":
+                layout.prop(obj.pogo_reigon, "gravity_angle")
+                layout.prop(obj.pogo_reigon, "gravity_power")
 
 class PogoObjectPanelOverrides(bpy.types.Panel):
     bl_label = "Overrides"

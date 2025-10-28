@@ -14,12 +14,15 @@ class PogoReigon(bpy.types.PropertyGroup):
             ("ndef", "", ""),
             ("kill", "Kill", ""), 
             ("CP_", "Checkpoint", ""), 
-            ("mode_double", "Double jump", ""), 
-            ("mode_puzzle", "Puzzle", ""),
-            ("mode_nobonk", "No bonk", ""),
-            ("mode_noboost", "No boost", ""),
-            ("gravity", "Gravity", ""),
+            ("modearea_double", "Double jump", ""), 
+            ("modearea_puzzle", "Puzzle", ""),
+            ("modearea_nobonk", "No bonk", ""),
+            ("modearea_noboost", "No boost", ""),
+            ("gravityReg_", "Gravity", ""),
             ("reg_finish", "Finish", "")
         ],
         name="Reigon Type"
     )
+
+    gravity_angle: bpy.props.FloatProperty(name="Gravity angle") # 90 is -x 180 is +z
+    gravity_power: bpy.props.FloatProperty(name="Gravity power", default=100.0)

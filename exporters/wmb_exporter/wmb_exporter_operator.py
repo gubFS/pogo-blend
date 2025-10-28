@@ -4,6 +4,7 @@ from ..mdl_exporter.mdl_exporter import MDLExporter
 from .wmb_objects.wmb_entity import *
 from .wmb_objects.wmb_path import *
 from .wmb_objects.wmb_info import WMBInfo
+from .wmb_objects.wmb_reigon import WMBReigon
 import os
 
 def export_to_wmb(context, filepath, global_scale):
@@ -43,6 +44,11 @@ def export_to_wmb(context, filepath, global_scale):
                     if obj.pogo_entity.filename_override == "":
                         if mesh not in meshes: meshes[mesh] = (entity, obj)
                     wmb_objects.append(entity)
+                case 'EMPTY':
+                    try: obj["pogo_reigon"]
+                    except KeyError: continue
+                    if obj.pogo_reigon.reigon_type == 'ndef': continue
+                    wmb_objects.append(WMBReigon(obj))
 
         for entity, obj in meshes.values():
             mdlpath = os.path.join(os.path.dirname(filepath), entity.filename)
