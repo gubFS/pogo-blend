@@ -116,7 +116,7 @@ class PogoObjectPanel(bpy.types.Panel):
                     layout.prop(entity, skill.get("identifier"), text=skill.get("name", skill.get("identifier")))
 
             if "path" in currentConfig and currentConfig.get("path") == True:
-                layout.prop(entity, "path")
+                layout.prop(entity, "path", placeholder="Path", icon='OUTLINER_OB_CURVE')
 
     def draw_empty_panel(self, obj, layout):
         try: obj["pogo_reigon"]

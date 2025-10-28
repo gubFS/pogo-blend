@@ -13,5 +13,9 @@ class PogoCustomMap(bpy.types.PropertyGroup):
     map_image: bpy.props.StringProperty(name="Map Image")
 
     spawn: bpy.props.PointerProperty(type=bpy.types.Object, name="Spawn", poll=lambda prop, obj: obj.type == 'EMPTY')
-    path_progress: bpy.props.PointerProperty(type=bpy.types.Object, name="Progress Path", poll=lambda prop, obj: obj.type == 'CURVE')
+    def path_poll(prop, obj):
+            try: obj["pogo_path"]
+            except KeyError: return False
+            return True
+    path_progress: bpy.props.PointerProperty(type=bpy.types.Object, name="Progress Path", poll=path_poll)
     start_line: bpy.props.PointerProperty(type=bpy.types.Object, name="Start Line", poll=lambda prop, obj: obj.type == 'MESH')

@@ -33,6 +33,8 @@ def export_to_wmb(context, filepath, global_scale):
             PogoStartLine(start_line)
         ]
         meshes = {}
+        paths = [path_progress]
+        paths_to_add = []
         for obj in custom_map_collection.objects:
             if obj in [spawn, path_progress, start_line]: continue
             match obj.type:
@@ -43,12 +45,23 @@ def export_to_wmb(context, filepath, global_scale):
                     mesh = obj.to_mesh()
                     if obj.pogo_entity.filename_override == "":
                         if mesh not in meshes: meshes[mesh] = (entity, obj)
+                    if obj.pogo_entity.path != None:
+                        paths_to_add.append((entity, obj.pogo_entity.path))
                     wmb_objects.append(entity)
                 case 'EMPTY':
                     try: obj["pogo_reigon"]
                     except KeyError: continue
                     if obj.pogo_reigon.reigon_type == 'ndef': continue
                     wmb_objects.append(WMBReigon(obj))
+                case 'CURVE':
+                    try: obj["pogo_path"]
+                    except KeyError: continue
+                    paths.append(obj)
+                    wmb_objects.append(WMBPath(obj))
+
+        for entity, path in paths_to_add:
+            try: entity.path = paths.index(path) + 1
+            except ValueError: pass
 
         for entity, obj in meshes.values():
             mdlpath = os.path.join(os.path.dirname(filepath), entity.filename)

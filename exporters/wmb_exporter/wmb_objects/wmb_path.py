@@ -6,9 +6,11 @@ class WMBPath:
         self.type = 6 # 6 is the ID for path types
         self.name = obj.name
 
+        location = obj.matrix_world.translation
+        scale = obj.matrix_world.to_scale().to_3d()
         self.points = []
         for point in obj.data.splines[0].points:
-            point = point.co.to_3d()
+            point = point.co.to_3d() * scale + location
             self.points.append(point)
 
     def to_bytes(self):

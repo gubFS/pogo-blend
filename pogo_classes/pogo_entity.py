@@ -96,7 +96,11 @@ class PogoEntity(bpy.types.PropertyGroup):
 
     flag_auto_collision: bpy.props.BoolProperty(name="Auto Collision")
 
-    path: bpy.props.PointerProperty(type=bpy.types.Curve, name="Path")
+    def path_poll(prop, obj):
+            try: obj["pogo_path"]
+            except KeyError: return False
+            return True
+    path: bpy.props.PointerProperty(type=bpy.types.Object, name="Path", poll=path_poll)
 
     skill_1: bpy.props.FloatProperty(name="skill_1")
     skill_2: bpy.props.FloatProperty(name="skill_2")
