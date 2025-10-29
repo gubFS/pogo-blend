@@ -76,6 +76,7 @@ def export_to_wmb(context, filepath, global_scale):
         export_splits(dirpath, custom_map, splits_to_add)
         WMBExporter(filepath, wmb_objects).export()
 
+        export_map_description(dirpath)
     finally:
         unapply_map_scale(*undo_map_scale_args)
 
@@ -88,6 +89,16 @@ def export_splits(dirpath, custom_map, splits):
         bytes.store_string(f"{split.name}\n")
     with open(filepath, 'wb') as f:
         f.write(bytes)
+
+def export_map_description(dirpath):
+    text = ""
+    try: text = bpy.data.texts["levelDescription.txt"].as_string()
+    except BaseException: pass
+    filepath = os.path.join(dirpath, "levelDescription.txt")
+    with open(filepath, 'wb') as f:
+        f.write(0xFF.to_bytes()) # utf-16-le header aka 'BOM'
+        f.write(0xFE.to_bytes())
+        f.write(text.encode('utf-16-le'))
 
 def apply_map_scale(custom_map_collection, scale):
     layer_collection = bpy.context.view_layer.layer_collection.children['CustomMap']
