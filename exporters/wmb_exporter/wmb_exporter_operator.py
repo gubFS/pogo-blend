@@ -69,6 +69,7 @@ def export_to_wmb(context, filepath, global_scale):
             PogoStartLine(start_line)
         ]
         meshes = {}
+        textures = {}
         paths = [path_progress]
         paths_to_add = []
         splits_to_add = {}
@@ -110,12 +111,28 @@ def export_to_wmb(context, filepath, global_scale):
             entity.filename = filename
             mdlpath = os.path.join(dirpath, filename)
             if os.path.exists(mdlpath): print(f"WARNING: Overwriting '{mdlpath}'")
-            MDLExporter(mdlpath, [obj], global_scale).export()
+            mdl_exporter = MDLExporter(mdlpath, [obj], global_scale)
+            for texture, slot_idx in mdl_exporter.skins.copy().items():
+                if texture == "": continue
+                new_texture = None
+                if texture in textures:
+                    new_texture = textures[texture]
+                else:
+                    new_texture = get_unique_name(os.path.splitext(os.path.basename(texture))[0], ".tga", 255)
+                if new_texture == None:
+                    print("WARNING: could not find a unique filename")
+                    continue
+                mdl_exporter.skins.pop(texture)
+                mdl_exporter.skins[new_texture] = slot_idx
+                textures[texture] = new_texture
+            mdl_exporter.export()
         export_splits(dirpath, custom_map, splits_to_add)
         WMBExporter(filepath, wmb_objects).export()
 
         export_map_description(dirpath)
         export_map_image(dirpath, custom_map)
+        for texture, new_texture in textures.items():
+            export_texture(dirpath, new_texture, texture)
     finally:
         unapply_map_scale(*undo_map_scale_args)
 
@@ -143,6 +160,10 @@ def export_map_description(dirpath):
 def export_map_image(dirpath, custom_map):
     img = Image.open(custom_map.map_image)
     img.save(os.path.join(dirpath, "workshopPreview.png"), format="PNG")
+
+def export_texture(dirpath, image_name, image_path):
+    img = Image.open(image_path)
+    img.save(os.path.join(dirpath, image_name), format="TGA")
 
 def apply_map_scale(custom_map_collection, scale):
     layer_collection = bpy.context.view_layer.layer_collection.children['CustomMap']

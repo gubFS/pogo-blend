@@ -1,3 +1,5 @@
+import bpy
+import os
 from mathutils import *
 from ..gub_byte_array import GubByteArray
 
@@ -29,12 +31,14 @@ class MDLExporter:
                 if mat_slot.material and mat_slot.material.node_tree:
                     for node in mat_slot.material.node_tree.nodes:
                         if node.type == 'TEX_IMAGE':
-                            image = node.image.name
-                            if image in self.skins:
-                                skin_dict[mat_slot.slot_index] = self.skins[image]
+                            image = node.image
+                            full_path = bpy.path.abspath(image.filepath, library=image.library)
+                            image_path = os.path.normpath(full_path)
+                            if image_path in self.skins:
+                                skin_dict[mat_slot.slot_index] = self.skins[image_path]
                             else:
-                                self.skins[image] = len(self.skins)
-                                skin_dict[mat_slot.slot_index] = self.skins[image]
+                                self.skins[image_path] = len(self.skins)
+                                skin_dict[mat_slot.slot_index] = self.skins[image_path]
                             has_skin = True
 
             for uv in mesh.uv_layers[0].uv:
@@ -110,6 +114,7 @@ class MDLExporter:
 
         # Skin
         for texture, skin_idx in self.skins.items():
+            texture = os.path.basename(texture)
             mdl.store_8(7) # type?
             mdl.store_8s(0, 3) # unused
             mdl.store_32(len(texture) + 1)
