@@ -149,7 +149,7 @@ def apply_map_scale(custom_map_collection, scale):
     bpy.context.view_layer.active_layer_collection = layer_collection
     if bpy.ops.object.mode_set.poll():
         bpy.ops.object.mode_set(mode='OBJECT')
-    bpy.ops.object.add(type='EMPTY')
+    bpy.ops.object.add(type='EMPTY', location=(0,0,0))
     scale_root = bpy.context.object
 
     objects = custom_map_collection.objects.values()
