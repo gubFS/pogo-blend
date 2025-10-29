@@ -3,11 +3,13 @@ import bpy
 def register():
     bpy.utils.register_class(EditMapDescription)
     bpy.utils.register_class(SelectMapImage)
+    bpy.utils.register_class(PogoSplitList)
     bpy.utils.register_class(PogoCollectionPanel)
 
 def unregister():
     bpy.utils.unregister_class(EditMapDescription)
     bpy.utils.unregister_class(SelectMapImage)
+    bpy.utils.unregister_class(PogoSplitList)
     bpy.utils.unregister_class(PogoCollectionPanel)
 
 class EditMapDescription(bpy.types.Operator):
@@ -41,6 +43,16 @@ class SelectMapImage(bpy.types.Operator):
         context.window_manager.fileselect_add(self)
         return {'RUNNING_MODAL'}
 
+class PogoSplitList(bpy.types.UIList):
+    bl_idname = "POGO_UL_pogo_blend_split_list"
+
+    def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
+        if self.layout_type in {'DEFAULT', 'COMPACT'}:
+            layout.label(text=item.split_reigon.name, translate=False, icon_value=icon)
+        elif self.layout_type == 'GRID':
+            layout.alignment = 'CENTER'
+            layout.label(text="", icon_value=icon)
+
 class PogoCollectionPanel(bpy.types.Panel):
     bl_label = "Pogo Blend"
     bl_idname = "COLLECTION_PT_collection_pogo_blend"
@@ -55,7 +67,6 @@ class PogoCollectionPanel(bpy.types.Panel):
         custom_map = collection.custom_map
 
         layout.prop(custom_map, "map_name")
-        # layout.prop(custom_map, "map_description")
         layout.operator("pogo_blend.edit_map_description")
 
         row = layout.row()
@@ -65,3 +76,10 @@ class PogoCollectionPanel(bpy.types.Panel):
         layout.prop(custom_map, "spawn", placeholder="Empty", icon='EMPTY_DATA')
         layout.prop(custom_map, "path_progress", placeholder="Curve", icon='CURVE_DATA')
         layout.prop(custom_map, "start_line", placeholder='Mesh', icon='MESH_DATA')
+
+        row = layout.row()
+        row.template_list("POGO_UL_pogo_blend_split_list", "", context.collection.custom_map, "splits", context.collection.custom_map, "active_split_idx")
+
+        col = row.column()
+        col.operator("pogo_blend.active_split_move", icon='TRIA_UP', text="").direction = 'UP'
+        col.operator("pogo_blend.active_split_move", icon='TRIA_DOWN', text="").direction = 'DOWN'
