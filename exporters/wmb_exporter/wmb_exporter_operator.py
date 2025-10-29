@@ -6,6 +6,7 @@ from .wmb_objects.wmb_path import *
 from .wmb_objects.wmb_info import WMBInfo
 from .wmb_objects.wmb_reigon import WMBReigon
 from ..gub_byte_array import GubByteArray
+from PIL import Image
 import os
 
 def export_to_wmb(context, filepath, global_scale):
@@ -77,6 +78,7 @@ def export_to_wmb(context, filepath, global_scale):
         WMBExporter(filepath, wmb_objects).export()
 
         export_map_description(dirpath)
+        export_map_image(dirpath, custom_map)
     finally:
         unapply_map_scale(*undo_map_scale_args)
 
@@ -99,6 +101,10 @@ def export_map_description(dirpath):
         f.write(0xFF.to_bytes()) # utf-16-le header aka 'BOM'
         f.write(0xFE.to_bytes())
         f.write(text.encode('utf-16-le'))
+
+def export_map_image(dirpath, custom_map):
+    img = Image.open(custom_map.map_image)
+    img.save(os.path.join(dirpath, "workshopPreview.png"), format="PNG")
 
 def apply_map_scale(custom_map_collection, scale):
     layer_collection = bpy.context.view_layer.layer_collection.children['CustomMap']

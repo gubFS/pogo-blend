@@ -33,7 +33,7 @@ class SelectMapImage(bpy.types.Operator):
     bl_options = {'REGISTER'}
 
     filepath: bpy.props.StringProperty(subtype="FILE_PATH")
-    filter_glob: bpy.props.StringProperty(default="*.png;*.jpg;*.jpeg;*.tga;*.svg")
+    filter_glob: bpy.props.StringProperty(default="*.bmp;*.ico;*.jpeg;*.jpg;*.png;*.tga;*.webp")
 
     def execute(self, context):
         context.collection.custom_map.map_image = self.filepath
