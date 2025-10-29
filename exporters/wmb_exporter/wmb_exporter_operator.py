@@ -5,6 +5,7 @@ from .wmb_objects.wmb_entity import *
 from .wmb_objects.wmb_path import *
 from .wmb_objects.wmb_info import WMBInfo
 from .wmb_objects.wmb_reigon import WMBReigon
+from ..gub_byte_array import GubByteArray
 import os
 
 def export_to_wmb(context, filepath, global_scale):
@@ -24,6 +25,8 @@ def export_to_wmb(context, filepath, global_scale):
     if custom_map.start_line == None: raise ContextError("You MUST choose a starting line on the 'CustomMap' collection")
     start_line = custom_map.start_line
 
+    dirpath = os.path.dirname(filepath)
+
     undo_map_scale_args = apply_map_scale(custom_map_collection, global_scale)
     try:
         wmb_objects = [
@@ -35,6 +38,7 @@ def export_to_wmb(context, filepath, global_scale):
         meshes = {}
         paths = [path_progress]
         paths_to_add = []
+        splits_to_add = {}
         for obj in custom_map_collection.objects:
             if obj in [spawn, path_progress, start_line]: continue
             match obj.type:
@@ -52,7 +56,9 @@ def export_to_wmb(context, filepath, global_scale):
                     try: obj["pogo_reigon"]
                     except KeyError: continue
                     if obj.pogo_reigon.reigon_type == 'ndef': continue
-                    wmb_objects.append(WMBReigon(obj))
+                    reigon = WMBReigon(obj)
+                    if obj.pogo_reigon.reigon_type == 'CP_': splits_to_add[obj] = reigon
+                    wmb_objects.append(reigon)
                 case 'CURVE':
                     try: obj["pogo_path"]
                     except KeyError: continue
@@ -64,12 +70,24 @@ def export_to_wmb(context, filepath, global_scale):
             except ValueError: pass
 
         for entity, obj in meshes.values():
-            mdlpath = os.path.join(os.path.dirname(filepath), entity.filename)
+            mdlpath = os.path.join(dirpath, entity.filename)
             if os.path.exists(mdlpath): print(f"WARNING: Overwriting '{mdlpath}'")
             MDLExporter(mdlpath, [obj], global_scale).export()
+        export_splits(dirpath, custom_map, splits_to_add)
         WMBExporter(filepath, wmb_objects).export()
+
     finally:
         unapply_map_scale(*undo_map_scale_args)
+
+def export_splits(dirpath, custom_map, splits):
+    filepath = os.path.join(dirpath, "splitSetup.txt")
+    bytes = GubByteArray()
+    for i, split in enumerate(custom_map.splits.values()):
+        split = split.split_reigon
+        splits[split].name += str(i)
+        bytes.store_string(f"{split.name}\n")
+    with open(filepath, 'wb') as f:
+        f.write(bytes)
 
 def apply_map_scale(custom_map_collection, scale):
     layer_collection = bpy.context.view_layer.layer_collection.children['CustomMap']
