@@ -5,7 +5,6 @@ class MDLExporter:
     def __init__(self, filepath, objs, scale=1.0):
         self.filepath = filepath
         if len(objs) == 0: raise Exception("No objects selected")
-        if len(objs) > 1: raise Exception("Multiple objects is not currently supported")
         self.objs = objs
 
         sum = Vector((0,0,0))
@@ -13,26 +12,30 @@ class MDLExporter:
             sum += obj.matrix_world.translation * scale
         center = sum / len(objs)
 
-        self.skins = []
+        self.skins = {"":0}
         self.uvs = []
         self.tris = []
         self.verts = []
         self.vert_normals = []
 
         obj_verts_index = 0
+        uv_index = 0
+        skin_dict = {}
         for obj in self.objs:
             mesh = obj.to_mesh()
 
-            # Find the first image texture in the materials
-            found = False
+            has_skin = False
             for mat_slot in obj.material_slots:
-                if found: break
                 if mat_slot.material and mat_slot.material.node_tree:
                     for node in mat_slot.material.node_tree.nodes:
-                        if found: break
                         if node.type == 'TEX_IMAGE':
-                            self.skins.append(node.image.name)
-                            found = True
+                            image = node.image.name
+                            if image in self.skins:
+                                skin_dict[mat_slot.slot_index] = self.skins[image]
+                            else:
+                                self.skins[image] = len(self.skins)
+                                skin_dict[mat_slot.slot_index] = self.skins[image]
+                            has_skin = True
 
             for uv in mesh.uv_layers[0].uv:
                 self.uvs.append(Vector((uv.vector.x, 1 - uv.vector.y)))
@@ -52,17 +55,21 @@ class MDLExporter:
 
             for i, tri in enumerate(mesh.loop_triangles):
                 poly_idx = mesh.loop_triangle_polygons[i].value
+                skin_idx = 0
+                if has_skin and tri.material_index in skin_dict:
+                    skin_idx = skin_dict[tri.material_index]
 
                 vert_indecies = []
                 uv_indecies = []
                 for i in range(2, -1, -1): # loop in reverse because the normals are flipped in mdl files compared to blend
                     vert_indecies.append(obj_verts_index + tri.vertices[i])
                 for vert_idx in tri.vertices:
-                    uv_indecies.append(uvkeys[poly_idx][vert_idx])
+                    uv_indecies.append(uv_index + uvkeys[poly_idx][vert_idx])
                 uv_indecies.reverse()
-                self.tris.append((vert_indecies, uv_indecies))
+                self.tris.append((vert_indecies, uv_indecies, skin_idx))
 
-            obj_verts_index += len(mesh.vertices)
+            obj_verts_index = len(self.verts)
+            uv_index = len(self.uvs)
 
 
     # See MDLFormat.txt for documentation
@@ -102,24 +109,24 @@ class MDLExporter:
         mdl.store_32(0)
 
         # Skin
-        for i, skin in enumerate(self.skins):
+        for texture, skin_idx in self.skins.items():
             mdl.store_8(7) # type?
             mdl.store_8s(0, 3) # unused
-            mdl.store_32(len(skin) + 1)
+            mdl.store_32(len(texture) + 1)
             mdl.store_32(1)
-            mdl.store_string(f"Skin{i + 1}", 16)
-            mdl.store_string(skin); mdl.store_8(0)
+            mdl.store_string(f"Skin{skin_idx + 1}", 16)
+            mdl.store_string(texture); mdl.store_8(0)
 
         for uv in self.uvs:
             for i in range(2):
                 mdl.store_float(uv[i])
 
-        for tri, uv in self.tris:
+        for tri, uv, skin_idx in self.tris:
             for i in range(3):
                 mdl.store_16(tri[i])
             for i in range(3):
                 mdl.store_16(uv[i])
-            mdl.store_8s(0, 4)
+            mdl.store_32(skin_idx)
             mdl.store_8s(0xFF, 6)
             mdl.store_8s(0xFF, 4)
 
