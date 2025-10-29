@@ -9,6 +9,37 @@ from ..gub_byte_array import GubByteArray
 from PIL import Image
 import os
 
+
+from string import ascii_lowercase
+change_chars = "0123456789" + ascii_lowercase
+used_names = set()
+def get_unique_name(suggestion, required_suffix, max_length):
+    suggestion = suggestion.lower().replace(" ", "_")
+    base_suggestion = suggestion
+    suggestion = suggestion[:min(len(suggestion), max(0,max_length - len(required_suffix)))]
+    name = suggestion + required_suffix
+    if len(name) > max_length: return None
+
+    change_array = [0]
+    while name in used_names:
+        if len(change_array) + len(required_suffix) > max_length: return None
+        change = ""
+        for change_idx in change_array:
+            change += change_chars[change_idx]
+        suggestion = base_suggestion[:min(len(base_suggestion), max_length - len(required_suffix) - len(change))] + change
+        name = suggestion + required_suffix
+        for i in range(len(change_array)):
+            change_array[i] += 1
+            if change_array[i] >= len(change_chars):
+                change_array[i] = 0
+                if i >= len(change_array) - 1:
+                    change_array.append(0)
+                    break
+            else:
+                break
+    used_names.add(name)
+    return name
+
 def export_to_wmb(context, filepath, global_scale):
     custom_map_collection = None
     for collection in context.scene.collection.children:
@@ -27,6 +58,7 @@ def export_to_wmb(context, filepath, global_scale):
     start_line = custom_map.start_line
 
     dirpath = os.path.dirname(filepath)
+    used_names.clear()
 
     undo_map_scale_args = apply_map_scale(custom_map_collection, global_scale)
     try:
@@ -71,7 +103,12 @@ def export_to_wmb(context, filepath, global_scale):
             except ValueError: pass
 
         for entity, obj in meshes.values():
-            mdlpath = os.path.join(dirpath, entity.filename)
+            filename = get_unique_name(obj.name, ".mdl", 33)
+            if filename == None:
+                print("WARNING: could not find a unique filename")
+                continue
+            entity.filename = filename
+            mdlpath = os.path.join(dirpath, filename)
             if os.path.exists(mdlpath): print(f"WARNING: Overwriting '{mdlpath}'")
             MDLExporter(mdlpath, [obj], global_scale).export()
         export_splits(dirpath, custom_map, splits_to_add)
@@ -81,6 +118,7 @@ def export_to_wmb(context, filepath, global_scale):
         export_map_image(dirpath, custom_map)
     finally:
         unapply_map_scale(*undo_map_scale_args)
+
 
 def export_splits(dirpath, custom_map, splits):
     filepath = os.path.join(dirpath, "splitSetup.txt")
