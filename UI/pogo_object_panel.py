@@ -1,4 +1,5 @@
 import bpy
+from ..pogo_blend_preferences import get_preferences
 
 def register():
     bpy.utils.register_class(AddPogoEntityData)
@@ -141,6 +142,14 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = "object"
+
+    @classmethod
+    def poll(self, context):
+        if get_preferences().show_overrides:
+            try: context.object["pogo_entity"]
+            except KeyError: return False
+            return True
+        return False
 
     def draw(self, context):
         layout = self.layout
