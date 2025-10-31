@@ -1,4 +1,5 @@
 import bpy
+from ...pogo_blend_preferences import get_preferences
 from .wmb_exporter import WMBExporter
 from ..mdl_exporter.mdl_exporter import MDLExporter
 from .wmb_objects.wmb_entity import *
@@ -208,11 +209,14 @@ class WMBExporterOperatorFile(bpy.types.Operator, ExportHelper):
             name="Scale Multiplier",
             description="Use this to scale on export",
             min=0.0, max=1000.0,
-            default=50.0,
     )
 
     def execute(self, context):
         return bpy.ops.pogo_blend.wmb_export(filepath = self.filepath, global_scale = self.global_scale)
+
+    def invoke(self, context, event):
+        self.global_scale=get_preferences().map_scale
+        return ExportHelper.invoke(self, context, event)
 
 class WMBExporterOperator(bpy.types.Operator):
     bl_idname = "pogo_blend.wmb_export"
@@ -225,7 +229,6 @@ class WMBExporterOperator(bpy.types.Operator):
             name="Scale Multiplier",
             description="Use this to scale on export",
             min=0.0, max=1000.0,
-            default=50.0,
     )
 
     def execute(self, context):
@@ -240,6 +243,10 @@ class WMBExporterOperator(bpy.types.Operator):
         else:
             self.report({'INFO'}, f"Custom Map built in {math.floor((time.time() - start_time) * 1000)}ms")
             return {'FINISHED'}
+
+    def invoke(self, context, event):
+        self.global_scale=get_preferences().map_scale
+        return self.execute(context)
 
 # Only needed if you want to add into a dynamic menu
 def menu_func_export(self, context):
