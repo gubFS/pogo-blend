@@ -166,12 +166,9 @@ def export_texture(dirpath, image_name, image_path):
     img.save(os.path.join(dirpath, image_name), format="TGA")
 
 def apply_map_scale(custom_map_collection, scale):
-    layer_collection = bpy.context.view_layer.layer_collection.children['CustomMap']
-    bpy.context.view_layer.active_layer_collection = layer_collection
-    if bpy.ops.object.mode_set.poll():
-        bpy.ops.object.mode_set(mode='OBJECT')
-    bpy.ops.object.add(type='EMPTY', location=(0,0,0))
-    scale_root = bpy.context.object
+    scale_root = bpy.data.objects.new(name="ScaleRoot", object_data=None)
+    scale_root.location = (0,0,0)
+    custom_map_collection.objects.link(scale_root)
 
     objects = custom_map_collection.objects.values()
     objects.remove(scale_root)
@@ -192,9 +189,10 @@ class ContextError(BaseException): pass
 
 # ExportHelper is a helper class, defines filename and invoke() function which calls the file selector.
 from bpy_extras.io_utils import ExportHelper
+import time
 
-class WMBExporterOperator(bpy.types.Operator, ExportHelper):
-    bl_idname = "pogo_blend.wmb_export"
+class WMBExporterOperatorFile(bpy.types.Operator, ExportHelper):
+    bl_idname = "pogo_blend.wmb_export_file"
     bl_label = "Export Project to WMB (Pogostuck Map)"
     bl_description = "Exports this project to a Pogostuck Custom Map project"
 
@@ -213,24 +211,25 @@ class WMBExporterOperator(bpy.types.Operator, ExportHelper):
             default=50.0,
     )
 
-    # List of operator properties, the attributes will be assigned to the class instance from the operator settings before calling.
-    # use_setting: BoolProperty(
-    #     name="Example Boolean",
-    #     description="Example Tooltip",
-    #     default=True,
-    # )
-    #
-    # type: EnumProperty(
-    #     name="Example Enum",
-    #     description="Choose between two items",
-    #     items=(
-    #         ('OPT_A', "First Option", "Description one"),
-    #         ('OPT_B', "Second Option", "Description two"),
-    #     ),
-    #     default='OPT_A',
-    # )
+    def execute(self, context):
+        return bpy.ops.pogo_blend.wmb_export(filepath = self.filepath, global_scale = self.global_scale)
+
+class WMBExporterOperator(bpy.types.Operator):
+    bl_idname = "pogo_blend.wmb_export"
+    bl_label = "Export Project to WMB (Pogostuck Map)"
+    bl_description = "Exports this project to a Pogostuck Custom Map project"
+
+    filepath: bpy.props.StringProperty(name="File path")
+
+    global_scale: bpy.props.FloatProperty(
+            name="Scale Multiplier",
+            description="Use this to scale on export",
+            min=0.0, max=1000.0,
+            default=50.0,
+    )
 
     def execute(self, context):
+        start_time = time.time()
         try: export_to_wmb(context, self.filepath, self.global_scale)
         except BaseException as e:
             error_type = {'ERROR'}
@@ -238,19 +237,23 @@ class WMBExporterOperator(bpy.types.Operator, ExportHelper):
             self.report(error_type, str(e))
             raise e
             return {'CANCELLED'}
-        else: return {'FINISHED'}
+        else:
+            self.report({'INFO'}, f"Custom Map built in {math.floor((time.time() - start_time) * 1000)}ms")
+            return {'FINISHED'}
 
 # Only needed if you want to add into a dynamic menu
 def menu_func_export(self, context):
-    self.layout.operator(WMBExporterOperator.bl_idname, text="Pogostuck Custom Map")
+    self.layout.operator(WMBExporterOperatorFile.bl_idname, text="Pogostuck Custom Map")
 
 # Register and add to the "file selector" menu (required to use F3 search "Text Export Operator" for quick access).
 def register():
     bpy.utils.register_class(WMBExporterOperator)
+    bpy.utils.register_class(WMBExporterOperatorFile)
     bpy.types.TOPBAR_MT_file_export.append(menu_func_export)
 
 
 def unregister():
     bpy.utils.unregister_class(WMBExporterOperator)
+    bpy.utils.unregister_class(WMBExporterOperatorFile)
     bpy.types.TOPBAR_MT_file_export.remove(menu_func_export)
 

@@ -66,6 +66,11 @@ class PogoCollectionPanel(bpy.types.Panel):
         if collection.name != "CustomMap": return
         custom_map = collection.custom_map
 
+        op_settings = layout.operator("pogo_blend.wmb_export")
+        filepath = "/home/fpc/Drives/SecondaryDrive/SteamLibrary/steamapps/common/Pogostuck/CustomMaps/PogoBlendTest/customMap.wmb"
+        op_settings.filepath = filepath
+        op_settings.global_scale = 50.0
+
         layout.prop(custom_map, "map_name")
         layout.operator("pogo_blend.edit_map_description")
 
