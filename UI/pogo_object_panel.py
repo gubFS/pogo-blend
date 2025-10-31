@@ -144,7 +144,7 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
     bl_context = "object"
 
     @classmethod
-    def poll(self, context):
+    def poll(cls, context):
         if get_preferences().show_overrides:
             try: context.object["pogo_entity"]
             except KeyError: return False

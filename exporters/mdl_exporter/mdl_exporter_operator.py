@@ -1,4 +1,5 @@
 import bpy
+from ...pogo_blend_preferences import get_preferences
 from .mdl_exporter import MDLExporter
 
 def export_to_mdl(context, filepath, only_selected, scale):
@@ -42,6 +43,10 @@ class MDLExporterOperator(bpy.types.Operator, ExportHelper):
             default=50.0,
     )
 
+    @classmethod
+    def poll(cls, context):
+        return get_preferences().mdl_exporter
+
     def execute(self, context):
         try: export_to_mdl(context, self.filepath, self.selected_only, self.global_scale)
         except BaseException as e:
@@ -53,7 +58,8 @@ class MDLExporterOperator(bpy.types.Operator, ExportHelper):
 
 # Only needed if you want to add into a dynamic menu
 def menu_func_export(self, context):
-    self.layout.operator(MDLExporterOperator.bl_idname, text="MDL (.mdl)")
+    if MDLExporterOperator.poll(context):
+        self.layout.operator(MDLExporterOperator.bl_idname, text="MDL (.mdl)")
 
 # Register and add to the "file selector" menu (required to use F3 search "Text Export Operator" for quick access).
 def register():
