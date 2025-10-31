@@ -1,4 +1,5 @@
 from . import add_pogo_reigon
+from . import add_pogo_path
 from . import add_pogo_menu
 
 from . import pogo_object_panel
@@ -6,6 +7,7 @@ from . import pogo_collection_panel
 
 def register():
     add_pogo_reigon.register()
+    add_pogo_path.register()
     add_pogo_menu.register()
 
     pogo_object_panel.register()
@@ -13,6 +15,7 @@ def register():
 
 def unregister():
     add_pogo_reigon.unregister()
+    add_pogo_path.unregister()
     add_pogo_menu.unregister()
 
     pogo_object_panel.unregister()
