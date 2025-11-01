@@ -3,14 +3,18 @@ from ..pogo_blend_preferences import get_preferences
 
 def register():
     bpy.utils.register_class(AddPogoEntityData)
+    bpy.utils.register_class(RemovePogoEntityData)
     bpy.utils.register_class(AddPogoPathData)
+    bpy.utils.register_class(RemovePogoPathData)
     bpy.utils.register_class(PogoObjectPanel)
     bpy.utils.register_class(PogoObjectPanelOverrides)
 
 
 def unregister():
     bpy.utils.unregister_class(AddPogoEntityData)
+    bpy.utils.unregister_class(RemovePogoEntityData)
     bpy.utils.unregister_class(AddPogoPathData)
+    bpy.utils.unregister_class(RemovePogoPathData)
     bpy.utils.unregister_class(PogoObjectPanel)
     bpy.utils.unregister_class(PogoObjectPanelOverrides)
 
@@ -23,6 +27,15 @@ class AddPogoPathData(bpy.types.Operator):
         context.object.pogo_path
         return {'FINISHED'}
 
+class RemovePogoPathData(bpy.types.Operator):
+    bl_idname = "pogo_blend.remove_pogo_path_data"
+    bl_label = "Remove pogo data"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        del context.object["pogo_path"]
+        return {'FINISHED'}
+
 class AddPogoEntityData(bpy.types.Operator):
     bl_idname = "pogo_blend.add_pogo_entity_data"
     bl_label = "Add pogo data"
@@ -30,6 +43,15 @@ class AddPogoEntityData(bpy.types.Operator):
 
     def execute(self, context):
         context.object.pogo_entity
+        return {'FINISHED'}
+
+class RemovePogoEntityData(bpy.types.Operator):
+    bl_idname = "pogo_blend.remove_pogo_entity_data"
+    bl_label = "Remove pogo data"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        del context.object["pogo_entity"]
         return {'FINISHED'}
 
 class PogoObjectPanel(bpy.types.Panel):
@@ -63,7 +85,10 @@ class PogoObjectPanel(bpy.types.Panel):
         except KeyError:
             layout.operator("pogo_blend.add_pogo_path_data")
             return
-        layout.label(text="This curve is a Pogo Path")
+        row = layout.row()
+        row.label(text="This curve is a Pogo Path")
+        row.separator_spacer()
+        row.operator("pogo_blend.remove_pogo_path_data", text="", icon='X')
 
     def draw_mesh_panel(self, obj, layout):
         try: obj["pogo_entity"]
@@ -73,7 +98,9 @@ class PogoObjectPanel(bpy.types.Panel):
 
         entity = obj.pogo_entity
 
-        layout.prop(obj, "name")
+        row = layout.row()
+        row.prop(obj, "name")
+        row.operator("pogo_blend.remove_pogo_entity_data", text="", icon='X')
         layout.prop(obj, "location")
         layout.prop(obj, "rotation_euler", text="Rotation")
         layout.prop(obj, "scale")
