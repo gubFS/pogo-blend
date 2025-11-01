@@ -71,23 +71,33 @@ class PogoCollectionPanel(bpy.types.Panel):
         op_settings.filepath = filepath
         op_settings.global_scale = 50.0
 
-        layout.prop(custom_map, "map_name")
-        layout.operator("pogo_blend.edit_map_description")
+        map_information_panel_header, map_information_panel = layout.panel("map_information_panel")
+        map_information_panel_header.label(text="Map Information")
+        if map_information_panel:
+            map_information_panel.prop(custom_map, "map_name")
+            map_information_panel.operator("pogo_blend.edit_map_description")
 
-        row = layout.row()
-        row.prop(custom_map, "map_image")
-        row.operator("pogo_blend.select_map_image", icon="IMAGE_DATA", text="")
+            row = map_information_panel.row()
+            row.prop(custom_map, "map_image")
+            row.operator("pogo_blend.select_map_image", icon="IMAGE_DATA", text="")
 
-        layout.prop(custom_map, "spawn", placeholder="Empty", icon='EMPTY_DATA')
-        layout.prop(custom_map, "path_progress", placeholder="Curve", icon='CURVE_DATA')
-        layout.prop(custom_map, "start_line", placeholder='Mesh', icon='MESH_DATA')
+        required_objects_panel_header, required_objects_panel = layout.panel("required_objects_panel")
+        required_objects_panel_header.label(text="Required Objects")
+        if required_objects_panel:
+            required_objects_panel.prop(custom_map, "spawn", placeholder="Empty", icon='EMPTY_DATA')
+            required_objects_panel.prop(custom_map, "path_progress", placeholder="Curve", icon='CURVE_DATA')
+            required_objects_panel.prop(custom_map, "start_line", placeholder='Mesh', icon='MESH_DATA')
 
-        row = layout.row()
-        row.template_list("POGO_UL_pogo_blend_split_list", "", context.collection.custom_map, "splits", context.collection.custom_map, "active_split_idx")
 
-        col = row.column()
-        col.operator("pogo_blend.active_split_move", icon='TRIA_UP', text="").direction = 'UP'
-        col.operator("pogo_blend.active_split_move", icon='TRIA_DOWN', text="").direction = 'DOWN'
+        splits_panel_header, splits_panel = layout.panel("splits_panel")
+        splits_panel_header.label(text="Splits")
+        if splits_panel:
+            row = splits_panel.row()
+            row.template_list("POGO_UL_pogo_blend_split_list", "", context.collection.custom_map, "splits", context.collection.custom_map, "active_split_idx")
+
+            col = row.column()
+            col.operator("pogo_blend.active_split_move", icon='TRIA_UP', text="").direction = 'UP'
+            col.operator("pogo_blend.active_split_move", icon='TRIA_DOWN', text="").direction = 'DOWN'
 
         mode_panel_header, mode_panel = layout.panel("mode_panel")
         mode_panel_header.label(text="Modes")
