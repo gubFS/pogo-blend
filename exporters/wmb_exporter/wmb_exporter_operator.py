@@ -66,6 +66,7 @@ def export_to_wmb(context, filepath, global_scale):
         wmb_objects = [
             WMBInfo(),
             PogoSpawn(spawn),
+            PogoModeSetup(custom_map),
             PogoPathProgress(path_progress),
             PogoStartLine(start_line)
         ]

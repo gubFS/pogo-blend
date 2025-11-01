@@ -12,7 +12,6 @@ class WMBEntity:
         self.scale = obj.scale if entity.filename_override == "" else (1,1,1)
         self.name = obj.name if entity.name_override == "" else entity.name_override
 
-        # TODO: write real filename when converted to .mdl
         self.filename = f"{obj.to_mesh().name}.mdl" if entity.filename_override == ""\
             else entity.filename_override
 
@@ -100,6 +99,34 @@ class PogoSpawn(WMBEntity):
         self.material = "ndef"
         self.string1 = ""
         self.string2 = ""
+
+class PogoModeSetup(WMBEntity):
+    def __init__(self, custom_map):
+        self.type = 7 # 7 is the ID for entity types
+        self.origin = (0,0,0)
+        self.angle = (0,0,0)
+        self.scale = (1,1,1)
+        self.name = "modeSetup"
+        self.filename = ""
+        self.action = "customMapSetup_act"
+        self.string1 = ""
+        self.string2 = ""
+        self.skills = []
+
+        flags = 1 << 8 | 1 << 9 | 1 << 17 # invis, passable, unlit
+        if custom_map.double_jump: flags |= 1 << 2
+        if custom_map.puzzle: flags |= 1 << 3
+        if custom_map.no_boost: flags |= 1 << 4
+        if custom_map.no_bonk: flags |= 1 << 5
+        if custom_map.mushroom_power: flags |= 1 << 6
+        if custom_map.ice: flags |= 1 << 7
+        self.flags = flags
+
+        self.ambient = 0.0
+        self.albedo = 50.0
+        self.path = 0
+        self.entity2 = 0
+        self.material = "ndef"
 
 class PogoStartLine(WMBEntity):
     def __init__(self, obj):

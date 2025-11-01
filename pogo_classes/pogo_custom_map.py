@@ -50,3 +50,11 @@ class PogoCustomMap(bpy.types.PropertyGroup):
     path_progress: bpy.props.PointerProperty(type=bpy.types.Object, name="Progress Path", poll=path_poll)
     start_line: bpy.props.PointerProperty(type=bpy.types.Object, name="Start Line", poll=lambda prop, obj: obj.type == 'MESH')
 
+    double_jump: bpy.props.BoolProperty(name="Double Jump")
+    puzzle: bpy.props.BoolProperty(name="Puzzle")
+    no_boost: bpy.props.BoolProperty(name="No boost")
+    no_bonk: bpy.props.BoolProperty(name="No bonk")
+    mushroom_power: bpy.props.BoolProperty(name="Mushroom power", description="Enables mushrooms to have a bounce power", default=True)
+    ice: bpy.props.BoolProperty(name="Ice")
+
+

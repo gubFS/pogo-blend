@@ -88,3 +88,18 @@ class PogoCollectionPanel(bpy.types.Panel):
         col = row.column()
         col.operator("pogo_blend.active_split_move", icon='TRIA_UP', text="").direction = 'UP'
         col.operator("pogo_blend.active_split_move", icon='TRIA_DOWN', text="").direction = 'DOWN'
+
+        mode_panel_header, mode_panel = layout.panel("mode_panel")
+        mode_panel_header.label(text="Modes")
+        if mode_panel:
+            row = mode_panel.row()
+            col = row.column()
+            col.prop(custom_map, "double_jump")
+            col.prop(custom_map, "no_boost")
+            col.prop(custom_map, "ice")
+
+            col = row.column()
+            col.prop(custom_map, "puzzle")
+            col.prop(custom_map, "no_bonk")
+            col.prop(custom_map, "mushroom_power")
+

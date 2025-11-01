@@ -8,7 +8,11 @@
       }
     ],
     "skills": [
-
+        {
+            "identifier": "skill_1",
+            "name": "Power",
+            "default": 0.0
+        }
     ]
   },
   "mushroomFullObj_act": {
