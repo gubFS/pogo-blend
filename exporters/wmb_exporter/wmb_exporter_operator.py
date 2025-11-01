@@ -246,6 +246,18 @@ class WMBExporterOperator(bpy.types.Operator):
             return {'FINISHED'}
 
     def invoke(self, context, event):
+        self.filepath = get_preferences().custom_maps_path
+        if self.filepath == "":
+            self.report({'INFO'}, "The Custom Maps directory is not defined. Select it and try again. It can be accessed manually in the preferences for the Pogo Blend addon")
+            bpy.ops.pogo_blend.select_custom_maps_dir('INVOKE_DEFAULT')
+            return {'CANCELLED'}
+        if not os.path.exists(self.filepath): 
+            self.report('ERROR', "The Custom Maps directory does not exist. Select a valid directory in the preferences for the Pogo Blend addon")
+            return {'CANCELLED'}
+        self.filepath = os.path.join(self.filepath, bpy.data.collections["CustomMap"].custom_map.map_name)
+        if not os.path.exists(self.filepath):
+            os.mkdir(self.filepath)
+        self.filepath = os.path.join(self.filepath, "customMap.wmb")
         self.global_scale=get_preferences().map_scale
         return self.execute(context)
 

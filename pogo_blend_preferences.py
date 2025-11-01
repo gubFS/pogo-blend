@@ -1,5 +1,31 @@
 import bpy
 
+class SelectCustomMapsDir(bpy.types.Operator):
+    bl_idname = "pogo_blend.select_custom_maps_dir"
+    bl_label = "Select the custom maps directory"
+    bl_options = {'REGISTER'}
+
+    directory: bpy.props.StringProperty(
+        name="Custom Maps directory",
+        description="New maps will be created in the selected directory",
+        subtype='DIR_PATH'
+    )
+
+    # Filters folders
+    filter_folder: bpy.props.BoolProperty(
+        default=True,
+        options={"HIDDEN"}
+    )
+
+    def execute(self, context):
+        get_preferences().custom_maps_path = self.directory
+        return {'FINISHED'}
+
+    def invoke(self, context, event):
+        context.window_manager.fileselect_add(self)
+        # Tells Blender to hang on for the slow user input
+        return {'RUNNING_MODAL'}
+
 class PogoBlendPrefrences(bpy.types.AddonPreferences):
     bl_idname = __package__
 
@@ -36,7 +62,9 @@ class PogoBlendPrefrences(bpy.types.AddonPreferences):
 
         layout.prop(self, "mdl_importer")
         layout.prop(self, "mdl_exporter")
-        layout.prop(self, "custom_maps_path")
+        row = layout.row()
+        row.prop(self, "custom_maps_path")
+        row.operator("pogo_blend.select_custom_maps_dir", text="", icon='FILE_FOLDER')
         layout.prop(self, "map_scale")
         layout.prop(self, "show_overrides")
 
@@ -44,7 +72,9 @@ def get_preferences():
     return bpy.context.preferences.addons[__package__].preferences
 
 def register():
+    bpy.utils.register_class(SelectCustomMapsDir)
     bpy.utils.register_class(PogoBlendPrefrences)
 
 def unregister():
+    bpy.utils.unregister_class(SelectCustomMapsDir)
     bpy.utils.unregister_class(PogoBlendPrefrences)
