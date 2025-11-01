@@ -32,6 +32,7 @@ class ActiveSplitMove(bpy.types.Operator):
         elif self.direction == 'UP':
             new_idx = max(current_idx - 1, 0)
         custom_map.splits.move(current_idx, new_idx)
+        custom_map.active_split_idx = new_idx
 
         return {'FINISHED'}
 
