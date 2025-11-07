@@ -7,16 +7,26 @@ from ..gub_byte_array import GubByteArray
 
 
 class MDLExporter:
-    def __init__(self, filepath, objs, scale=1.0):
+    def __init__(
+        self,
+        filepath,
+        objs,
+        scale=1.0,
+        bake_location=False,
+        bake_rotation=False,
+        bake_scale=False,
+    ):
         self.filepath = filepath
         if len(objs) == 0:
             raise Exception("No objects selected")
         self.objs = objs
 
-        sum = Vector((0, 0, 0))
-        for obj in objs:
-            sum += obj.matrix_world.translation * scale
-        center = sum / len(objs)
+        center = Vector((0, 0, 0))
+        if not bake_location:
+            sum = Vector((0, 0, 0))
+            for obj in objs:
+                sum += obj.matrix_world.translation * scale
+            center = sum / len(objs)
 
         self.skins = {"": 0}
         self.uvs = []
@@ -52,11 +62,21 @@ class MDLExporter:
             for uv in mesh.uv_layers[0].uv:
                 self.uvs.append(Vector((uv.vector.x, 1 - uv.vector.y)))
 
+            loc = obj.matrix_world.translation
+            rot = obj.matrix_world.to_euler()
+            scl = obj.matrix_world.to_scale()
             for vert in mesh.vertices:
-                self.verts.append(
-                    (obj.matrix_world.translation * scale - center) + vert.co * scale
-                )
-                self.vert_normals.append(vert.normal)
+                normal = vert.normal.copy()
+                vert = vert.co.copy()
+                vert *= scale
+                if bake_rotation:
+                    vert.rotate(rot)
+                    normal.rotate(rot)
+                if bake_scale:
+                    vert *= scl
+
+                self.verts.append((loc * scale - center) + vert)
+                self.vert_normals.append(normal)
 
             total_uvs = 0
             uvkeys = {}
