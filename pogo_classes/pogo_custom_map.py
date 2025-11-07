@@ -3,20 +3,6 @@ import bpy
 from .. import pogo_blend_utils as pbu
 
 
-def register():
-    bpy.utils.register_class(PogoSplit)
-    bpy.utils.register_class(PogoCustomMap)
-    bpy.utils.register_class(ActiveSplitMove)
-    bpy.types.Collection.custom_map = bpy.props.PointerProperty(type=PogoCustomMap)
-
-
-def unregister():
-    bpy.utils.unregister_class(PogoSplit)
-    bpy.utils.unregister_class(PogoCustomMap)
-    bpy.utils.unregister_class(ActiveSplitMove)
-    del bpy.types.Collection.custom_map
-
-
 class PogoSplit(bpy.types.PropertyGroup):
     split_reigon: bpy.props.PointerProperty(type=bpy.types.Object)
 
@@ -74,3 +60,17 @@ class PogoCustomMap(bpy.types.PropertyGroup):
         default=True,
     )
     ice: bpy.props.BoolProperty(name="Ice")
+
+
+def register():
+    bpy.utils.register_class(PogoSplit)
+    bpy.utils.register_class(PogoCustomMap)
+    bpy.utils.register_class(ActiveSplitMove)
+    bpy.types.Collection.custom_map = bpy.props.PointerProperty(type=PogoCustomMap)
+
+
+def unregister():
+    bpy.utils.unregister_class(PogoSplit)
+    bpy.utils.unregister_class(PogoCustomMap)
+    bpy.utils.unregister_class(ActiveSplitMove)
+    del bpy.types.Collection.custom_map

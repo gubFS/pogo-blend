@@ -4,16 +4,6 @@ import os
 import bpy
 
 
-def register():
-    bpy.utils.register_class(PogoEntity)
-    bpy.types.Object.pogo_entity = bpy.props.PointerProperty(type=PogoEntity)
-
-
-def unregister():
-    bpy.utils.unregister_class(PogoEntity)
-    del bpy.types.Object.pogo_entity
-
-
 class PogoEntity(bpy.types.PropertyGroup):
     name_override: bpy.props.StringProperty()
     filename_override: bpy.props.StringProperty()
@@ -155,3 +145,13 @@ class PogoEntity(bpy.types.PropertyGroup):
         )
 
         return flags
+
+
+def register():
+    bpy.utils.register_class(PogoEntity)
+    bpy.types.Object.pogo_entity = bpy.props.PointerProperty(type=PogoEntity)
+
+
+def unregister():
+    bpy.utils.unregister_class(PogoEntity)
+    del bpy.types.Object.pogo_entity

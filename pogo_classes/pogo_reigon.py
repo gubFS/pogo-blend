@@ -1,16 +1,6 @@
 import bpy
 
 
-def register():
-    bpy.utils.register_class(PogoReigon)
-    bpy.types.Object.pogo_reigon = bpy.props.PointerProperty(type=PogoReigon)
-
-
-def unregister():
-    bpy.utils.unregister_class(PogoReigon)
-    del bpy.types.Object.pogo_reigon
-
-
 class PogoReigon(bpy.types.PropertyGroup):
     reigon_types = [
         ("ndef", "", ""),
@@ -50,3 +40,13 @@ class PogoReigon(bpy.types.PropertyGroup):
         name="Gravity angle", update=update_reigon_type
     )  # 90 is -x 180 is +z
     gravity_power: bpy.props.FloatProperty(name="Gravity power", default=100.0)
+
+
+def register():
+    bpy.utils.register_class(PogoReigon)
+    bpy.types.Object.pogo_reigon = bpy.props.PointerProperty(type=PogoReigon)
+
+
+def unregister():
+    bpy.utils.unregister_class(PogoReigon)
+    del bpy.types.Object.pogo_reigon
