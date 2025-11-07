@@ -1,6 +1,7 @@
 from ..gub_byte_array import GubByteArray
 
-class WMBExporter():
+
+class WMBExporter:
     def __init__(self, filepath, wmb_objects):
         self.filepath = filepath
         self.wmb_objects = wmb_objects
@@ -23,7 +24,9 @@ class WMBExporter():
             encoded_objects.store_buffer(encoded_object)
 
         header.store_32_at(len(header), object_list_offset)
-        header.store_32_at(len(objects_header) + len(encoded_objects), object_list_offset + 4)
+        header.store_32_at(
+            len(objects_header) + len(encoded_objects), object_list_offset + 4
+        )
 
         with open(self.filepath, "wb") as f:
             f.write(header)
@@ -33,33 +36,32 @@ class WMBExporter():
     def get_header_bytes(self):
         header = GubByteArray()
 
-        header.store_string("WMB7") # file format version
+        header.store_string("WMB7")  # file format version
         # the following are "LIST" objects that include a offset from the start of the file and a length in bytes
-        header.store_64(0) # palettes WMB1..6 only
-        header.store_64(0) # legacy1 WMB1..6 only
-        header.store_64(0) # texturess, not needed?
-        header.store_64(0) # legacy2 WMB1..6 only
-        header.store_64(0) # pvs BSP only
-        header.store_64(0) # bsp_nodes BSP only
-        header.store_64(0) # materials, not needed?
-        header.store_64(0) # legacy3 WMB1..6 only
-        header.store_64(0) # legacy4 WMB1..6 only
-        header.store_64(0) # aabb_hulls WMB1...6 only
-        header.store_64(0) # bsp_leafs BSP only
-        header.store_64(0) # bsp_blocks BSP only
-        header.store_64(0) # legacy5 WMB1...6 only
-        header.store_64(0) # legacy6 WMB1..6 only
-        header.store_64(0) # legacy7 WMB1..6 only
+        header.store_64(0)  # palettes WMB1..6 only
+        header.store_64(0)  # legacy1 WMB1..6 only
+        header.store_64(0)  # texturess, not needed?
+        header.store_64(0)  # legacy2 WMB1..6 only
+        header.store_64(0)  # pvs BSP only
+        header.store_64(0)  # bsp_nodes BSP only
+        header.store_64(0)  # materials, not needed?
+        header.store_64(0)  # legacy3 WMB1..6 only
+        header.store_64(0)  # legacy4 WMB1..6 only
+        header.store_64(0)  # aabb_hulls WMB1...6 only
+        header.store_64(0)  # bsp_leafs BSP only
+        header.store_64(0)  # bsp_blocks BSP only
+        header.store_64(0)  # legacy5 WMB1...6 only
+        header.store_64(0)  # legacy6 WMB1..6 only
+        header.store_64(0)  # legacy7 WMB1..6 only
 
         # object list offset goes here but i will write it later
-        global object_list_offset 
+        global object_list_offset
         object_list_offset = header.get_position()
-        header.store_64(0) # write it for now to keep proper offsets
+        header.store_64(0)  # write it for now to keep proper offsets
 
-        header.store_64(0) # lightmaps, not needed?
-        header.store_64(0) # blocks, not used in caterpillar
-        header.store_64(0) # legacy8 WMB1..6 only
-        header.store_64(0) # lightmaps_terrain, not used???
+        header.store_64(0)  # lightmaps, not needed?
+        header.store_64(0)  # blocks, not used in caterpillar
+        header.store_64(0)  # legacy8 WMB1..6 only
+        header.store_64(0)  # lightmaps_terrain, not used???
 
         return header
-

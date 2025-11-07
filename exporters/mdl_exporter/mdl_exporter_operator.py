@@ -1,24 +1,29 @@
 import bpy
-from ...pogo_blend_preferences import get_preferences
+
+from ... import pogo_blend_utils as pbu
 from .mdl_exporter import MDLExporter
+
 
 def export_to_mdl(context, filepath, only_selected, scale):
     objects = context.scene.collection.all_objects
-    if only_selected: objects = context.selected_objects
+    if only_selected:
+        objects = context.selected_objects
 
     objs = []
     for obj in objects:
-        if obj.type == 'MESH':
+        if obj.type == "MESH":
             objs.append(obj)
 
     print(f"Exporting {len(objs)} objects to mdl")
     MDLExporter(filepath, objs, scale).export()
 
+
 # ExportHelper is a helper class, defines filename and invoke() function which calls the file selector.
 from bpy_extras.io_utils import ExportHelper
 
+
 class MDLExporterOperator(bpy.types.Operator, ExportHelper):
-    bl_idname = "pogo_blend.mdl_export"
+    bl_idname = "pogo_blend.export_mdl"
     bl_label = "Export meshes to MDL (Gamestudio A8)"
     bl_description = "Exports meshes to MDL files. Does not support bones."
 
@@ -26,7 +31,7 @@ class MDLExporterOperator(bpy.types.Operator, ExportHelper):
 
     filter_glob: bpy.props.StringProperty(
         default="*.mdl",
-        options={'HIDDEN'},
+        options={"HIDDEN"},
         maxlen=255,  # Max internal buffer length, longer would be clamped.
     )
 
@@ -37,29 +42,34 @@ class MDLExporterOperator(bpy.types.Operator, ExportHelper):
     )
 
     global_scale: bpy.props.FloatProperty(
-            name="Scale Multiplier",
-            description="Use this to scale on export",
-            min=0.0, max=1000.0,
-            default=50.0,
+        name="Scale Multiplier",
+        description="Use this to scale on export",
+        min=0.0,
+        max=1000.0,
+        default=50.0,
     )
 
     @classmethod
     def poll(cls, context):
-        return get_preferences().mdl_exporter
+        return pbu.get_preferences().mdl_exporter
 
     def execute(self, context):
-        try: export_to_mdl(context, self.filepath, self.selected_only, self.global_scale)
+        try:
+            export_to_mdl(context, self.filepath, self.selected_only, self.global_scale)
         except BaseException as e:
-            error_type = {'ERROR'}
+            error_type = {"ERROR"}
             self.report(error_type, str(e))
-            raise e
-            return {'CANCELLED'}
-        else: return {'FINISHED'}
+            raise e  # NOTE: Only for debugging purposes
+            return {"CANCELLED"}
+        else:
+            return {"FINISHED"}
+
 
 # Only needed if you want to add into a dynamic menu
 def menu_func_export(self, context):
     if MDLExporterOperator.poll(context):
         self.layout.operator(MDLExporterOperator.bl_idname, text="MDL (.mdl)")
+
 
 # Register and add to the "file selector" menu (required to use F3 search "Text Export Operator" for quick access).
 def register():
@@ -70,4 +80,3 @@ def register():
 def unregister():
     bpy.utils.unregister_class(MDLExporterOperator)
     bpy.types.TOPBAR_MT_file_export.remove(menu_func_export)
-

@@ -1,4 +1,6 @@
 import struct
+
+
 class GubByteArray(bytearray):
     def __init__(self):
         self.big_endian = False
@@ -43,11 +45,13 @@ class GubByteArray(bytearray):
     def store_float(self, value):
         self.pack("f", value)
 
-    def store_float_buffer(self, floats, amount = -1):
-        if amount == -1: amount = len(floats)
+    def store_float_buffer(self, floats, amount=-1):
+        if amount == -1:
+            amount = len(floats)
         for i in range(amount):
             f = 0.0
-            if i < len(floats): f = floats[i]
+            if i < len(floats):
+                f = floats[i]
             self.store_float(f)
 
     def store_buffer(self, buffer):
@@ -60,7 +64,8 @@ class GubByteArray(bytearray):
         for vec in vecs:
             self.store_vec3f(vec)
 
-    def store_string(self, value, size = -1):
-        if size == -1: size = len(value)
+    def store_string(self, value, size=-1):
+        if size == -1:
+            size = len(value)
         format = f"{size}s"
-        self.pack(format, value.encode('utf-8'))
+        self.pack(format, value.encode("utf-8"))

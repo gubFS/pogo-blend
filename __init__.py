@@ -1,13 +1,16 @@
-import os
 import importlib
+import os
 
 modules = []
 for root, dirs, files in os.walk(os.path.dirname(__file__)):
-    if "__pycache__" in root or ".git" in root: continue
+    if "__pycache__" in root or ".git" in root:
+        continue
     for file in files:
         filename, file_extension = os.path.splitext(file)
-        if file_extension != ".py": continue
-        if file == "__init__.py": continue
+        if file_extension != ".py":
+            continue
+        if file == "__init__.py":
+            continue
         if filename in locals():
             importlib.reload(locals()[filename])
             modules.append(locals()[filename])
@@ -19,7 +22,6 @@ for root, dirs, files in os.walk(os.path.dirname(__file__)):
             modules.append(locals()[filename])
             # print(f"loaded: {filename}")
 
-import bpy
 
 def register():
     for module in modules:
@@ -27,9 +29,9 @@ def register():
         if callable(register):
             module.register()
 
+
 def unregister():
     for module in modules:
         unregister = getattr(module, "unregister", None)
         if callable(unregister):
             module.unregister()
-

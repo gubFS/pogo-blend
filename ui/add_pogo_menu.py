@@ -1,5 +1,6 @@
 import bpy
 
+
 class AddPogoMenu(bpy.types.Menu):
     bl_label = "Pogo Blend"
     bl_idname = "OBJECT_MT_pogo_blend_menu"
@@ -7,8 +8,8 @@ class AddPogoMenu(bpy.types.Menu):
     def draw(self, context):
         layout = self.layout
 
-        layout.operator("pogo_blend.add_pogo_reigon", icon='CUBE')
-        layout.operator("pogo_blend.add_pogo_path", icon='CURVES')
+        layout.operator("pogo_blend.add_pogo_reigon", icon="CUBE")
+        layout.operator("pogo_blend.add_pogo_path", icon="CURVES")
 
 
 def draw_item(self, context):

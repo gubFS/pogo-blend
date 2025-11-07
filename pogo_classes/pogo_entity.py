@@ -1,14 +1,18 @@
-import bpy
-import os
 import json
+import os
+
+import bpy
+
 
 def register():
     bpy.utils.register_class(PogoEntity)
     bpy.types.Object.pogo_entity = bpy.props.PointerProperty(type=PogoEntity)
 
+
 def unregister():
     bpy.utils.unregister_class(PogoEntity)
     del bpy.types.Object.pogo_entity
+
 
 class PogoEntity(bpy.types.PropertyGroup):
     name_override: bpy.props.StringProperty()
@@ -18,98 +22,84 @@ class PogoEntity(bpy.types.PropertyGroup):
     string1_override: bpy.props.StringProperty()
     string2_override: bpy.props.StringProperty()
 
-    material: bpy.props.EnumProperty(items=[
-        ("ndef", "", ""),
-        ("appAGeoDefault_mat", "appAGeoDefault_mat", ""), # albedo changes greyscale of object, 50 albedo is 50% greyscale. 100 albedo is no greyscale
-        ("appAGeoXRay_mat", "appAGeoXRay_mat", ""),
-        ("anvil_mat", "Anvil", ""),
-        ("mat_bug", "mat_bug", ""), # similar to traffic cone
-        ("characterSimple_mat", "characterSimple_mat", ""),
-        ("cloud_mat", "cloud_mat", ""),
-        ("coconut_mat", "coconut_mat", ""),
-        ("cmFruitTex_mat", "cmFruitTex_mat", ""), # this is the same material as map3FruitTex_mat, except that texture coordinates are not mirrored when they leave the 0..1 square area
-        ("egg_mat", "egg_mat", ""),
-        ("fruit_mat", "fruit_mat", ""), # map 1 main material, uses gradientTest mostly
-        ("fruitTex_mat", "fruitTex_mat", ""), # map 1 main material but uses custom textures, such as for the red mushrooms
-        ("iceSnow_mat", "iceSnow_mat", ""), 
-        ("map3Carrots_mat", "map3Carrots_mat", ""), 
-        ("map3Chain_mat", "map3Chain_mat", ""), 
-        ("map3ClothBee_mat", "map3ClothBee_mat", ""), 
-        ("map3Eggplants_mat", "map3Eggplants_mat", ""), 
-        ("map3FruitDefault_mat", "map3FruitDefault_mat", ""), # see map 1 notes
-        ("map3FruitTex_mat", "map3FruitTex_mat", ""), 
-        ("map3GoldSlime_mat", "map3GoldSlime_mat", ""), 
-        ("mymetal_mat", "mymetal_mat", ""),
-        ("monoSpikes_mat", "monoSpikes_mat", ""),
-        ("monoWheel_mat", "monoWheel_mat", ""),
-        ("mountain_mat", "mountain_mat", ""),
-        ("pencil_mat", "pencil_mat", ""),
-        ("pinkSap_mat", "pinkSap_mat", ""),
-        ("pogostick_mat", "pogostick_mat", ""),
-        ("pogostickGold_mat", "pogostickGold_mat", ""),
-        ("slime_mat", "slime_mat", ""), 
-        ("startFinish_mat", "startFinish_mat", ""), 
-        ("toggleBlock_mat", "toggleBlock_mat", ""), 
-        ("mat_trafficCone", "mat_trafficCone", ""), 
-        ("mat_ushanka", "mat_ushanka", ""),
-        ("viking_mat", "viking_mat", ""),
-        ("wood_mat", "wood_mat", ""),
-        ("cmNormalmapping", "cmNormalmapping", ""),
-        ("cmUnlit", "cmUnlit", ""),
-        ("cmPixelated", "cmPixelated", ""),
-    ], name="Material", default="ndef")
+    material_enums = [("ndef", "", "")]
+    with open(os.path.join(os.path.dirname(__file__), "materials.json"), "r") as f_in:
+        materials = json.load(f_in)
+        for material, config in materials.items():
+            if "disable" in config and config["disable"] == True:
+                continue
+            material_enums.append(
+                (
+                    material,
+                    config["name"] if "name" in config else material,
+                    config["description"] if "description" in config else "",
+                )
+            )
+    material: bpy.props.EnumProperty(
+        items=material_enums, name="Material", default="ndef"
+    )
 
-    flag_invisible: bpy.props.BoolProperty(name="Invisble") # = 8,
-    flag_passable: bpy.props.BoolProperty(name="Passable") # = 9,
-    flag_transparent: bpy.props.BoolProperty(name="Transparent") # = 10,
-    flag_unlit: bpy.props.BoolProperty(name="Unlit") # = 17,
-    flag_shadow: bpy.props.BoolProperty(name="Shadow") # = 18, # 
-    flag_metal: bpy.props.BoolProperty(name="Kill") # = 22, # kill
-    flag_cast: bpy.props.BoolProperty(name="Cast") # = 23, # 
-    flag_polygon: bpy.props.BoolProperty(name="Collision") # = 26, # collision. if polygon isn't set then its passable
+    flag_invisible: bpy.props.BoolProperty(name="Invisble")  # = 8,
+    flag_passable: bpy.props.BoolProperty(name="Passable")  # = 9,
+    flag_transparent: bpy.props.BoolProperty(name="Transparent")  # = 10,
+    flag_unlit: bpy.props.BoolProperty(name="Unlit")  # = 17,
+    flag_shadow: bpy.props.BoolProperty(name="Shadow")  # = 18, #
+    flag_metal: bpy.props.BoolProperty(name="Kill")  # = 22, # kill
+    flag_cast: bpy.props.BoolProperty(name="Cast")  # = 23, #
+    flag_polygon: bpy.props.BoolProperty(
+        name="Collision"
+    )  # = 26, # collision. if polygon isn't set then its passable
 
-    flag_overlay: bpy.props.BoolProperty() # = 12,
-    flag_flare: bpy.props.BoolProperty() # = 15,
-    flag_nofilter: bpy.props.BoolProperty() # = 16,
-    flag_nofog: bpy.props.BoolProperty() # = 20, # 
-    flag_bright: bpy.props.BoolProperty() # = 21, # 
-    flag_local: bpy.props.BoolProperty() # = 25, # 
-    flag_bbox: bpy.props.BoolProperty() # = 29, # 
+    flag_overlay: bpy.props.BoolProperty()  # = 12,
+    flag_flare: bpy.props.BoolProperty()  # = 15,
+    flag_nofilter: bpy.props.BoolProperty()  # = 16,
+    flag_nofog: bpy.props.BoolProperty()  # = 20,
+    flag_bright: bpy.props.BoolProperty()  # = 21,
+    flag_local: bpy.props.BoolProperty()  # = 25,
+    flag_bbox: bpy.props.BoolProperty()  # = 29,
 
     ambient: bpy.props.FloatProperty(name="Ambient")
     albedo: bpy.props.FloatProperty(name="Albedo", default=50.0)
 
     action_enums = [("ndef", "", "")]
-    with open(os.path.join(os.path.dirname(__file__), "actions.json"), 'r') as f_in: 
+    with open(os.path.join(os.path.dirname(__file__), "actions.json"), "r") as f_in:
         actions = json.load(f_in)
         for action, config in actions.items():
-            if "disable" in config and config["disable"] == True: continue
-            action_enums.append((action, config["name"] if "name" in config else action, config["description"] if "description" in config else ""))
+            if "disable" in config and config["disable"] == True:
+                continue
+            action_enums.append(
+                (
+                    action,
+                    config["name"] if "name" in config else action,
+                    config["description"] if "description" in config else "",
+                )
+            )
 
     def on_action1_change(self, context):
         value = self.action1
         if value == "ndef" and self.action2 != "ndef":
             self.action1 = self.action2
             self.action2 = "ndef"
-    action1: bpy.props.EnumProperty(items=action_enums,name="Action", default="ndef", update=on_action1_change)
-    action2: bpy.props.EnumProperty(items=action_enums,name="Action2", default="ndef")
 
-    flag_1: bpy.props.BoolProperty(name="flag_1") # = 0,
-    flag_2: bpy.props.BoolProperty(name="flag_2") # = 1,
-    flag_3: bpy.props.BoolProperty(name="flag_3") # = 2,
-    flag_4: bpy.props.BoolProperty(name="flag_4") # = 3,
-    flag_5: bpy.props.BoolProperty(name="flag_5") # = 4,
-    flag_6: bpy.props.BoolProperty(name="flag_6") # = 5,
-    flag_7: bpy.props.BoolProperty(name="Ice") # = 6, # ICE
-    flag_8: bpy.props.BoolProperty(name="Bonk") # = 7,
+    action1: bpy.props.EnumProperty(
+        items=action_enums, name="Action", default="ndef", update=on_action1_change
+    )
+    action2: bpy.props.EnumProperty(items=action_enums, name="Action2", default="ndef")
+
+    flag_1: bpy.props.BoolProperty(name="flag_1")  # = 0,
+    flag_2: bpy.props.BoolProperty(name="flag_2")  # = 1,
+    flag_3: bpy.props.BoolProperty(name="flag_3")  # = 2,
+    flag_4: bpy.props.BoolProperty(name="flag_4")  # = 3,
+    flag_5: bpy.props.BoolProperty(name="flag_5")  # = 4,
+    flag_6: bpy.props.BoolProperty(name="flag_6")  # = 5,
+    flag_7: bpy.props.BoolProperty(name="Ice")  # = 6, # ICE
+    flag_8: bpy.props.BoolProperty(name="Bonk")  # = 7,
 
     flag_auto_collision: bpy.props.BoolProperty(name="Auto Collision")
 
-    def path_poll(prop, obj):
-            try: obj["pogo_path"]
-            except KeyError: return False
-            return True
-    path: bpy.props.PointerProperty(type=bpy.types.Object, name="Path", poll=path_poll)
+    path: bpy.props.PointerProperty(
+        type=bpy.types.Object, name="Path", poll=lambda prop, obj: "pogo_path" in obj
+    )
 
     skill_1: bpy.props.FloatProperty(name="skill_1")
     skill_2: bpy.props.FloatProperty(name="skill_2")
@@ -132,38 +122,36 @@ class PogoEntity(bpy.types.PropertyGroup):
     skill_19: bpy.props.FloatProperty(name="skill_19")
     skill_20: bpy.props.FloatProperty(name="skill_20")
 
-    def get_skills(self):
+    def get_skills(self) -> list[bpy.props.FloatProperty]:
         skills = []
         for i in range(1, 21):
             skills.append(getattr(self, f"skill_{i}"))
         return skills
 
-    def get_flags(self):
-        flags = 0
-        if self.flag_1: flags |= 1 << 0
-        if self.flag_2: flags |= 1 << 1
-        if self.flag_3: flags |= 1 << 2
-        if self.flag_4: flags |= 1 << 3
-        if self.flag_5: flags |= 1 << 4
-        if self.flag_6: flags |= 1 << 5
-        if self.flag_7: flags |= 1 << 6
-        if self.flag_8: flags |= 1 << 7
-
-        if self.flag_invisible: flags |= 1 << 8
-        if self.flag_transparent: flags |= 1 << 10
-        if self.flag_overlay: flags |= 1 << 12
-        if self.flag_flare: flags |= 1 << 15
-        if self.flag_nofilter: flags |= 1 << 16
-        if self.flag_unlit: flags |= 1 << 17
-        if self.flag_shadow: flags |= 1 << 18
-        if self.flag_nofog: flags |= 1 << 20
-        if self.flag_bright: flags |= 1 << 21
-        if self.flag_metal: flags |= 1 << 22
-        if self.flag_cast: flags |= 1 << 23
-        if self.flag_local: flags |= 1 << 25
-        if self.flag_polygon: flags |= 1 << 26
-        else: flags |= 1 << 9 # flag_passable
-        if self.flag_bbox: flags |= 1 << 27
+    def get_flags(self) -> int:
+        flags = (
+            self.flag_1 << 0
+            | self.flag_2 << 1
+            | self.flag_3 << 2
+            | self.flag_4 << 3
+            | self.flag_5 << 4
+            | self.flag_6 << 5
+            | self.flag_7 << 6
+            | self.flag_8 << 7
+            | self.flag_invisible << 8
+            | self.flag_transparent << 10
+            | self.flag_overlay << 12
+            | self.flag_flare << 15
+            | self.flag_nofilter << 16
+            | self.flag_unlit << 17
+            | self.flag_shadow << 18
+            | self.flag_nofog << 20
+            | self.flag_bright << 21
+            | self.flag_metal << 22
+            | self.flag_cast << 23
+            | self.flag_local << 25
+            | self.flag_bbox << 27
+            | 1 << (26 if self.flag_polygon else 9)  # 9 = passable
+        )
 
         return flags
-

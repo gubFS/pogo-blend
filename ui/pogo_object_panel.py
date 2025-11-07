@@ -1,64 +1,53 @@
 import bpy
-from ..pogo_blend_preferences import get_preferences
 
-def register():
-    bpy.utils.register_class(AddPogoEntityData)
-    bpy.utils.register_class(RemovePogoEntityData)
-    bpy.utils.register_class(AddPogoPathData)
-    bpy.utils.register_class(RemovePogoPathData)
-    bpy.utils.register_class(PogoObjectPanel)
-    bpy.utils.register_class(PogoObjectPanelOverrides)
+from .. import pogo_blend_preferences as pbu
 
-
-def unregister():
-    bpy.utils.unregister_class(AddPogoEntityData)
-    bpy.utils.unregister_class(RemovePogoEntityData)
-    bpy.utils.unregister_class(AddPogoPathData)
-    bpy.utils.unregister_class(RemovePogoPathData)
-    bpy.utils.unregister_class(PogoObjectPanel)
-    bpy.utils.unregister_class(PogoObjectPanelOverrides)
 
 class AddPogoPathData(bpy.types.Operator):
     bl_idname = "pogo_blend.add_pogo_path_data"
     bl_label = "Add pogo data"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
         context.object.pogo_path
-        return {'FINISHED'}
+        return {"FINISHED"}
+
 
 class RemovePogoPathData(bpy.types.Operator):
     bl_idname = "pogo_blend.remove_pogo_path_data"
     bl_label = "Remove pogo data"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
         del context.object["pogo_path"]
-        return {'FINISHED'}
+        return {"FINISHED"}
+
 
 class AddPogoEntityData(bpy.types.Operator):
     bl_idname = "pogo_blend.add_pogo_entity_data"
     bl_label = "Add pogo data"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
         context.object.pogo_entity
-        return {'FINISHED'}
+        return {"FINISHED"}
+
 
 class RemovePogoEntityData(bpy.types.Operator):
     bl_idname = "pogo_blend.remove_pogo_entity_data"
     bl_label = "Remove pogo data"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
         del context.object["pogo_entity"]
-        return {'FINISHED'}
+        return {"FINISHED"}
+
 
 class PogoObjectPanel(bpy.types.Panel):
     bl_label = "Pogo Blend"
     bl_idname = "OBJECT_PT_object_pogo_blend"
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
     bl_context = "object"
 
     def draw(self, context):
@@ -66,11 +55,11 @@ class PogoObjectPanel(bpy.types.Panel):
         obj = context.object
 
         match obj.type:
-            case 'MESH':
+            case "MESH":
                 self.draw_mesh_panel(obj, layout)
-            case 'CURVE':
+            case "CURVE":
                 self.draw_curve_panel(obj, layout)
-            case 'EMPTY':
+            case "EMPTY":
                 self.draw_empty_panel(obj, layout)
             case _:
                 self.draw_not_relevant(layout)
@@ -79,20 +68,17 @@ class PogoObjectPanel(bpy.types.Panel):
     def draw_not_relevant(self, layout):
         layout.label(text="This object type has no relevant pogo data")
 
-
     def draw_curve_panel(self, obj, layout):
-        try: obj["pogo_path"]
-        except KeyError:
+        if "pogo_path" not in obj:
             layout.operator("pogo_blend.add_pogo_path_data")
             return
         row = layout.row()
         row.label(text="This curve is a Pogo Path")
         row.separator_spacer()
-        row.operator("pogo_blend.remove_pogo_path_data", text="", icon='X')
+        row.operator("pogo_blend.remove_pogo_path_data", text="", icon="X")
 
     def draw_mesh_panel(self, obj, layout):
-        try: obj["pogo_entity"]
-        except KeyError:
+        if "pogo_entity" not in obj:
             layout.operator("pogo_blend.add_pogo_entity_data")
             return
 
@@ -100,7 +86,7 @@ class PogoObjectPanel(bpy.types.Panel):
 
         row = layout.row()
         row.prop(obj, "name")
-        row.operator("pogo_blend.remove_pogo_entity_data", text="", icon='X')
+        row.operator("pogo_blend.remove_pogo_entity_data", text="", icon="X")
         layout.prop(obj, "location")
         layout.prop(obj, "rotation_euler", text="Rotation")
         layout.prop(obj, "scale")
@@ -143,46 +129,51 @@ class PogoObjectPanel(bpy.types.Panel):
             for i, flag in enumerate(currentConfig["flags"]):
                 col = colLeft if i % 2 == 0 else colRight
                 # entity[flag["identifier"]] = flag["default"] # TODO: change value to default when action is changed (not on every draw)
-                col.prop(entity, flag.get("identifier"), text=flag.get("name", flag.get("identifier")))
+                col.prop(
+                    entity,
+                    flag.get("identifier"),
+                    text=flag.get("name", flag.get("identifier")),
+                )
 
         if "skills" in currentConfig and len(currentConfig.get("skills")) != 0:
             for i, skill in enumerate(currentConfig["skills"]):
-                layout.prop(entity, skill.get("identifier"), text=skill.get("name", skill.get("identifier")))
+                layout.prop(
+                    entity,
+                    skill.get("identifier"),
+                    text=skill.get("name", skill.get("identifier")),
+                )
 
         if "path" in currentConfig and currentConfig.get("path") == True:
-            layout.prop(entity, "path", placeholder="Path", icon='OUTLINER_OB_CURVE')
+            layout.prop(entity, "path", placeholder="Path", icon="OUTLINER_OB_CURVE")
 
     def draw_empty_panel(self, obj, layout):
-        try: obj["pogo_reigon"]
-        except KeyError: self.draw_not_relevant(layout)
-        else:
-            layout.prop(obj.pogo_reigon, "reigon_type")
-            if obj.pogo_reigon.reigon_type == "gravityReg_":
-                layout.prop(obj.pogo_reigon, "gravity_angle")
-                layout.prop(obj.pogo_reigon, "gravity_power")
+        if "pogo_reigon" not in obj:
+            self.draw_not_relevant(layout)
+            return
+        layout.prop(obj.pogo_reigon, "reigon_type")
+        if obj.pogo_reigon.reigon_type == "gravityReg_":
+            layout.prop(obj.pogo_reigon, "gravity_angle")
+            layout.prop(obj.pogo_reigon, "gravity_power")
+
 
 class PogoObjectPanelOverrides(bpy.types.Panel):
     bl_label = "Overrides"
     bl_idname = "OBJECT_PT_object_pogo_blend_override"
     bl_parent_id = "OBJECT_PT_object_pogo_blend"
-    bl_options = {'DEFAULT_CLOSED'}
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
+    bl_options = {"DEFAULT_CLOSED"}
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
     bl_context = "object"
 
     @classmethod
     def poll(cls, context):
-        if get_preferences().show_overrides:
-            try: context.object["pogo_entity"]
-            except KeyError: return False
-            return True
-        return False
+        return pbu.get_preferences().show_overrides and "pogo_entity" in context.object
 
     def draw(self, context):
         layout = self.layout
         obj = context.object
-        try: obj["pogo_entity"]
-        except KeyError: return
+        if "pogo_entity" not in obj:
+            return
 
         entity = obj.pogo_entity
         layout.prop(entity, "name_override")
@@ -226,3 +217,20 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
         layout.prop(entity, "string1_override", text="string1")
         layout.prop(entity, "string2_override", text="string2")
 
+
+def register():
+    bpy.utils.register_class(AddPogoEntityData)
+    bpy.utils.register_class(RemovePogoEntityData)
+    bpy.utils.register_class(AddPogoPathData)
+    bpy.utils.register_class(RemovePogoPathData)
+    bpy.utils.register_class(PogoObjectPanel)
+    bpy.utils.register_class(PogoObjectPanelOverrides)
+
+
+def unregister():
+    bpy.utils.unregister_class(AddPogoEntityData)
+    bpy.utils.unregister_class(RemovePogoEntityData)
+    bpy.utils.unregister_class(AddPogoPathData)
+    bpy.utils.unregister_class(RemovePogoPathData)
+    bpy.utils.unregister_class(PogoObjectPanel)
+    bpy.utils.unregister_class(PogoObjectPanelOverrides)

@@ -1,25 +1,28 @@
 import bpy
 
+
 def register():
     bpy.utils.register_class(PogoReigon)
     bpy.types.Object.pogo_reigon = bpy.props.PointerProperty(type=PogoReigon)
+
 
 def unregister():
     bpy.utils.unregister_class(PogoReigon)
     del bpy.types.Object.pogo_reigon
 
+
 class PogoReigon(bpy.types.PropertyGroup):
     reigon_types = [
-            ("ndef", "", ""),
-            ("kill", "Kill", ""), 
-            ("CP_", "Checkpoint", ""), 
-            ("modearea_double", "Double jump", ""), 
-            ("modearea_puzzle", "Puzzle", ""),
-            ("modearea_nobonk", "No bonk", ""),
-            ("modearea_noboost", "No boost", ""),
-            ("gravityReg_", "Gravity", ""),
-            ("reg_finish", "Finish", "")
-        ]
+        ("ndef", "", ""),
+        ("kill", "Kill", ""),
+        ("CP_", "Checkpoint", ""),
+        ("modearea_double", "Double jump", ""),
+        ("modearea_puzzle", "Puzzle", ""),
+        ("modearea_nobonk", "No bonk", ""),
+        ("modearea_noboost", "No boost", ""),
+        ("gravityReg_", "Gravity", ""),
+        ("reg_finish", "Finish", ""),
+    ]
 
     def update_reigon_type(self, context):
         obj = context.object
@@ -38,11 +41,12 @@ class PogoReigon(bpy.types.PropertyGroup):
         else:
             if obj in splits:
                 split = custom_map.splits.remove(splits[obj])
+
     reigon_type: bpy.props.EnumProperty(
-        items=reigon_types,
-        name="Reigon Type",
-        update=update_reigon_type
+        items=reigon_types, name="Reigon Type", update=update_reigon_type
     )
 
-    gravity_angle: bpy.props.FloatProperty(name="Gravity angle", update=update_reigon_type) # 90 is -x 180 is +z
+    gravity_angle: bpy.props.FloatProperty(
+        name="Gravity angle", update=update_reigon_type
+    )  # 90 is -x 180 is +z
     gravity_power: bpy.props.FloatProperty(name="Gravity power", default=100.0)

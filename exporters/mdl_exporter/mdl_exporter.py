@@ -1,20 +1,24 @@
-import bpy
 import os
-from mathutils import *
+
+import bpy
+from mathutils import Vector
+
 from ..gub_byte_array import GubByteArray
+
 
 class MDLExporter:
     def __init__(self, filepath, objs, scale=1.0):
         self.filepath = filepath
-        if len(objs) == 0: raise Exception("No objects selected")
+        if len(objs) == 0:
+            raise Exception("No objects selected")
         self.objs = objs
 
-        sum = Vector((0,0,0))
+        sum = Vector((0, 0, 0))
         for obj in objs:
             sum += obj.matrix_world.translation * scale
         center = sum / len(objs)
 
-        self.skins = {"":0}
+        self.skins = {"": 0}
         self.uvs = []
         self.tris = []
         self.verts = []
@@ -24,15 +28,18 @@ class MDLExporter:
         uv_index = 0
         skin_dict = {}
         for obj in self.objs:
-            mesh = obj.to_mesh()
+            mesh = obj.data
 
             has_skin = False
+            # Goes through every node on every material on the object
             for mat_slot in obj.material_slots:
                 if mat_slot.material and mat_slot.material.node_tree:
                     for node in mat_slot.material.node_tree.nodes:
-                        if node.type == 'TEX_IMAGE':
+                        if node.type == "TEX_IMAGE":
                             image = node.image
-                            full_path = bpy.path.abspath(image.filepath, library=image.library)
+                            full_path = bpy.path.abspath(
+                                image.filepath, library=image.library
+                            )
                             image_path = os.path.normpath(full_path)
                             if image_path in self.skins:
                                 skin_dict[mat_slot.slot_index] = self.skins[image_path]
@@ -41,11 +48,14 @@ class MDLExporter:
                                 skin_dict[mat_slot.slot_index] = self.skins[image_path]
                             has_skin = True
 
+            # y-axis is flipped in A8
             for uv in mesh.uv_layers[0].uv:
                 self.uvs.append(Vector((uv.vector.x, 1 - uv.vector.y)))
 
             for vert in mesh.vertices:
-                self.verts.append((obj.matrix_world.translation * scale - center) + vert.co * scale)
+                self.verts.append(
+                    (obj.matrix_world.translation * scale - center) + vert.co * scale
+                )
                 self.vert_normals.append(vert.normal)
 
             total_uvs = 0
@@ -65,7 +75,9 @@ class MDLExporter:
 
                 vert_indecies = []
                 uv_indecies = []
-                for i in range(2, -1, -1): # loop in reverse because the normals are flipped in mdl files compared to blend
+                for i in range(
+                    2, -1, -1
+                ):  # loop in reverse because the normals are flipped in mdl files compared to blend
                     vert_indecies.append(obj_verts_index + tri.vertices[i])
                 for vert_idx in tri.vertices:
                     uv_indecies.append(uv_index + uvkeys[poly_idx][vert_idx])
@@ -75,17 +87,18 @@ class MDLExporter:
             obj_verts_index = len(self.verts)
             uv_index = len(self.uvs)
 
-
     # See MDLFormat.txt for documentation
-    def export(self):	# see MDL7Format.txt
+    def export(self):  # see MDL7Format.txt
         mdl = GubByteArray()
 
         mdl.store_string("MDL7")
         mdl.store_32(0)
         mdl.store_32(0)
-        mdl.store_32(1) # group num may need to update but imma just do one group for now
+        mdl.store_32(
+            1
+        )  # group num may need to update but imma just do one group for now
         file_size_pos = mdl.get_position()
-        mdl.store_32(0) # file size, update at the end
+        mdl.store_32(0)  # file size, update at the end
         mdl.store_32(0)
         mdl.store_32(0)
 
@@ -101,10 +114,10 @@ class MDLExporter:
         mdl.store_16(0x14)
 
         group_pos = mdl.get_position()
-        mdl.store_8(1) # 1 is triangle based
-        mdl.store_8s(0, 3) # unused
+        mdl.store_8(1)  # 1 is triangle based
+        mdl.store_8s(0, 3)  # unused
         group_size_pos = mdl.get_position()
-        mdl.store_32(0) # size of group, store later
+        mdl.store_32(0)  # size of group, store later
         mdl.store_string("Group", 16)
         mdl.store_32(len(self.skins))
         mdl.store_32(len(self.uvs))
@@ -115,12 +128,13 @@ class MDLExporter:
         # Skin
         for texture, skin_idx in self.skins.items():
             texture = os.path.basename(texture)
-            mdl.store_8(7) # type?
-            mdl.store_8s(0, 3) # unused
+            mdl.store_8(7)  # type?
+            mdl.store_8s(0, 3)  # unused
             mdl.store_32(len(texture) + 1)
             mdl.store_32(1)
             mdl.store_string(f"Skin{skin_idx + 1}", 16)
-            mdl.store_string(texture); mdl.store_8(0)
+            mdl.store_string(texture)
+            mdl.store_8(0)
 
         for uv in self.uvs:
             for i in range(2):
@@ -147,4 +161,3 @@ class MDLExporter:
 
         with open(self.filepath, "wb") as f:
             f.write(mdl)
-

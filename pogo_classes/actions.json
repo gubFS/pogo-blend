@@ -8,34 +8,24 @@
       }
     ],
     "skills": [
-        {
-            "identifier": "skill_1",
-            "name": "Power",
-            "default": 0.0
-        }
+      {
+        "identifier": "skill_1",
+        "name": "Power",
+        "default": 0.0
+      }
     ]
   },
   "mushroomFullObj_act": {
-    "flags": [
-
-    ],
-    "skills": [
-
-    ]
+    "flags": [],
+    "skills": []
   },
   "execString12acts": {
     "disable": true,
-    "flags": [
-
-    ],
-    "skills": [
-
-    ]
+    "flags": [],
+    "skills": []
   },
   "skillset_act": {
-    "flags": [
-
-    ],
+    "flags": [],
     "skills": [
       {
         "identifier": "skill_1",
@@ -80,12 +70,8 @@
     ]
   },
   "slime_act": {
-    "flags": [
-
-    ],
-    "skills": [
-
-    ]
+    "flags": [],
+    "skills": []
   },
   "POI_act": {
     "flags": [
@@ -124,37 +110,21 @@
     ]
   },
   "monolithThorn_act": {
-    "flags": [
-
-    ],
-    "skills": [
-
-    ],
+    "flags": [],
+    "skills": [],
     "path": true
   },
   "coconutSlippery": {
-    "flags": [
-
-    ],
-    "skills": [
-
-    ]
+    "flags": [],
+    "skills": []
   },
   "pinkSap_act": {
-    "flags": [
-
-    ],
-    "skills": [
-
-    ]
+    "flags": [],
+    "skills": []
   },
   "boostjuice_act": {
-    "flags": [
-
-    ],
-    "skills": [
-
-    ]
+    "flags": [],
+    "skills": []
   },
   "map3Wheel_act": {
     "flags": [
@@ -249,9 +219,7 @@
     ]
   },
   "moveLoop_act": {
-    "flags": [
-
-    ],
+    "flags": [],
     "skills": [
       {
         "identifier": "skill_1",
@@ -345,9 +313,7 @@
         "default": false
       }
     ],
-    "skills": [
-
-    ]
+    "skills": []
   },
   "toggleSine_act": {
     "flags": [

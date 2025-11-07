@@ -1,30 +1,29 @@
 import bpy
 
+
 class SelectCustomMapsDir(bpy.types.Operator):
     bl_idname = "pogo_blend.select_custom_maps_dir"
     bl_label = "Select the custom maps directory"
-    bl_options = {'REGISTER'}
+    bl_options = {"REGISTER"}
 
     directory: bpy.props.StringProperty(
         name="Custom Maps directory",
         description="New maps will be created in the selected directory",
-        subtype='DIR_PATH'
+        subtype="DIR_PATH",
     )
 
     # Filters folders
-    filter_folder: bpy.props.BoolProperty(
-        default=True,
-        options={"HIDDEN"}
-    )
+    filter_folder: bpy.props.BoolProperty(default=True, options={"HIDDEN"})
 
     def execute(self, context):
         get_preferences().custom_maps_path = self.directory
-        return {'FINISHED'}
+        return {"FINISHED"}
 
     def invoke(self, context, event):
         context.window_manager.fileselect_add(self)
         # Tells Blender to hang on for the slow user input
-        return {'RUNNING_MODAL'}
+        return {"RUNNING_MODAL"}
+
 
 class PogoBlendPrefrences(bpy.types.AddonPreferences):
     bl_idname = __package__
@@ -34,7 +33,7 @@ class PogoBlendPrefrences(bpy.types.AddonPreferences):
         name="MDL Importer",
         description="Add mdl impoterter to importers",
     )
-    mdl_exporter:bpy.props.BoolProperty(
+    mdl_exporter: bpy.props.BoolProperty(
         default=False,
         name="MDL Exporter",
         description="Add mdl exporter to exporters",
@@ -48,13 +47,13 @@ class PogoBlendPrefrences(bpy.types.AddonPreferences):
     map_scale: bpy.props.FloatProperty(
         default=50.0,
         name="Map Scale",
-        description="The default map scale. 50 means the default Cube is roughly half the size of the Pogo Dude"
+        description="The default map scale. 50 means the default Cube is roughly half the size of the Pogo Dude",
     )
 
     show_overrides: bpy.props.BoolProperty(
         default=False,
         name="Enable overrides",
-        description="Adds a panel to entities that shows all editiable fields. Not relevant in most normal use cases"
+        description="Adds a panel to entities that shows all editiable fields. Not relevant in most normal use cases",
     )
 
     def draw(self, context):
@@ -64,16 +63,19 @@ class PogoBlendPrefrences(bpy.types.AddonPreferences):
         layout.prop(self, "mdl_exporter")
         row = layout.row()
         row.prop(self, "custom_maps_path")
-        row.operator("pogo_blend.select_custom_maps_dir", text="", icon='FILE_FOLDER')
+        row.operator("pogo_blend.select_custom_maps_dir", text="", icon="FILE_FOLDER")
         layout.prop(self, "map_scale")
         layout.prop(self, "show_overrides")
+
 
 def get_preferences():
     return bpy.context.preferences.addons[__package__].preferences
 
+
 def register():
     bpy.utils.register_class(SelectCustomMapsDir)
     bpy.utils.register_class(PogoBlendPrefrences)
+
 
 def unregister():
     bpy.utils.unregister_class(SelectCustomMapsDir)

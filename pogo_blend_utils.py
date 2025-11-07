@@ -1,0 +1,66 @@
+from string import ascii_lowercase
+
+import bpy
+
+from .pogo_blend_preferences import get_preferences as gp
+
+
+def get_preferences() -> bpy.types.AddonPreferences:
+    return gp()
+
+
+class ContextError(BaseException):
+    pass
+
+
+def get_custom_map_collection() -> bpy.types.Collection:
+    try:
+        return bpy.data.collections["CustomMap"]
+    except KeyError:
+        raise ContextError("No Custom Map found, please name a collection 'CustomMap'")
+
+
+def get_custom_map() -> bpy.types.PropertyGroup:
+    return get_custom_map_collection().custom_map
+
+
+def get_unique_name(suggestion, required_suffix, max_length, used_names):
+    change_chars = "0123456789" + ascii_lowercase
+
+    suggestion = suggestion.lower().replace(" ", "_")
+    base_suggestion = suggestion
+    suggestion = suggestion[
+        : min(len(suggestion), max(0, max_length - len(required_suffix)))
+    ]
+    name = suggestion + required_suffix
+    if len(name) > max_length:
+        return None
+
+    change_array = [0]
+    while name in used_names:
+        if len(change_array) + len(required_suffix) > max_length:
+            return None
+        change = ""
+        for change_idx in change_array:
+            change += change_chars[change_idx]
+        suggestion = (
+            base_suggestion[
+                : min(
+                    len(base_suggestion),
+                    max_length - len(required_suffix) - len(change),
+                )
+            ]
+            + change
+        )
+        name = suggestion + required_suffix
+        for i in range(len(change_array)):
+            change_array[i] += 1
+            if change_array[i] >= len(change_chars):
+                change_array[i] = 0
+                if i >= len(change_array) - 1:
+                    change_array.append(0)
+                    break
+            else:
+                break
+    used_names.add(name)
+    return name
