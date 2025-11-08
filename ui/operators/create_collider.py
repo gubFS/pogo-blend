@@ -11,6 +11,7 @@ def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
         # note context for cleanup
         c_camera = scene.camera
         c_resolution = (scene.render.resolution_x, scene.render.resolution_y)
+        c_cursor = scene.cursor.location.copy()
 
         # select obj
         bpy.ops.object.select_all(action="DESELECT")
@@ -92,6 +93,8 @@ def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
         scene.camera = c_camera
         scene.render.resolution_x = c_resolution[0]
         scene.render.resolution_y = c_resolution[1]
+
+        scene.cursor.location = c_cursor
 
         return collider
 
