@@ -59,8 +59,9 @@ class MDLExporter:
                             has_skin = True
 
             # y-axis is flipped in A8
-            for uv in mesh.uv_layers[0].uv:
-                self.uvs.append(Vector((uv.vector.x, 1 - uv.vector.y)))
+            if has_skin:
+                for uv in mesh.uv_layers[0].uv:
+                    self.uvs.append(Vector((uv.vector.x, 1 - uv.vector.y)))
 
             loc = obj.matrix_world.translation
             rot = obj.matrix_world.to_euler()

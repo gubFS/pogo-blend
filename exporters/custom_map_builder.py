@@ -1,9 +1,11 @@
+import copy
 import os
 
 import bpy
 from PIL import Image
 
 from .. import pogo_blend_utils as pbu
+from ..ui.operators.create_collider import create_collider
 from .gub_byte_array import GubByteArray
 from .mdl_exporter.mdl_exporter import MDLExporter
 from .wmb_exporter.wmb_exporter import WMBExporter
@@ -57,6 +59,7 @@ def build_custom_map(context, filepath, global_scale):
         paths = [path_progress]
         paths_to_add = []
         splits_to_add = {}
+        cols_cleanup = []
 
         for obj in custom_map_collection.objects:
             if obj in [spawn, path_progress, start_line]:
@@ -69,10 +72,36 @@ def build_custom_map(context, filepath, global_scale):
 
                     entity = WMBEntity(obj)
                     mesh = obj.data
+                    path = None
                     if obj.pogo_entity.filename_override == "":
                         if mesh not in meshes:
-                            meshes[mesh] = (entity, obj)
-                    if obj.pogo_entity.path != None:
+                            meshes[mesh] = (entity, obj, global_scale)
+                        if (
+                            obj.pogo_entity.flag_auto_collision
+                            and obj.pogo_entity.flag_polygon
+                        ):
+                            collider = create_collider(obj, 64)
+                            cols_cleanup.append(collider)
+                            collider_entity = copy.deepcopy(entity)
+                            meshes[collider.data] = (collider_entity, collider, 1.0)
+                            entity.flags &= ~(1 << 26)  # clear polygon
+                            entity.flags |= 1 << 9  # set passable
+                            collider_entity.flags |= (
+                                1 << 8 | 1 << 17
+                            )  # invisible, unlit
+                            collider_entity.origin[1] = 0.0
+                            collider_entity.angle = (0, 0, 0)
+                            collider_entity.scale = (1, 1, 1)
+                            collider_entity.material = "ndef"
+                            if obj.pogo_entity.path != None:
+                                paths_to_add.append(
+                                    (collider_entity, obj.pogo_entity.path)
+                                )
+                            wmb_objects.append(collider_entity)
+                    if (
+                        obj.pogo_entity.path != None
+                        and not obj.pogo_entity.flag_auto_collision
+                    ):
                         paths_to_add.append((entity, obj.pogo_entity.path))
                     wmb_objects.append(entity)
                 case "EMPTY":
@@ -95,7 +124,7 @@ def build_custom_map(context, filepath, global_scale):
         for entity, path in paths_to_add:
             entity.path = paths.index(path) + 1
 
-        for entity, obj in meshes.values():
+        for entity, obj, scale in meshes.values():
             filename = pbu.get_unique_name(obj.name, ".mdl", 33, used_names)
             if filename == None:
                 print("WARNING: could not find a unique filename")
@@ -105,7 +134,7 @@ def build_custom_map(context, filepath, global_scale):
             mdlpath = os.path.join(dirpath, filename)
             if os.path.exists(mdlpath):
                 print(f"WARNING: Overwriting '{mdlpath}'")
-            mdl_exporter = MDLExporter(mdlpath, [obj], global_scale)
+            mdl_exporter = MDLExporter(mdlpath, [obj], scale)
             for texture, slot_idx in mdl_exporter.skins.copy().items():
                 if texture == "":
                     continue
@@ -135,6 +164,11 @@ def build_custom_map(context, filepath, global_scale):
         export_map_image(dirpath, custom_map)
         for texture, new_texture in textures.items():
             export_texture(dirpath, new_texture, texture)
+
+        for col in cols_cleanup:
+            mesh = col.data
+            bpy.data.objects.remove(col, do_unlink=True)
+            bpy.data.meshes.remove(mesh, do_unlink=True)
     finally:
         unapply_map_scale(*undo_map_scale_args)
 

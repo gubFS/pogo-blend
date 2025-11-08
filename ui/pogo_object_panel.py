@@ -102,8 +102,8 @@ class PogoObjectPanel(bpy.types.Panel):
         col.prop(entity, "flag_unlit")
         col.prop(entity, "flag_transparent")
         col.prop(entity, "flag_polygon")
-        # if entity.flag_polygon == True:
-        #     col.prop(entity, "flag_auto_collision")
+        if entity.flag_polygon:
+            col.prop(entity, "flag_auto_collision")
 
         col = row.column()
         col.prop(entity, "flag_shadow")

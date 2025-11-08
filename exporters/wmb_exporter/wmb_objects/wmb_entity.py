@@ -33,13 +33,13 @@ class WMBEntity:
             or entity.string1_override != ""
             or entity.string2_override != ""
         ):
-            self.action = entity.action1
+            self.action = entity.action1 if entity.action1 != "ndef" else ""
             self.string1 = entity.string1_override
             self.string2 = entity.string2_override
         else:
             self.action = "execString12acts"
-            self.string1 = entity.action1
-            self.string2 = entity.action2
+            self.string1 = entity.action1 if entity.action1 != "ndef" else ""
+            self.string2 = entity.action2 if entity.action2 != "ndef" else ""
 
         self.skills = entity.get_skills()
         self.flags = entity.get_flags()

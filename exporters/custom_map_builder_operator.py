@@ -65,7 +65,7 @@ class CustomMapBuilder(bpy.types.Operator):
                 error_type = {"ERROR_INVALID_CONTEXT"}
             self.report(error_type, str(e))
             raise e  # NOTE: For debugging purposes, should not be here
-            return {"CANCELLED"}
+            return {"FINISHED"}  # finished to so undo's are registered
         else:
             self.report(
                 {"INFO"},
