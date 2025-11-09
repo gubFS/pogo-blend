@@ -89,7 +89,7 @@ class WMBEntity:
             and self.material == "ndef"
             and self.string1 == ""
             and self.string2 == ""
-            and len(self.filename) <= 13
+            and len(self.filename) <= 12
             and len(self.action) <= 20
             and self.is_skills_old()
         )
