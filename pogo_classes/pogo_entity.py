@@ -70,11 +70,66 @@ class PogoEntity(bpy.types.PropertyGroup):
         if value == "ndef" and self.action2 != "ndef":
             self.action1 = self.action2
             self.action2 = "ndef"
+        else:
+            self.set_action_defaults(context, True)
+
+    def on_action2_change(self, context):
+        self.set_action_defaults(context, False)
+
+    def set_action_defaults(self, context, is_action1: bool) -> None:
+        other_action = "action1" if not is_action1 else "action2"
+        other_action_name = self.action_enums[self[other_action]][0]
+        new_action = "action1" if is_action1 else "action2"
+        new_action_name = self.action_enums[self[new_action]][0]
+
+        all_values = set()
+        all_values.update(f"flag_{i}" for i in range(1, 9))
+        all_values.update(f"skill_{i}" for i in range(1, 21))
+
+        in_use = set()
+        if other_action_name in self.actions:
+            config = self.actions[other_action_name]
+            if "flags" in config:
+                in_use.update(flag["identifier"] for flag in config["flags"])
+            if "skills" in config:
+                in_use.update(skill["identifier"] for skill in config["skills"])
+        all_values = all_values.difference(in_use)
+
+        new_action_values = {}
+        if new_action_name in self.actions:
+            config = self.actions[new_action_name]
+            if "flags" in config:
+                new_action_values.update(
+                    {
+                        flag["identifier"]: flag
+                        for flag in config["flags"]
+                        if "default" in flag
+                    }
+                )
+            if "skills" in config:
+                new_action_values.update(
+                    {
+                        skill["identifier"]: skill
+                        for skill in config["skills"]
+                        if "default" in skill
+                    }
+                )
+
+        for id, value in new_action_values.items():
+            if id in in_use:
+                continue
+            default = value["default"]
+            self[id] = default
+        all_values = all_values.difference(new_action_values)
+        for value in all_values:
+            self.property_unset(value)
 
     action1: bpy.props.EnumProperty(
         items=action_enums, name="Action", default="ndef", update=on_action1_change
     )
-    action2: bpy.props.EnumProperty(items=action_enums, name="Action2", default="ndef")
+    action2: bpy.props.EnumProperty(
+        items=action_enums, name="Action2", default="ndef", update=on_action2_change
+    )
 
     flag_1: bpy.props.BoolProperty(name="flag_1")  # = 0,
     flag_2: bpy.props.BoolProperty(name="flag_2")  # = 1,
