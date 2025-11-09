@@ -1,4 +1,5 @@
 import bpy
+import bpy_extras
 
 from ... import pogo_blend_utils as pbu
 from .mdl_exporter import MDLExporter
@@ -18,14 +19,10 @@ def export_to_mdl(context, filepath, only_selected, scale):
     MDLExporter(filepath, objs, scale).export()
 
 
-# ExportHelper is a helper class, defines filename and invoke() function which calls the file selector.
-from bpy_extras.io_utils import ExportHelper
-
-
-class MDLExporterOperator(bpy.types.Operator, ExportHelper):
+class MDLExporterOperator(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
     bl_idname = "pogo_blend.export_mdl"
     bl_label = "Export meshes to MDL (Gamestudio A8)"
-    bl_description = "Exports meshes to MDL files. Does not support bones."
+    bl_description = "Exports meshes to MDL files."
 
     filename_ext = ".mdl"
 
@@ -35,7 +32,6 @@ class MDLExporterOperator(bpy.types.Operator, ExportHelper):
         maxlen=255,  # Max internal buffer length, longer would be clamped.
     )
 
-    # List of operator properties, the attributes will be assigned to the class instance from the operator settings before calling.
     selected_only: bpy.props.BoolProperty(
         name="Export selected only",
         default=True,

@@ -58,7 +58,7 @@ typedef struct {
 typedef struct {
 	short			vert_indecies[3];
 	short			uv_indecies[3];
-	byte			unused[4]; Filled with 0x00, might indicate which skin the tri is part of
+	byte			unused[4]; indicates which skin the tri is part of
 	byte			unused[6]; // i think, filled with 0xFF
 	byte			unused[4]; // i think, filled with either 0x00 or 0xFF ???
 } MD7_TRI;
