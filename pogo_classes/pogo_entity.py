@@ -80,7 +80,9 @@ class PogoEntity(bpy.types.PropertyGroup):
 
     def set_action_defaults(self, context, is_action1: bool) -> None:
         other_action = "action1" if not is_action1 else "action2"
-        other_action_name = self.action_enums[self[other_action]][0]
+        other_action_name = ""
+        if other_action in self:
+            other_action_name = self.action_enums[self[other_action]][0]
         new_action = "action1" if is_action1 else "action2"
         new_action_name = self.action_enums[self[new_action]][0]
 
