@@ -54,7 +54,7 @@ def build_custom_map(context, filepath, global_scale):
             PogoPathProgress(path_progress),
             PogoStartLine(start_line),
         ]
-        meshes = {}
+        meshes = {start_line.data: (wmb_objects[-1], start_line, global_scale)}
         textures = {}
         paths = [path_progress]
         paths_to_add = []
