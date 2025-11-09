@@ -71,10 +71,12 @@ class PogoEntity(bpy.types.PropertyGroup):
             self.action1 = self.action2
             self.action2 = "ndef"
         else:
-            self.set_action_defaults(context, True)
+            if context.area.type == "PROPERTIES":
+                self.set_action_defaults(context, True)
 
     def on_action2_change(self, context):
-        self.set_action_defaults(context, False)
+        if context.area.type == "PROPERTIES":
+            self.set_action_defaults(context, False)
 
     def set_action_defaults(self, context, is_action1: bool) -> None:
         other_action = "action1" if not is_action1 else "action2"
