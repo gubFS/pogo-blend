@@ -105,9 +105,10 @@ class CreatePogoCollider(bpy.types.Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
-        objs = context.selected_objects
+        objs = filter(lambda obj: obj.type == "MESH", context.selected_objects)
+        objs = list(objs)
         if not objs:
-            self.report({"ERROR"}, "No objects selected")
+            self.report({"ERROR"}, "No mesh objects selected")
             return {"CANCELLED"}
         for obj in objs:
             create_collider(obj)
