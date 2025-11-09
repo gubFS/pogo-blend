@@ -112,6 +112,64 @@ class PogoEntity(bpy.types.PropertyGroup):
     skill_19: bpy.props.FloatProperty(name="skill_19")
     skill_20: bpy.props.FloatProperty(name="skill_20")
 
+    def copy_from(self, other: PogoEntity) -> None:
+        self.name_override = other.name_override
+        self.filename_override = other.filename_override
+        self.material_override = other.material_override
+        self.action_override = other.action_override
+        self.string1_override = other.string1_override
+        self.string2_override = other.string2_override
+        self.material = other.material
+        self.flag_invisible = other.flag_invisible
+        self.flag_passable = other.flag_passable
+        self.flag_transparent = other.flag_transparent
+        self.flag_unlit = other.flag_unlit
+        self.flag_shadow = other.flag_shadow
+        self.flag_metal = other.flag_metal
+        self.flag_cast = other.flag_cast
+        self.flag_polygon = other.flag_polygon
+        self.flag_overlay = other.flag_overlay
+        self.flag_flare = other.flag_flare
+        self.flag_nofilter = other.flag_nofilter
+        self.flag_nofog = other.flag_nofog
+        self.flag_bright = other.flag_bright
+        self.flag_local = other.flag_local
+        self.flag_bbox = other.flag_bbox
+        self.ambient = other.ambient
+        self.albedo = other.albedo
+        self.action1 = other.action1
+        self.action2 = other.action2
+        self.flag_1 = other.flag_1
+        self.flag_2 = other.flag_2
+        self.flag_3 = other.flag_3
+        self.flag_4 = other.flag_4
+        self.flag_5 = other.flag_5
+        self.flag_6 = other.flag_6
+        self.flag_7 = other.flag_7
+        self.flag_8 = other.flag_8
+        self.flag_auto_collision = other.flag_auto_collision
+        self.path = other.path
+        self.skill_1 = other.skill_1
+        self.skill_2 = other.skill_2
+        self.skill_3 = other.skill_3
+        self.skill_4 = other.skill_4
+        self.skill_5 = other.skill_5
+        self.skill_6 = other.skill_6
+        self.skill_7 = other.skill_7
+        self.skill_8 = other.skill_8
+        self.skill_9 = other.skill_9
+        self.skill_10 = other.skill_10
+        self.skill_11 = other.skill_11
+        self.skill_12 = other.skill_12
+        self.skill_13 = other.skill_13
+        self.skill_14 = other.skill_14
+        self.skill_15 = other.skill_15
+        self.skill_16 = other.skill_16
+        self.skill_17 = other.skill_17
+        self.skill_18 = other.skill_18
+        self.skill_19 = other.skill_19
+        self.skill_20 = other.skill_20
+
     def get_skills(self) -> list[bpy.props.FloatProperty]:
         skills = []
         for i in range(1, 21):

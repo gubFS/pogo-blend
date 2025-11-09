@@ -82,17 +82,10 @@ def build_custom_map(context, filepath, global_scale):
                         ):
                             collider = create_collider(obj, 64)
                             cols_cleanup.append(collider)
-                            collider_entity = copy.deepcopy(entity)
+                            collider_entity = WMBEntity(collider)
                             meshes[collider.data] = (collider_entity, collider, 1.0)
                             entity.flags &= ~(1 << 26)  # clear polygon
                             entity.flags |= 1 << 9  # set passable
-                            collider_entity.flags |= (
-                                1 << 8 | 1 << 17
-                            )  # invisible, unlit
-                            collider_entity.origin[1] = 0.0
-                            collider_entity.angle = (0, 0, 0)
-                            collider_entity.scale = (1, 1, 1)
-                            collider_entity.material = "ndef"
                             if obj.pogo_entity.path != None:
                                 paths_to_add.append(
                                     (collider_entity, obj.pogo_entity.path)
