@@ -169,7 +169,7 @@ class PogoEntity(bpy.types.PropertyGroup):
     skill_19: bpy.props.FloatProperty(name="skill_19")
     skill_20: bpy.props.FloatProperty(name="skill_20")
 
-    def copy_from(self, other: PogoEntity) -> None:
+    def copy_from(self, other) -> None:
         self.name_override = other.name_override
         self.filename_override = other.filename_override
         self.material_override = other.material_override
