@@ -67,6 +67,7 @@ def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
         # convert to mesh and extrude collider
         bpy.ops.object.convert(target="MESH")
         bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.select_mode(type="VERT")
         bpy.ops.mesh.select_all(action="SELECT")
         bpy.ops.transform.resize(value=(1, 0, 1))
         bpy.ops.mesh.edge_face_add()
