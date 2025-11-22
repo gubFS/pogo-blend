@@ -28,7 +28,7 @@ class MDLExporter:
                 sum += obj.matrix_world.translation * scale
             center = sum / len(objs)
 
-        self.skins = {"": 0}
+        self.skins = {}
         self.uvs = []
         self.tris = []
         self.verts = []
@@ -57,6 +57,7 @@ class MDLExporter:
                                 self.skins[image_path] = len(self.skins)
                                 skin_dict[mat_slot.slot_index] = self.skins[image_path]
                             has_skin = True
+            self.has_skin = has_skin
 
             # y-axis is flipped in A8
             if has_skin:
@@ -77,16 +78,19 @@ class MDLExporter:
                     vert *= scl
 
                 self.verts.append((loc * scale - center) + vert)
-                self.vert_normals.append(normal)
+                self.vert_normals.append(
+                    normal * -1
+                )  # GSA8 uses flipped normals or something
 
-            total_uvs = 0
             uvkeys = {}
-            for poly in mesh.polygons:
-                uvkeys[poly.index] = {}
-                for vert_idx in poly.vertices:
-                    uv_idx = total_uvs
-                    uvkeys[poly.index][vert_idx] = uv_idx
-                    total_uvs += 1
+            if has_skin:
+                total_uvs = 0
+                for poly in mesh.polygons:
+                    uvkeys[poly.index] = {}
+                    for vert_idx in poly.vertices:
+                        uv_idx = total_uvs
+                        uvkeys[poly.index][vert_idx] = uv_idx
+                        total_uvs += 1
 
             for i, tri in enumerate(mesh.loop_triangles):
                 poly_idx = mesh.loop_triangle_polygons[i].value
@@ -100,9 +104,10 @@ class MDLExporter:
                     2, -1, -1
                 ):  # loop in reverse because the normals are flipped in mdl files compared to blend
                     vert_indecies.append(obj_verts_index + tri.vertices[i])
-                for vert_idx in tri.vertices:
-                    uv_indecies.append(uv_index + uvkeys[poly_idx][vert_idx])
-                uv_indecies.reverse()
+                if has_skin:
+                    for vert_idx in tri.vertices:
+                        uv_indecies.append(uv_index + uvkeys[poly_idx][vert_idx])
+                    uv_indecies.reverse()
                 self.tris.append((vert_indecies, uv_indecies, skin_idx))
 
             obj_verts_index = len(self.verts)
@@ -140,32 +145,34 @@ class MDLExporter:
         group_size_pos = mdl.get_position()
         mdl.store_32(0)  # size of group, store later
         mdl.store_string("Group", 16)
-        mdl.store_32(len(self.skins))
-        mdl.store_32(len(self.uvs))
+        mdl.store_32(len(self.skins) if self.has_skin else 0)
+        mdl.store_32(len(self.uvs) if self.has_skin else 0)
         mdl.store_32(len(self.tris))
         mdl.store_32(len(self.verts))
         mdl.store_32(0)
 
         # Skin
-        for texture, skin_idx in self.skins.items():
-            texture = os.path.basename(texture)
-            mdl.store_8(7)  # type?
-            mdl.store_8s(0, 3)  # unused
-            mdl.store_32(len(texture) + 1)
-            mdl.store_32(1)
-            mdl.store_string(f"Skin{skin_idx + 1}", 16)
-            mdl.store_string(texture)
-            mdl.store_8(0)
+        if self.has_skin:
+            for texture, skin_idx in self.skins.items():
+                texture = os.path.basename(texture)
+                mdl.store_8(7)  # type?
+                mdl.store_8s(0, 3)  # unused
+                mdl.store_32(len(texture) + 1)
+                mdl.store_32(1)
+                mdl.store_string(f"Skin{skin_idx + 1}", 16)
+                mdl.store_string(texture)
+                mdl.store_8(0)
 
-        for uv in self.uvs:
-            for i in range(2):
-                mdl.store_float(uv[i])
+        if self.has_skin:
+            for uv in self.uvs:
+                for i in range(2):
+                    mdl.store_float(uv[i])
 
         for tri, uv, skin_idx in self.tris:
             for i in range(3):
                 mdl.store_16(tri[i])
             for i in range(3):
-                mdl.store_16(uv[i])
+                mdl.store_16(uv[i] if self.has_skin else 0)
             mdl.store_32(skin_idx)
             mdl.store_8s(0xFF, 6)
             mdl.store_8s(0xFF, 4)
