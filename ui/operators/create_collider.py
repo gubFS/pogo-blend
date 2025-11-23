@@ -63,6 +63,8 @@ def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
         lineart.silhouette_filtering = "INDIVIDUAL"
         lineart.use_crease = False
         lineart.use_intersection = False
+        lineart_data = pencil.data
+        lineart_material = lineart.target_material
 
         # convert to mesh and extrude collider
         bpy.ops.object.convert(target="MESH")
@@ -105,6 +107,8 @@ def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
 
         # cleanup
         camera_data = camera.data
+        bpy.data.materials.remove(lineart_material, do_unlink=True)
+        bpy.data.grease_pencils_v3.remove(lineart_data, do_unlink=True)
         bpy.data.objects.remove(camera, do_unlink=True)
         bpy.data.cameras.remove(camera_data, do_unlink=True)
 
