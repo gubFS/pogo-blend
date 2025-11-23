@@ -5,6 +5,7 @@ import bpy
 from PIL import Image
 
 from .. import pogo_blend_utils as pbu
+from ..caching.hash_entity import hash_entity
 from ..ui.operators.create_collider import create_collider
 from .gub_byte_array import GubByteArray
 from .mdl_exporter.mdl_exporter import MDLExporter
@@ -20,6 +21,7 @@ from .wmb_exporter.wmb_objects.wmb_path import PogoPathProgress, WMBPath
 from .wmb_exporter.wmb_objects.wmb_reigon import WMBReigon
 
 used_names = set()
+cache = {}
 
 
 def build_custom_map(context, filepath, global_scale):
@@ -125,8 +127,18 @@ def build_custom_map(context, filepath, global_scale):
 
             entity.filename = filename
             mdlpath = os.path.join(dirpath, filename)
+
             if os.path.exists(mdlpath):
+                if not obj.name.endswith("_col"):
+                    if mdlpath not in cache:
+                        cache[mdlpath] = hash_entity(obj)
+                    elif cache[mdlpath] != hash_entity(obj):
+                        cache[mdlpath] = hash_entity(obj)
+                    else:
+                        print(f"skipping {mdlpath}")
+                        continue
                 print(f"WARNING: Overwriting '{mdlpath}'")
+
             mdl_exporter = MDLExporter(mdlpath, [obj], scale)
             for texture, slot_idx in mdl_exporter.skins.copy().items():
                 if texture == "":
