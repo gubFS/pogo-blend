@@ -19,7 +19,7 @@ class WMBEntity:
         self.name = obj.name if entity.name_override == "" else entity.name_override
 
         self.filename = (
-            f"{obj.data.name}.mdl"
+            f"NOTSWITCHED"
             if entity.filename_override == ""
             else entity.filename_override
         )

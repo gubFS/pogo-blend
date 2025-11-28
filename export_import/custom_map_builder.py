@@ -6,8 +6,9 @@ from PIL import Image
 
 from .. import pogo_blend_utils as pbu
 from ..caching.hash_entity import hash_entity
-from ..ui.operators.create_collider import create_collider
+from ..ui.operators import create_collider
 from .gub_byte_array import GubByteArray
+from .hash_cache import HashCache
 from .mdl_exporter.mdl_exporter import MDLExporter
 from .wmb_exporter.wmb_exporter import WMBExporter
 from .wmb_exporter.wmb_objects.wmb_entity import (
@@ -21,7 +22,6 @@ from .wmb_exporter.wmb_objects.wmb_path import PogoPathProgress, WMBPath
 from .wmb_exporter.wmb_objects.wmb_reigon import WMBReigon
 
 used_names = set()
-cache = {}
 
 
 def build_custom_map(context, filepath, global_scale):
@@ -45,6 +45,7 @@ def build_custom_map(context, filepath, global_scale):
         )
 
     dirpath = os.path.dirname(filepath)
+    cache = HashCache(os.path.join(dirpath, ".pogo_blend"))
     used_names.clear()
 
     undo_map_scale_args = apply_map_scale(custom_map_collection, global_scale)
@@ -61,7 +62,7 @@ def build_custom_map(context, filepath, global_scale):
         paths = [path_progress]
         paths_to_add = []
         splits_to_add = {}
-        cols_cleanup = []
+        colliders = []
 
         for obj in custom_map_collection.objects:
             if obj in [spawn, path_progress, start_line]:
@@ -82,17 +83,7 @@ def build_custom_map(context, filepath, global_scale):
                             obj.pogo_entity.flag_auto_collision
                             and obj.pogo_entity.flag_polygon
                         ):
-                            collider = create_collider(obj, 64)
-                            cols_cleanup.append(collider)
-                            collider_entity = WMBEntity(collider)
-                            meshes[collider.data] = (collider_entity, collider, 1.0)
-                            entity.flags &= ~(1 << 26)  # clear polygon
-                            entity.flags |= 1 << 9  # set passable
-                            if obj.pogo_entity.path != None:
-                                paths_to_add.append(
-                                    (collider_entity, obj.pogo_entity.path)
-                                )
-                            wmb_objects.append(collider_entity)
+                            colliders.append((obj, entity))
                     if (
                         obj.pogo_entity.path != None
                         and not obj.pogo_entity.flag_auto_collision
@@ -116,9 +107,7 @@ def build_custom_map(context, filepath, global_scale):
                     paths.append(obj)
                     wmb_objects.append(WMBPath(obj))
 
-        for entity, path in paths_to_add:
-            entity.path = paths.index(path) + 1
-
+        # export meshes
         for entity, obj, scale in meshes.values():
             filename = pbu.get_unique_name(obj.name, ".mdl", 33, used_names)
             if filename == None:
@@ -128,16 +117,12 @@ def build_custom_map(context, filepath, global_scale):
             entity.filename = filename
             mdlpath = os.path.join(dirpath, filename)
 
-            if os.path.exists(mdlpath):
-                if not obj.name.endswith("_col"):
-                    if mdlpath not in cache:
-                        cache[mdlpath] = hash_entity(obj)
-                    elif cache[mdlpath] != hash_entity(obj):
-                        cache[mdlpath] = hash_entity(obj)
-                    else:
-                        print(f"skipping {mdlpath}")
-                        continue
-                print(f"WARNING: Overwriting '{mdlpath}'")
+            if not cache.update_entity(filename, obj):
+                print(f"skipping {mdlpath}")
+                continue
+
+            # if os.path.exists(mdlpath):
+            #     print(f"WARNING: Overwriting '{mdlpath}'")
 
             mdl_exporter = MDLExporter(mdlpath, [obj], scale)
             for texture, slot_idx in mdl_exporter.skins.copy().items():
@@ -162,7 +147,41 @@ def build_custom_map(context, filepath, global_scale):
                 textures[texture] = new_texture
             mdl_exporter.export()
 
+        # colliders
+        for obj, entity in colliders:
+            filename = pbu.get_unique_name(obj.name, "_col.mdl", 33, used_names)
+            if filename == None:
+                print("WARNING: could not find a unique filename")
+                continue
+            mdlpath = os.path.join(dirpath, filename)
+
+            if cache.update_collider(filename, obj):
+                collider = create_collider.create_collider(obj, 64)
+                MDLExporter(mdlpath, [collider], 1.0).export()
+            else:
+                # print("skipping col")
+                collider = create_collider.create_collider_object(obj)
+
+            collider_entity = WMBEntity(collider)
+            collider_entity.filename = filename
+            entity.flags &= ~(1 << 26)  # clear polygon
+            entity.flags |= 1 << 9  # set passable
+            if obj.pogo_entity.path != None:
+                paths_to_add.append((collider_entity, obj.pogo_entity.path))
+            wmb_objects.append(collider_entity)
+
+            # cleanup generated collider
+            mesh = collider.data
+            bpy.data.objects.remove(collider, do_unlink=True)
+            if mesh != None:
+                bpy.data.meshes.remove(mesh, do_unlink=True)
+        cache.write()
+
+        for entity, path in paths_to_add:
+            entity.path = paths.index(path) + 1
+
         export_splits(dirpath, custom_map, splits_to_add)
+
         WMBExporter(filepath, wmb_objects).export()
 
         export_map_description(dirpath)
@@ -170,10 +189,6 @@ def build_custom_map(context, filepath, global_scale):
         for texture, new_texture in textures.items():
             export_texture(dirpath, new_texture, texture)
 
-        for col in cols_cleanup:
-            mesh = col.data
-            bpy.data.objects.remove(col, do_unlink=True)
-            bpy.data.meshes.remove(mesh, do_unlink=True)
     finally:
         unapply_map_scale(*undo_map_scale_args)
 
