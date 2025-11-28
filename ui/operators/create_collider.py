@@ -80,30 +80,18 @@ def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
         )
         bpy.ops.mesh.select_all(action="SELECT")
         bpy.ops.mesh.normals_make_consistent()
+
         bpy.ops.object.mode_set(mode="OBJECT")
         bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="BOUNDS")
         bpy.ops.view3d.snap_cursor_to_active()
         scene.cursor.location.x = obj.matrix_world.translation.x
         scene.cursor.location.z = obj.matrix_world.translation.z
         bpy.ops.object.origin_set(type="ORIGIN_CURSOR", center="BOUNDS")
-        collider = context.object
-        collider.matrix_world.translation[1] = 0
-        collider.name = f"{obj.name}_col"
-        collider.data.name = f"{obj.name}_col"
-        collider.users_collection[0].objects.unlink(collider)
-        obj.users_collection[0].objects.link(collider)
 
-        collider.pogo_entity
-        if "pogo_entity" in obj:
-            collider.pogo_entity.copy_from(obj.pogo_entity)
-        collider.pogo_entity.flag_passable = False
-        collider.pogo_entity.flag_invisible = True
-        collider.pogo_entity.flag_unlit = True
-        collider.pogo_entity.flag_polygon = True
-        collider.pogo_entity.flag_auto_collision = False
-        collider.pogo_entity.ambient = 0.0
-        collider.pogo_entity.albedo = 50.0
-        collider.pogo_entity.material = "ndef"
+        collider_object = context.object
+        collider_mesh = collider_object.data
+        collider = create_collider_object(obj, collider_mesh)
+        bpy.data.objects.remove(collider_object, do_unlink=True)
 
         # cleanup
         camera_data = camera.data
@@ -119,6 +107,31 @@ def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
         scene.cursor.location = c_cursor
 
         return collider
+
+
+def create_collider_object(obj, data=None):
+    collider = bpy.data.objects.new(f"{obj.name}_col", data)
+    if data != None:
+        collider.data.name = collider.name
+
+    collider.matrix_world.translation = obj.matrix_world.translation
+    collider.matrix_world.translation[1] = 0
+
+    obj.users_collection[0].objects.link(collider)
+
+    collider.pogo_entity
+    if "pogo_entity" in obj:
+        collider.pogo_entity.copy_from(obj.pogo_entity)
+    collider.pogo_entity.flag_passable = False
+    collider.pogo_entity.flag_invisible = True
+    collider.pogo_entity.flag_unlit = True
+    collider.pogo_entity.flag_polygon = True
+    collider.pogo_entity.flag_auto_collision = False
+    collider.pogo_entity.ambient = 0.0
+    collider.pogo_entity.albedo = 50.0
+    collider.pogo_entity.material = "ndef"
+
+    return collider
 
 
 class CreatePogoCollider(bpy.types.Operator):
