@@ -57,7 +57,7 @@ def build_custom_map(context, filepath, global_scale):
             PogoPathProgress(path_progress),
             PogoStartLine(start_line),
         ]
-        meshes = {start_line.data: (wmb_objects[-1], start_line, global_scale)}
+        meshes = {start_line.data: ([wmb_objects[-1]], start_line, global_scale)}
         textures = {}
         paths = [path_progress]
         paths_to_add = []
@@ -78,7 +78,9 @@ def build_custom_map(context, filepath, global_scale):
                     path = None
                     if obj.pogo_entity.filename_override == "":
                         if mesh not in meshes:
-                            meshes[mesh] = (entity, obj, global_scale)
+                            meshes[mesh] = ([entity], obj, global_scale)
+                        else:
+                            meshes[mesh][0].append(entity)
                         if (
                             obj.pogo_entity.flag_auto_collision
                             and obj.pogo_entity.flag_polygon
@@ -108,13 +110,14 @@ def build_custom_map(context, filepath, global_scale):
                     wmb_objects.append(WMBPath(obj))
 
         # export meshes
-        for entity, obj, scale in meshes.values():
+        for entities, obj, scale in meshes.values():
             filename = pbu.get_unique_name(obj.name, ".mdl", 33, used_names)
             if filename == None:
                 print("WARNING: could not find a unique filename")
                 continue
 
-            entity.filename = filename
+            for entity in entities:
+                entity.filename = filename
             mdlpath = os.path.join(dirpath, filename)
 
             for texture in pbu.get_textures(obj):
