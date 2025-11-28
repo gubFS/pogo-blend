@@ -63,6 +63,15 @@ def build_custom_map(context, filepath, global_scale):
         paths_to_add = []
         splits_to_add = {}
         colliders = []
+        used_files = set(
+            [
+                ".pogo_blend",
+                "customMap.wmb",
+                "levelDescription.txt",
+                "splitSetup.txt",
+                "workshopPreview.png",
+            ]
+        )
 
         for obj in custom_map_collection.objects:
             if obj in [spawn, path_progress, start_line]:
@@ -115,6 +124,7 @@ def build_custom_map(context, filepath, global_scale):
             if filename == None:
                 print("WARNING: could not find a unique filename")
                 continue
+            used_files.add(filename)
 
             for entity in entities:
                 entity.filename = filename
@@ -132,6 +142,7 @@ def build_custom_map(context, filepath, global_scale):
                         print("WARNING: could not find a unique filename")
                         continue
                     else:
+                        used_files.add(new_texture)
                         textures[texture] = new_texture
 
             if not cache.update_entity(filename, obj):
@@ -158,6 +169,7 @@ def build_custom_map(context, filepath, global_scale):
             if filename == None:
                 print("WARNING: could not find a unique filename")
                 continue
+            used_files.add(filename)
             mdlpath = os.path.join(dirpath, filename)
 
             if cache.update_collider(filename, obj):
@@ -193,6 +205,20 @@ def build_custom_map(context, filepath, global_scale):
         export_map_image(dirpath, custom_map)
         for texture, new_texture in textures.items():
             export_texture(dirpath, new_texture, texture)
+
+        files_in_dictionary = set(
+            [
+                file
+                for file in os.listdir(dirpath)
+                if os.path.isfile(os.path.join(dirpath, file))
+            ]
+        )
+        unused_files = files_in_dictionary.difference(used_files)
+        for file in unused_files:
+            for extension in [".mdl", ".tga", ".png"]:
+                if file.endswith(extension):
+                    fullpath = os.path.join(dirpath, file)
+                    os.remove(fullpath)
 
     finally:
         unapply_map_scale(*undo_map_scale_args)
