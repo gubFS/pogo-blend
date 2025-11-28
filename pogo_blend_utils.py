@@ -1,3 +1,4 @@
+import os
 from string import ascii_lowercase
 
 import bpy
@@ -64,3 +65,16 @@ def get_unique_name(suggestion, required_suffix, max_length, used_names):
                 break
     used_names.add(name)
     return name
+
+
+def get_textures(obj) -> list[str]:
+    textures = []
+    for mat_slot in obj.material_slots:
+        if mat_slot.material and mat_slot.material.node_tree:
+            for node in mat_slot.material.node_tree.nodes:
+                if node.type == "TEX_IMAGE":
+                    image = node.image
+                    full_path = bpy.path.abspath(image.filepath, library=image.library)
+                    image_path = os.path.normpath(full_path)
+                    textures.append(image_path)
+    return textures

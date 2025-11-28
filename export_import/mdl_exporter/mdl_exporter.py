@@ -3,6 +3,7 @@ import os
 import bpy
 from mathutils import Vector
 
+from ... import pogo_blend_utils as pbu
 from ..gub_byte_array import GubByteArray
 
 
@@ -40,23 +41,14 @@ class MDLExporter:
         for obj in self.objs:
             mesh = obj.data
 
-            has_skin = False
-            # Goes through every node on every material on the object
-            for mat_slot in obj.material_slots:
-                if mat_slot.material and mat_slot.material.node_tree:
-                    for node in mat_slot.material.node_tree.nodes:
-                        if node.type == "TEX_IMAGE":
-                            image = node.image
-                            full_path = bpy.path.abspath(
-                                image.filepath, library=image.library
-                            )
-                            image_path = os.path.normpath(full_path)
-                            if image_path in self.skins:
-                                skin_dict[mat_slot.slot_index] = self.skins[image_path]
-                            else:
-                                self.skins[image_path] = len(self.skins)
-                                skin_dict[mat_slot.slot_index] = self.skins[image_path]
-                            has_skin = True
+            textures = pbu.get_textures(obj)
+            for i, texture in enumerate(textures):
+                if texture in self.skins:
+                    skin_dict[i] = self.skins[texture]
+                else:
+                    self.skins[texture] = len(self.skins)
+                    skin_dict[i] = self.skins[texture]
+            has_skin = len(textures) != 0
             self.has_skin = has_skin
 
             # y-axis is flipped in A8

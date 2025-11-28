@@ -117,8 +117,22 @@ def build_custom_map(context, filepath, global_scale):
             entity.filename = filename
             mdlpath = os.path.join(dirpath, filename)
 
+            for texture in pbu.get_textures(obj):
+                if texture not in textures:
+                    new_texture = pbu.get_unique_name(
+                        os.path.splitext(os.path.basename(texture))[0],
+                        ".tga",
+                        255,
+                        used_names,
+                    )
+                    if new_texture == None:
+                        print("WARNING: could not find a unique filename")
+                        continue
+                    else:
+                        textures[texture] = new_texture
+
             if not cache.update_entity(filename, obj):
-                print(f"skipping {mdlpath}")
+                # print(f"skipping {mdlpath}")
                 continue
 
             # if os.path.exists(mdlpath):
@@ -129,22 +143,10 @@ def build_custom_map(context, filepath, global_scale):
                 if texture == "":
                     continue
 
-                new_texture = None
                 if texture in textures:
                     new_texture = textures[texture]
-                else:
-                    new_texture = pbu.get_unique_name(
-                        os.path.splitext(os.path.basename(texture))[0],
-                        ".tga",
-                        255,
-                        used_names,
-                    )
-                if new_texture == None:
-                    print("WARNING: could not find a unique filename")
-                    continue
-                mdl_exporter.skins.pop(texture)
-                mdl_exporter.skins[new_texture] = slot_idx
-                textures[texture] = new_texture
+                    mdl_exporter.skins.pop(texture)
+                    mdl_exporter.skins[new_texture] = slot_idx
             mdl_exporter.export()
 
         # colliders

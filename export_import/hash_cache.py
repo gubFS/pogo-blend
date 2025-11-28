@@ -5,6 +5,7 @@ from collections.abc import Callable
 
 import bpy
 
+from .. import pogo_blend_utils as pbu
 from .gub_byte_array import GubByteArray
 
 
@@ -94,9 +95,5 @@ class HashCache:
             bytes.store_32(polygon.material_index)
 
     def _store_textures(self, obj, bytes: GubByteArray):
-        for mat_slot in obj.material_slots:
-            bytes.store_32(mat_slot.slot_index)
-            if mat_slot.material and mat_slot.material.node_tree:
-                for node in mat_slot.material.node_tree.nodes:
-                    if node.type == "TEX_IMAGE":
-                        bytes.store_string(node.image.filepath)
+        for texture in pbu.get_textures(obj):
+            bytes.store_string(texture)
