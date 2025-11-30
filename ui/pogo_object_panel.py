@@ -217,6 +217,9 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
         layout.prop(entity, "string1_override", text="string1")
         layout.prop(entity, "string2_override", text="string2")
 
+        for i in range(1, 21):
+            layout.prop(entity, f"skill_{i}", text=f"skill_{i}")
+
 
 def register():
     bpy.utils.register_class(AddPogoEntityData)
