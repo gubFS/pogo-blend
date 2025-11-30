@@ -67,8 +67,9 @@ def import_mdl(context, filepath, scale):
             filename_length = read_32()
             skip(4)
             skip(16)
-            filename = read_str()
-            skins.append(filename)
+            if filename_length != 0:
+                filename = read_str()
+                skins.append(filename)
 
         for i in range(num_uvs_points):
             uvs.append((read_float(), read_float()))
@@ -102,15 +103,16 @@ def import_mdl(context, filepath, scale):
     obj.select_set(True)
     context.view_layer.objects.active = obj
 
-    uv_layer = mesh.uv_layers.new(name="layer")
-    for i, tri in enumerate(tris):
-        mesh.polygons[i].material_index = (
-            tri.skin_idx if tri.skin_idx != 0xFFFFFFFF else 0
-        )
-        for j in range(3):
-            vec = Vector(uvs[tri.uvs[j]])
-            vec.y = 1 - vec.y
-            uv_layer.uv[(i * 3) + j].vector = vec
+    if len(uvs) != 0:
+        uv_layer = mesh.uv_layers.new(name="layer")
+        for i, tri in enumerate(tris):
+            mesh.polygons[i].material_index = (
+                tri.skin_idx if tri.skin_idx != 0xFFFFFFFF else 0
+            )
+            for j in range(3):
+                vec = Vector(uvs[tri.uvs[j]])
+                vec.y = 1 - vec.y
+                uv_layer.uv[(i * 3) + j].vector = vec
 
     for skin in skins:
         if skin == "":
