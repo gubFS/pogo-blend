@@ -5,7 +5,6 @@ import bpy
 from PIL import Image
 
 from .. import pogo_blend_utils as pbu
-from ..caching.hash_entity import hash_entity
 from ..ui.operators import create_collider
 from .gub_byte_array import GubByteArray
 from .hash_cache import HashCache
@@ -192,7 +191,6 @@ def build_custom_map(context, filepath, global_scale):
             bpy.data.objects.remove(collider, do_unlink=True)
             if mesh != None:
                 bpy.data.meshes.remove(mesh, do_unlink=True)
-        cache.write()
 
         for entity, path in paths_to_add:
             entity.path = paths.index(path) + 1
@@ -219,6 +217,9 @@ def build_custom_map(context, filepath, global_scale):
                 if file.endswith(extension):
                     fullpath = os.path.join(dirpath, file)
                     os.remove(fullpath)
+
+        cache.keep(used_files)
+        cache.write()
 
     finally:
         unapply_map_scale(*undo_map_scale_args)

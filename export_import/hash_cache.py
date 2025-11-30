@@ -45,6 +45,12 @@ class HashCache:
     def update_collider(self, key: str, obj) -> bool:
         return self._update(key, obj, self.hash_collider)
 
+    def keep(self, keep_set: set):
+        current = set(self.cache.keys())
+        to_remove = current.difference(keep_set)
+        for key in to_remove:
+            del self.cache[key]
+
     def hash_entity(self, obj) -> str:
         bytes = GubByteArray()
         mesh = obj.data
