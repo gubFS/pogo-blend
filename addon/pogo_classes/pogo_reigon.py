@@ -4,9 +4,7 @@ from .. import pogo_blend_utils as pbu
 
 
 class PogoReigon(bpy.types.PropertyGroup):
-    reigon_types = [
-        ("ndef", "", "No reigon type"),
-    ]
+    reigon_types = [("ndef", "", "No reigon type", 0)]
     reigon_types.extend(pbu.get_enum_list("pogo_classes/reigon_types.yaml", True))
 
     def update_reigon_type(self, context):

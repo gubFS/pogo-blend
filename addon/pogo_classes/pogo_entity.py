@@ -14,7 +14,7 @@ class PogoEntity(bpy.types.PropertyGroup):
     string1_override: bpy.props.StringProperty()
     string2_override: bpy.props.StringProperty()
 
-    material_enums = [("ndef", "", "")]
+    material_enums = [("ndef", "", "No material", 0)]
     material_enums.extend(pbu.get_enum_list("pogo_classes/materials.yaml", False)) #pbu.get_preferences().show_all_materials))
     material: bpy.props.EnumProperty(
         items=material_enums, name="Material", default="ndef"
@@ -42,7 +42,7 @@ class PogoEntity(bpy.types.PropertyGroup):
     ambient: bpy.props.FloatProperty(name="Ambient")
     albedo: bpy.props.FloatProperty(name="Albedo", default=50.0)
 
-    action_enums = [("ndef", "", "")]
+    action_enums = [("ndef", "", "No action", 0)]
     action_enums.extend(pbu.get_enum_list("pogo_classes/actions.yaml", False)) # pbu.get_preferences().show_all_actions))
 
     actions = pbu.parse_yaml("pogo_classes/actions.yaml")
@@ -80,12 +80,10 @@ class PogoEntity(bpy.types.PropertyGroup):
             self.set_action_defaults(context, False)
 
     def set_action_defaults(self, context, is_action1: bool) -> None:
-        other_action = "action1" if not is_action1 else "action2"
         other_action_name = ""
-        if other_action in self:
-            other_action_name = self.action_enums[self[other_action]][0]
-        new_action = "action1" if is_action1 else "action2"
-        new_action_name = self.action_enums[self[new_action]][0]
+        if ("action1" if not is_action1 else "action2") in self:
+            other_action_name = self.action1 if not is_action1 else self.action2
+        new_action_name = self.action1 if is_action1 else self.action2
 
         all_values = set()
         all_values.update(f"flag_{i}" for i in range(1, 9))

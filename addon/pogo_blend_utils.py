@@ -1,3 +1,4 @@
+import hashlib
 import os
 from pathlib import Path
 from string import ascii_lowercase
@@ -101,6 +102,7 @@ def get_enum_list(filepath: str, show_all: bool) -> list[tuple]:
                 key,
                 config["name"] if "name" in config else key,
                 config["description"] if "description" in config else "",
+                int.from_bytes(hashlib.sha256(key.encode()).digest()[:4], 'little') & 0b1111_1111_1111_1111_1111_1111_0000_0000, # idk why the enums are weird but they are so this is the solution
             )
         )
     return enum_list
