@@ -10,12 +10,8 @@ from .gub_byte_array import GubByteArray
 from .hash_cache import HashCache
 from .mdl_exporter.mdl_exporter import MDLExporter
 from .wmb_exporter.wmb_exporter import WMBExporter
-from .wmb_exporter.wmb_objects.wmb_entity import (
-    PogoModeSetup,
-    PogoSpawn,
-    PogoStartLine,
-    WMBEntity,
-)
+from .wmb_exporter.wmb_objects.wmb_entity import (PogoModeSetup, PogoSpawn,
+                                                  PogoStartLine, WMBEntity)
 from .wmb_exporter.wmb_objects.wmb_info import WMBInfo
 from .wmb_exporter.wmb_objects.wmb_path import PogoPathProgress, WMBPath
 from .wmb_exporter.wmb_objects.wmb_reigon import WMBReigon
@@ -248,8 +244,18 @@ def export_map_description(dirpath):
 
 
 def export_map_image(dirpath, custom_map):
-    img = Image.open(custom_map.map_image)
-    img.save(os.path.join(dirpath, "workshopPreview.png"), format="PNG")
+    image_path = custom_map.map_image
+
+    if image_path == None:
+        return
+    if image_path == "":
+        return
+
+    try:
+        img = Image.open(custom_map.map_image)
+        img.save(os.path.join(dirpath, "workshopPreview.png"), format="PNG")
+    except:
+        print("Could not load or save map image!")
 
 
 def export_texture(dirpath, image_name, image_path):
