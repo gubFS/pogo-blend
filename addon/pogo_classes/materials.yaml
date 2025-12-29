@@ -43,7 +43,6 @@ pogostick_mat:
 pogostickGold_mat:
 slime_mat:
 startFinish_mat:
-  hidden: true
 toggleBlock_mat:
 mat_trafficCone:
   hidden: true

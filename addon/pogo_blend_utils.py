@@ -106,3 +106,13 @@ def get_enum_list(filepath: str, show_all: bool) -> list[tuple]:
             )
         )
     return enum_list
+
+
+def get_enum_key(obj, prop_name: str, enum_list: list[tuple]) -> str | None:
+    if prop_name not in obj:
+        return "ndef"
+    key = [key for key, _, _, id in enum_list if id == obj[prop_name]]
+    if len(key) == 0:
+        return "ndef"
+    else:
+        return key[0]

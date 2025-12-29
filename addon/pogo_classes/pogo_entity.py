@@ -161,7 +161,7 @@ class PogoEntity(bpy.types.PropertyGroup):
         self.action_override = other.action_override
         self.string1_override = other.string1_override
         self.string2_override = other.string2_override
-        self.material = other.material
+        self.material = other.material if other.material != "" else "ndef"
         self.flag_invisible = other.flag_invisible
         self.flag_passable = other.flag_passable
         self.flag_transparent = other.flag_transparent
@@ -179,8 +179,8 @@ class PogoEntity(bpy.types.PropertyGroup):
         self.flag_bbox = other.flag_bbox
         self.ambient = other.ambient
         self.albedo = other.albedo
-        self.action1 = other.action1
-        self.action2 = other.action2
+        self.action1 = other.action1 if other.action1 != "" else "ndef"
+        self.action2 = other.action2 if other.action2 != "" else "ndef"
         self.flag_1 = other.flag_1
         self.flag_2 = other.flag_2
         self.flag_3 = other.flag_3
