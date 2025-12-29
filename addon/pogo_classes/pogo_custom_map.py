@@ -47,7 +47,7 @@ class PogoCustomMap(bpy.types.PropertyGroup):
     start_line: bpy.props.PointerProperty(
         type=bpy.types.Object,
         name="Start Line",
-        poll=lambda prop, obj: obj.type == "MESH",
+        poll=lambda prop, obj: "pogo_entity" in obj,
     )
 
     double_jump: bpy.props.BoolProperty(name="Double Jump")
