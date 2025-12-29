@@ -3,6 +3,8 @@ import os
 
 import bpy
 
+from .. import pogo_blend_utils as pbu
+
 
 class PogoEntity(bpy.types.PropertyGroup):
     name_override: bpy.props.StringProperty()
@@ -13,18 +15,7 @@ class PogoEntity(bpy.types.PropertyGroup):
     string2_override: bpy.props.StringProperty()
 
     material_enums = [("ndef", "", "")]
-    with open(os.path.join(os.path.dirname(__file__), "materials.json"), "r") as f_in:
-        materials = json.load(f_in)
-        for material, config in materials.items():
-            if "disable" in config and config["disable"] == True:
-                continue
-            material_enums.append(
-                (
-                    material,
-                    config["name"] if "name" in config else material,
-                    config["description"] if "description" in config else "",
-                )
-            )
+    material_enums.extend(pbu.get_enum_list("pogo_classes/materials.yaml", False))
     material: bpy.props.EnumProperty(
         items=material_enums, name="Material", default="ndef"
     )
@@ -52,18 +43,28 @@ class PogoEntity(bpy.types.PropertyGroup):
     albedo: bpy.props.FloatProperty(name="Albedo", default=50.0)
 
     action_enums = [("ndef", "", "")]
-    with open(os.path.join(os.path.dirname(__file__), "actions.json"), "r") as f_in:
-        actions = json.load(f_in)
-        for action, config in actions.items():
-            if "disable" in config and config["disable"] == True:
-                continue
-            action_enums.append(
-                (
-                    action,
-                    config["name"] if "name" in config else action,
-                    config["description"] if "description" in config else "",
-                )
-            )
+    action_enums.extend(pbu.get_enum_list("pogo_classes/actions.yaml", False))
+
+    actions = pbu.parse_yaml("pogo_classes/actions.yaml")
+    for key, config in actions.items():
+        if config == None:
+            config = {}
+            actions[key] = config
+        config.setdefault("name", key)
+        config.setdefault("description", "")
+        config.setdefault("flags", {})
+        config.setdefault("skills", {})
+        config.setdefault("path", False)
+
+        for flag, flag_config in config["flags"].items():
+            flag_config.setdefault("name", flag)
+            flag_config.setdefault("description", "")
+            flag_config.setdefault("default", False)
+
+        for skill, skill_config in config["skills"].items():
+            skill_config.setdefault("name", skill)
+            skill_config.setdefault("description", "")
+            skill_config.setdefault("default", 0.0)
 
     def on_action1_change(self, context):
         value = self.action1
@@ -93,36 +94,20 @@ class PogoEntity(bpy.types.PropertyGroup):
         in_use = set()
         if other_action_name in self.actions:
             config = self.actions[other_action_name]
-            if "flags" in config:
-                in_use.update(flag["identifier"] for flag in config["flags"])
-            if "skills" in config:
-                in_use.update(skill["identifier"] for skill in config["skills"])
+            in_use.update(flag for flag in config["flags"].keys())
+            in_use.update(skill for skill in config["skills"].keys())
         all_values = all_values.difference(in_use)
 
         new_action_values = {}
         if new_action_name in self.actions:
             config = self.actions[new_action_name]
-            if "flags" in config:
-                new_action_values.update(
-                    {
-                        flag["identifier"]: flag
-                        for flag in config["flags"]
-                        if "default" in flag
-                    }
-                )
-            if "skills" in config:
-                new_action_values.update(
-                    {
-                        skill["identifier"]: skill
-                        for skill in config["skills"]
-                        if "default" in skill
-                    }
-                )
+            new_action_values.update({flag: flag_config["default"] for flag, flag_config in config["flags"].items()})
+            new_action_values.update({skill: skill_config["default"] for skill, skill_config in config["skills"].items()})
 
         for id, value in new_action_values.items():
             if id in in_use:
                 continue
-            default = value["default"]
+            default = value
             self[id] = default
         all_values = all_values.difference(new_action_values)
         for value in all_values:
@@ -142,7 +127,7 @@ class PogoEntity(bpy.types.PropertyGroup):
     flag_5: bpy.props.BoolProperty(name="flag_5")  # = 4,
     flag_6: bpy.props.BoolProperty(name="flag_6")  # = 5,
     flag_7: bpy.props.BoolProperty(name="Ice")  # = 6, # ICE
-    flag_8: bpy.props.BoolProperty(name="Bonk")  # = 7,
+    flag_8: bpy.props.BoolProperty(name="Bonk")  # = 7, # NO BONK
 
     flag_auto_collision: bpy.props.BoolProperty(name="Auto Collision")
 

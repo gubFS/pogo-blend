@@ -1,0 +1,26 @@
+---
+kill:
+  name: Kill
+  description: Kills the player
+CP_:
+  name: Split
+  description: Triggers a split
+modearea_double:
+  name: Double Jump
+  description: Enables Double Jump mode
+modearea_puzzle:
+  name: Puzzle
+  description: Enables Puzzle mode
+modearea_nobonk:
+  name: No Bonk
+  description: Kills the player if they bonk
+modearea_noboost:
+  name: No Boost
+  description: Disables boosting
+gravityReg_:
+  name: Gravity
+  description: Changes the gravity in the reigon
+reg_finish:
+  name: Finish
+  description: Finishes the map when entered
+...

@@ -120,30 +120,29 @@ class PogoObjectPanel(bpy.types.Panel):
                 self.draw_action_panel(entity, entity.action2, layout)
 
     def draw_action_panel(self, entity, action, layout):
-        currentConfig = entity.actions.get(action)
+        action_config = entity.actions[action]
 
-        if "flags" in currentConfig and len(currentConfig.get("flags")) != 0:
+        if len(action_config["flags"]) != 0:
             row = layout.row()
             colLeft = row.column()
             colRight = row.column()
-            for i, flag in enumerate(currentConfig["flags"]):
+            for i, (flag, flag_config) in enumerate(action_config["flags"].items()):
                 col = colLeft if i % 2 == 0 else colRight
-                # entity[flag["identifier"]] = flag["default"] # TODO: change value to default when action is changed (not on every draw)
                 col.prop(
                     entity,
-                    flag.get("identifier"),
-                    text=flag.get("name", flag.get("identifier")),
+                    flag,
+                    text=flag_config["name"],
                 )
 
-        if "skills" in currentConfig and len(currentConfig.get("skills")) != 0:
-            for i, skill in enumerate(currentConfig["skills"]):
+        if len(action_config["skills"]) != 0:
+            for i, (skill, skill_config) in enumerate(action_config["skills"].items()):
                 layout.prop(
                     entity,
-                    skill.get("identifier"),
-                    text=skill.get("name", skill.get("identifier")),
+                    skill,
+                    text=skill_config["name"],
                 )
 
-        if "path" in currentConfig and currentConfig.get("path") == True:
+        if action_config["path"] == True:
             layout.prop(entity, "path", placeholder="Path", icon="OUTLINER_OB_CURVE")
 
     def draw_empty_panel(self, obj, layout):

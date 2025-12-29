@@ -5,16 +5,9 @@ from .. import pogo_blend_utils as pbu
 
 class PogoReigon(bpy.types.PropertyGroup):
     reigon_types = [
-        ("ndef", "", ""),
-        ("kill", "Kill", ""),
-        ("CP_", "Checkpoint", ""),
-        ("modearea_double", "Double jump", ""),
-        ("modearea_puzzle", "Puzzle", ""),
-        ("modearea_nobonk", "No bonk", ""),
-        ("modearea_noboost", "No boost", ""),
-        ("gravityReg_", "Gravity", ""),
-        ("reg_finish", "Finish", ""),
+        ("ndef", "", "No reigon type"),
     ]
+    reigon_types.extend(pbu.get_enum_list("pogo_classes/reigon_types.yaml", True))
 
     def update_reigon_type(self, context):
         obj = context.object

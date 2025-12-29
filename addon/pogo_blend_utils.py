@@ -1,7 +1,9 @@
 import os
+from pathlib import Path
 from string import ascii_lowercase
 
 import bpy
+import yaml
 
 from .pogo_blend_preferences import get_preferences as gp
 
@@ -12,7 +14,6 @@ def get_preferences() -> bpy.types.AddonPreferences:
 
 class ContextError(BaseException):
     pass
-
 
 def get_custom_map_collection() -> bpy.types.Collection:
     try:
@@ -78,3 +79,28 @@ def get_textures(obj) -> list[str]:
                     image_path = os.path.normpath(full_path)
                     textures.append(image_path)
     return textures
+
+
+def parse_yaml(filepath: str):
+    yaml_obj = None
+    with open(Path(__file__).parent.joinpath(Path(filepath)), 'r') as f:
+        yaml_obj = yaml.safe_load(f)
+    return yaml_obj
+
+
+def get_enum_list(filepath: str, show_all: bool) -> list[tuple]:
+    yaml_obj = parse_yaml(filepath)
+    enum_list = []
+    for key, config in yaml_obj.items():
+        if config == None:
+            config = {}
+        if not show_all and "hidden" in config and config["hidden"] == True:
+            continue
+        enum_list.append(
+            (
+                key,
+                config["name"] if "name" in config else key,
+                config["description"] if "description" in config else "",
+            )
+        )
+    return enum_list

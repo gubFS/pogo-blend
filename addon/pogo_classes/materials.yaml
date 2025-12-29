@@ -1,0 +1,58 @@
+---
+appAGeoDefault_mat:
+  description: albedo changes greyscale of object, 50 albedo is 50% greyscale. 100 albedo is no greyscale
+appAGeoXRay_mat:
+anvil_mat:
+  name: Anvil
+mat_bug:
+  description: similar to traffic cone
+  hidden: true
+characterSimple_mat:
+cloud_mat:
+coconut_mat:
+  hidden: true
+cmFruitTex_mat:
+  description: this is the same material as map3FruitTex_mat, except that texture coordinates are not mirrored when they leave the 0..1 square area
+egg_mat:
+fruit_mat:
+  description: map 1 main material, uses gradientTest mostly
+fruitTex_mat:
+  description: map 1 main material but uses custom textures, such as for the red mushrooms
+iceSnow_mat:
+map3Carrots_mat:
+  hidden: true
+map3Chain_mat:
+map3ClothBee_mat:
+map3Eggplants_mat:
+  hidden: true
+map3FruitDefault_mat:
+  description: see map 1 notes
+  hidden: true
+map3FruitTex_mat:
+  hidden: true
+map3GoldSlime_mat:
+mymetal_mat:
+monoSpikes_mat:
+monoWheel_mat:
+mountain_mat:
+  hidden: true
+pencil_mat:
+pinkSap_mat:
+pogostick_mat:
+  hidden: true
+pogostickGold_mat:
+slime_mat:
+startFinish_mat:
+  hidden: true
+toggleBlock_mat:
+mat_trafficCone:
+  hidden: true
+mat_ushanka:
+  hidden: true
+viking_mat:
+  hidden: true
+wood_mat:
+cmNormalmapping:
+cmUnlit:
+cmPixelated:
+...
