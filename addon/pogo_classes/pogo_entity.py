@@ -15,7 +15,7 @@ class PogoEntity(bpy.types.PropertyGroup):
     string2_override: bpy.props.StringProperty()
 
     material_enums = [("ndef", "", "")]
-    material_enums.extend(pbu.get_enum_list("pogo_classes/materials.yaml", False))
+    material_enums.extend(pbu.get_enum_list("pogo_classes/materials.yaml", False)) #pbu.get_preferences().show_all_materials))
     material: bpy.props.EnumProperty(
         items=material_enums, name="Material", default="ndef"
     )
@@ -43,7 +43,7 @@ class PogoEntity(bpy.types.PropertyGroup):
     albedo: bpy.props.FloatProperty(name="Albedo", default=50.0)
 
     action_enums = [("ndef", "", "")]
-    action_enums.extend(pbu.get_enum_list("pogo_classes/actions.yaml", False))
+    action_enums.extend(pbu.get_enum_list("pogo_classes/actions.yaml", False)) # pbu.get_preferences().show_all_actions))
 
     actions = pbu.parse_yaml("pogo_classes/actions.yaml")
     for key, config in actions.items():

@@ -56,6 +56,18 @@ class PogoBlendPrefrences(bpy.types.AddonPreferences):
         description="Adds a panel to entities that shows all editiable fields. Not relevant in most normal use cases",
     )
 
+    # show_all_materials: bpy.props.BoolProperty(
+    #     default=False,
+    #     name="Show all materials",
+    #     description="Some irrelevant materials are hidden, choose to show them here",
+    # )
+    #
+    # show_all_actions: bpy.props.BoolProperty(
+    #     default=False,
+    #     name="Show all actions",
+    #     description="Some irrelevant actions are hidden, choose to show them here",
+    # )
+
     def draw(self, context):
         layout = self.layout
 
@@ -66,6 +78,8 @@ class PogoBlendPrefrences(bpy.types.AddonPreferences):
         row.operator("pogo_blend.select_custom_maps_dir", text="", icon="FILE_FOLDER")
         layout.prop(self, "map_scale")
         layout.prop(self, "show_overrides")
+        # layout.prop(self, "show_all_materials")
+        # layout.prop(self, "show_all_actions")
 
 
 def get_preferences():
