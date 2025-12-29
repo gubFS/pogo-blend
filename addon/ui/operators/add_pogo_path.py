@@ -19,6 +19,7 @@ class AddPogoPath(bpy.types.Operator):
         spline.points[-1].select = False
         bpy.ops.curve.delete(type="VERT")
         bpy.ops.object.mode_set(mode="OBJECT")
+        obj.rotation_euler[0] = 1.570796
         obj.pogo_path
 
         return {"FINISHED"}

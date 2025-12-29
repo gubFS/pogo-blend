@@ -12,7 +12,9 @@ class WMBPath:
         scale = obj.matrix_world.to_scale().to_3d()
         self.points = []
         for point in obj.data.splines[0].points:
-            point = point.co.to_3d() * scale + location
+            point = point.co.to_3d()
+            point.rotate(obj.matrix_world.to_euler())
+            point = point * scale + location
             self.points.append(point)
 
     def to_bytes(self) -> GubByteArray:
