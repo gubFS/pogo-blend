@@ -108,13 +108,28 @@ def menu_func(self, context):
     self.layout.operator(CustomMapBuilder.bl_idname, text="Build Pogostuck Custom Map")
 
 
+keymaps = []
+
+
 def register():
     bpy.utils.register_class(CustomMapBuilder)
     bpy.utils.register_class(CustomMapBuilderFile)
     bpy.types.TOPBAR_MT_file_export.append(menu_func)
+
+    wm = bpy.context.window_manager
+    kc = wm.keyconfigs.addon
+    print(kc)
+    if kc:
+        km = kc.keymaps.new(name="Object Mode", space_type='EMPTY')
+        kmi = km.keymap_items.new(CustomMapBuilder.bl_idname, 'F5', 'PRESS')
+        keymaps.append((km, kmi))
 
 
 def unregister():
     bpy.utils.unregister_class(CustomMapBuilder)
     bpy.utils.unregister_class(CustomMapBuilderFile)
     bpy.types.TOPBAR_MT_file_export.remove(menu_func)
+
+    for km, kmi in keymaps:
+        km.keymap_items.remove(kmi)
+    keymaps.clear()
