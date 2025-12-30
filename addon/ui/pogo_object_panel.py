@@ -166,7 +166,17 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
 
     @classmethod
     def poll(cls, context):
-        return pbu.get_preferences().show_overrides and "pogo_entity" in context.object
+        return "pogo_entity" in context.object and (pbu.get_preferences().show_overrides or cls.is_overridden(context.object))
+
+    @classmethod
+    def is_overridden(cls, obj) -> bool:
+        entity = obj.pogo_entity
+        return entity.name_override != ""\
+            or entity.filename_override != ""\
+            or entity.material_override != ""\
+            or entity.action_override != ""\
+            or entity.string1_override != ""\
+            or entity.string2_override != ""
 
     def draw(self, context):
         layout = self.layout
@@ -174,50 +184,63 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
         if "pogo_entity" not in obj:
             return
 
+        show_override = pbu.get_preferences().show_overrides
+
         entity = obj.pogo_entity
-        layout.prop(entity, "name_override")
-        layout.prop(entity, "filename_override")
-        layout.prop(entity, "material_override")
 
-        row = layout.row()
-        col = row.column()
-        col.prop(entity, "flag_invisible", text="flag_invisible")
-        col.prop(entity, "flag_unlit", text="flag_unlit")
-        col.prop(entity, "flag_transparent", text="flag_transparent")
-        col.prop(entity, "flag_overlay", text="flag_overlay")
-        col.prop(entity, "flag_shadow", text="flag_shadow")
-        col.prop(entity, "flag_cast", text="flag_cast")
-        col.prop(entity, "flag_metal", text="flag_metal")
+        if show_override or entity.name_override != "":
+            layout.prop(entity, "name_override")
+        if show_override or entity.filename_override != "":
+            layout.prop(entity, "filename_override")
+        if show_override or entity.material_override != "":
+            layout.prop(entity, "material_override")
 
-        col = row.column()
-        col.prop(entity, "flag_flare", text="flag_flare")
-        col.prop(entity, "flag_bright", text="flag_bright")
-        col.prop(entity, "flag_nofilter", text="flag_nofilter")
-        col.prop(entity, "flag_nofog", text="flag_nofog")
-        col.prop(entity, "flag_passable", text="flag_passable")
-        col.prop(entity, "flag_bbox", text="flag_bbox")
-        col.prop(entity, "flag_polygon", text="flag_polygon")
-        col.prop(entity, "flag_local", text="flag_local")
+        if show_override:
+            row = layout.row()
+            col = row.column()
+            col.prop(entity, "flag_invisible", text="flag_invisible")
+            col.prop(entity, "flag_unlit", text="flag_unlit")
+            col.prop(entity, "flag_transparent", text="flag_transparent")
+            col.prop(entity, "flag_overlay", text="flag_overlay")
+            col.prop(entity, "flag_shadow", text="flag_shadow")
+            col.prop(entity, "flag_cast", text="flag_cast")
+            col.prop(entity, "flag_metal", text="flag_metal")
 
-        layout.prop(entity, "action_override")
-        row = layout.row()
-        col = row.column()
-        col.prop(entity, "flag_1", text="flag_1")
-        col.prop(entity, "flag_2", text="flag_2")
-        col.prop(entity, "flag_3", text="flag_3")
-        col.prop(entity, "flag_4", text="flag_4")
+            col = row.column()
+            col.prop(entity, "flag_flare", text="flag_flare")
+            col.prop(entity, "flag_bright", text="flag_bright")
+            col.prop(entity, "flag_nofilter", text="flag_nofilter")
+            col.prop(entity, "flag_nofog", text="flag_nofog")
+            col.prop(entity, "flag_passable", text="flag_passable")
+            col.prop(entity, "flag_bbox", text="flag_bbox")
+            col.prop(entity, "flag_polygon", text="flag_polygon")
+            col.prop(entity, "flag_local", text="flag_local")
 
-        col = row.column()
-        col.prop(entity, "flag_5", text="flag_5")
-        col.prop(entity, "flag_6", text="flag_6")
-        col.prop(entity, "flag_7", text="flag_7")
-        col.prop(entity, "flag_8", text="flag_8")
+        if show_override or entity.action_override != "":
+            layout.prop(entity, "action_override")
 
-        layout.prop(entity, "string1_override", text="string1")
-        layout.prop(entity, "string2_override", text="string2")
+        if show_override:
+            row = layout.row()
+            col = row.column()
+            col.prop(entity, "flag_1", text="flag_1")
+            col.prop(entity, "flag_2", text="flag_2")
+            col.prop(entity, "flag_3", text="flag_3")
+            col.prop(entity, "flag_4", text="flag_4")
 
-        for i in range(1, 21):
-            layout.prop(entity, f"skill_{i}", text=f"skill_{i}")
+            col = row.column()
+            col.prop(entity, "flag_5", text="flag_5")
+            col.prop(entity, "flag_6", text="flag_6")
+            col.prop(entity, "flag_7", text="flag_7")
+            col.prop(entity, "flag_8", text="flag_8")
+
+        if show_override or entity.string1_override != "":
+            layout.prop(entity, "string1_override", text="string1")
+        if show_override or entity.string2_override != "":
+            layout.prop(entity, "string2_override", text="string2")
+
+        if show_override:
+            for i in range(1, 21):
+                layout.prop(entity, f"skill_{i}", text=f"skill_{i}")
 
 
 def register():
