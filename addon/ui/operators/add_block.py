@@ -12,7 +12,7 @@ class AddBlock(bpy.types.Operator):
 
         bpy.ops.object.editmode_toggle()
         bpy.ops.mesh.select_all(action='SELECT')
-        bpy.ops.transform.rotate(value=1.5708, orient_axis='X')
+        bpy.ops.transform.rotate(value=1.5708, orient_axis='X', orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False), mirror=True)
         bpy.ops.object.editmode_toggle()
 
         block.name = "PogoBlock"
