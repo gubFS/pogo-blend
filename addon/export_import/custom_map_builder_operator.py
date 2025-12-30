@@ -104,17 +104,17 @@ class CustomMapBuilder(bpy.types.Operator):
         return self.execute(context)
 
 
-def menu_func(self, context):
-    self.layout.operator(CustomMapBuilder.bl_idname, text="Build Pogostuck Custom Map")
+# def menu_func(self, context):
+#     self.layout.operator(CustomMapBuilderFile.bl_idname, text="Pogostuck Custom Map")
 
 
 def register():
     bpy.utils.register_class(CustomMapBuilder)
-    bpy.utils.register_class(CustomMapBuilderFile)
-    bpy.types.TOPBAR_MT_file_export.append(menu_func)
+    # bpy.utils.register_class(CustomMapBuilderFile)
+    # bpy.types.TOPBAR_MT_file_export.append(menu_func)
 
 
 def unregister():
     bpy.utils.unregister_class(CustomMapBuilder)
-    bpy.utils.unregister_class(CustomMapBuilderFile)
-    bpy.types.TOPBAR_MT_file_export.remove(menu_func)
+    # bpy.utils.unregister_class(CustomMapBuilderFile)
+    # bpy.types.TOPBAR_MT_file_export.remove(menu_func)

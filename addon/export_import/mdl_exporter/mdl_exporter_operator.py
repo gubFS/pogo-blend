@@ -61,9 +61,16 @@ class MDLExporterOperator(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
             return {"FINISHED"}
 
 
+def menu_func_export(self, context):
+    if MDLExporterOperator.poll(context):
+        self.layout.operator(MDLExporterOperator.bl_idname, text="MDL (.mdl)")
+
+
 def register():
     bpy.utils.register_class(MDLExporterOperator)
+    bpy.types.TOPBAR_MT_file_export.append(menu_func_export)
 
 
 def unregister():
     bpy.utils.unregister_class(MDLExporterOperator)
+    bpy.types.TOPBAR_MT_file_export.remove(menu_func_export)

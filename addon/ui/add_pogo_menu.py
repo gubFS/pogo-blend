@@ -8,16 +8,17 @@ class AddPogoMenu(bpy.types.Menu):
     def draw(self, context):
         layout = self.layout
 
-        layout.operator("pogo_blend.add_block", icon="CUBE")
-        layout.operator("pogo_blend.add_sprite", icon="IMAGE_DATA")
-        layout.operator("pogo_blend.add_pogo_reigon", icon="MESH_PLANE")
-        layout.operator("pogo_blend.add_pogo_path", icon="CON_FOLLOWPATH")
+        layout.operator("pogo_blend.add_block", text="Block", icon="CUBE")
+        layout.operator("pogo_blend.add_sprite", text="Sprite", icon="IMAGE_DATA")
+        layout.operator("pogo_blend.add_pogo_reigon", text="Reigon", icon="MESH_PLANE")
+        layout.operator("pogo_blend.add_pogo_path", text="Path", icon="CON_FOLLOWPATH")
 
 
 def draw_item(self, context):
     layout = self.layout
     layout.separator()
     layout.menu(AddPogoMenu.bl_idname)
+
 
 def register():
     bpy.utils.register_class(AddPogoMenu)

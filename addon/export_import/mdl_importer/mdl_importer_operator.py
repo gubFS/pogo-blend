@@ -186,7 +186,6 @@ class MDLImporterOperator(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
 
     @classmethod
     def poll(cls, context):
-        return True
         return pbu.get_preferences().mdl_importer
 
     def execute(self, context):
@@ -201,9 +200,16 @@ class MDLImporterOperator(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
             return {"FINISHED"}
 
 
+def menu_func(self, context):
+    if MDLImporterOperator.poll(context):
+        self.layout.operator(MDLImporterOperator.bl_idname, text="MDL (.mdl)")
+
+
 def register():
     bpy.utils.register_class(MDLImporterOperator)
+    bpy.types.TOPBAR_MT_file_import.append(menu_func)
 
 
 def unregister():
     bpy.utils.unregister_class(MDLImporterOperator)
+    bpy.types.TOPBAR_MT_file_import.remove(menu_func)
