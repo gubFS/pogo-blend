@@ -14,6 +14,8 @@ def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
         c_camera = scene.camera
         c_resolution = (scene.render.resolution_x, scene.render.resolution_y)
         c_cursor = scene.cursor.location.copy()
+        c_selected_objects = context.selected_objects
+        c_active_object = context.view_layer.objects.active
 
         # select obj
         bpy.ops.object.select_all(action="DESELECT")
@@ -105,6 +107,10 @@ def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
         scene.render.resolution_y = c_resolution[1]
 
         scene.cursor.location = c_cursor
+
+        for obj in c_selected_objects:
+            obj.select_set(True)
+        context.view_layer.objects.active = c_active_object
 
         return collider
 
