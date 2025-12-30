@@ -24,9 +24,15 @@ class AddBlock(bpy.types.Operator):
         return {"FINISHED"}
 
 
+def menu_func(self, context):
+    self.layout.operator(AddBlock.bl_idname, text="Add Pogo Block")
+
+
 def register():
     bpy.utils.register_class(AddBlock)
+    bpy.types.TOPBAR_MT_file_export.append(menu_func)
 
 
 def unregister():
     bpy.utils.unregister_class(AddBlock)
+    bpy.types.TOPBAR_MT_file_export.remove(menu_func)

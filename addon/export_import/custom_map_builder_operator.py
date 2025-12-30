@@ -3,7 +3,6 @@ import os
 import time
 
 import bpy
-
 # ExportHelper is a helper class, defines filename and invoke() function which calls the file selector.
 from bpy_extras.io_utils import ExportHelper
 
@@ -105,19 +104,17 @@ class CustomMapBuilder(bpy.types.Operator):
         return self.execute(context)
 
 
-# Only needed if you want to add into a dynamic menu
-def menu_func_export(self, context):
-    self.layout.operator(CustomMapBuilderFile.bl_idname, text="Pogostuck Custom Map")
+def menu_func(self, context):
+    self.layout.operator(CustomMapBuilder.bl_idname, text="Build Pogostuck Custom Map")
 
 
-# Register and add to the "file selector" menu (required to use F3 search "Text Export Operator" for quick access).
 def register():
     bpy.utils.register_class(CustomMapBuilder)
     bpy.utils.register_class(CustomMapBuilderFile)
-    bpy.types.TOPBAR_MT_file_export.append(menu_func_export)
+    bpy.types.TOPBAR_MT_file_export.append(menu_func)
 
 
 def unregister():
     bpy.utils.unregister_class(CustomMapBuilder)
     bpy.utils.unregister_class(CustomMapBuilderFile)
-    bpy.types.TOPBAR_MT_file_export.remove(menu_func_export)
+    bpy.types.TOPBAR_MT_file_export.remove(menu_func)
