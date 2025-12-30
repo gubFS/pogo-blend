@@ -197,4 +197,7 @@ runStateToggle:
     skill_6:
       name: overshoot_fac
       default: 1.35
+water_act:
+  name: Water Visual
+  description: Adds a flowing water visual to the mesh
 ...
