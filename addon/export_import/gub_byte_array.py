@@ -16,8 +16,7 @@ class GubByteArray(bytearray):
         self.pack("B", value)
 
     def store_8s(self, value, amount):
-        for _ in range(amount):
-            self.store_8(value)
+        self.pack(f"{amount}B", *[value for _ in range(amount)])
 
     def store_16(self, value):
         self.pack("H", value)
@@ -32,12 +31,10 @@ class GubByteArray(bytearray):
             self[offset + i] = byte
 
     def store_32s(self, value, amount):
-        for _ in range(amount):
-            self.store_32(value)
+        self.pack(f"{amount}I", *[value for _ in range(amount)])
 
     def store_32_buffer(self, buffer):
-        for value in buffer:
-            self.store_32(value)
+        self.pack(f"{len(buffer)}I", *buffer)
 
     def store_64(self, value):
         self.pack("Q", value)
@@ -48,11 +45,10 @@ class GubByteArray(bytearray):
     def store_float_buffer(self, floats, amount=-1):
         if amount == -1:
             amount = len(floats)
-        for i in range(amount):
-            f = 0.0
-            if i < len(floats):
-                f = floats[i]
-            self.store_float(f)
+        floats = floats[:amount]
+        for _ in range(amount - len(floats)):
+            floats.append(0.0)
+        self.pack(f"{amount}f", *floats)
 
     def store_buffer(self, buffer):
         self.extend(buffer)
@@ -61,11 +57,18 @@ class GubByteArray(bytearray):
         self.pack("3f", vec[0], vec[1], vec[2])
 
     def store_vec3f_buffer(self, vecs):
+        floats = []
         for vec in vecs:
-            self.store_vec3f(vec)
+            floats.extend([vec[0], vec[1], vec[2]])
+        self.store_float_buffer(floats)
 
     def store_string(self, value, size=-1):
         if size == -1:
             size = len(value)
-        format = f"{size}s"
-        self.pack(format, value.encode("utf-8"))
+        self.pack(f"{size}s", value.encode("utf-8"))
+
+    def store_strings(self, strings: list[str]):
+        strbytes = bytearray()
+        for s in strings:
+            strbytes.extend(s.encode("utf-8"))
+        self.pack(f"{len(strbytes)}s", strbytes)

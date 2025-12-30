@@ -76,26 +76,33 @@ class HashCache:
         return xxhash.xxh128_hexdigest(bytes)
 
     def _store_verts(self, mesh, bytes: GubByteArray):
+        verts = []
         for vert in mesh.vertices:
-            bytes.store_vec3f(vert.co)
-            bytes.store_vec3f(vert.normal)
+            verts.append(vert.co)
+            verts.append(vert.normal)
+        bytes.store_vec3f_buffer(verts)
 
     def _store_uvs(self, mesh, bytes: GubByteArray):
+        floats = []
         for uv_layer in mesh.uv_layers:
             for uv in uv_layer.uv:
-                bytes.store_float_buffer([uv.vector.x, uv.vector.y])
+                floats.extend([uv.vector.x, uv.vector.y])
+        bytes.store_float_buffer(floats)
 
     def _store_edges(self, mesh, bytes: GubByteArray):
+        ints = []
         for edge in mesh.edges:
             for i in range(2):
-                bytes.store_32(edge.vertices[i])
+                ints.append(edge.vertices[i])
+        bytes.store_32_buffer(ints)
 
     def _store_polygons(self, mesh, bytes: GubByteArray):
+        ints = []
         for polygon in mesh.polygons:
             for i in range(3):
-                bytes.store_32(polygon.vertices[i])
-            bytes.store_32(polygon.material_index)
+                ints.append(polygon.vertices[i])
+            ints.append(polygon.material_index)
+        bytes.store_32_buffer(ints)
 
     def _store_textures(self, obj, bytes: GubByteArray):
-        for texture in pbu.get_textures(obj):
-            bytes.store_string(texture)
+        bytes.store_strings(pbu.get_textures(obj))
