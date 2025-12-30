@@ -3,12 +3,12 @@ import bpy
 
 class SelectCustomMapsDir(bpy.types.Operator):
     bl_idname = "pogo_blend.select_custom_maps_dir"
-    bl_label = "Select the custom maps directory"
+    bl_label = "Select the Custom Maps folder"
     bl_options = {"REGISTER"}
 
     directory: bpy.props.StringProperty(
-        name="Custom Maps directory",
-        description="New maps will be created in the selected directory",
+        name="Custom Maps folder",
+        description="New maps will be created in the selected folder",
         subtype="DIR_PATH",
     )
 
@@ -41,8 +41,8 @@ class PogoBlendPrefrences(bpy.types.AddonPreferences):
 
     custom_maps_path: bpy.props.StringProperty(
         default="",
-        name="Custom Maps directory",
-        description="The path to the directory where custom maps will be put",
+        name="Custom Maps folder",
+        description="The path to the folder where custom maps will be put",
     )
     map_scale: bpy.props.FloatProperty(
         default=50.0,
