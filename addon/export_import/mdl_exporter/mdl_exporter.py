@@ -1,5 +1,6 @@
 import os
 
+import bmesh
 import bpy
 from mathutils import Vector
 
@@ -38,8 +39,14 @@ class MDLExporter:
         obj_verts_index = 0
         uv_index = 0
         skin_dict = {}
+        dg = bpy.context.evaluated_depsgraph_get()
         for obj in self.objs:
-            mesh = obj.data
+            mesh = obj.to_mesh()
+            bm = bmesh.new()
+            bm.from_object(obj, dg)
+            bmesh.ops.triangulate(bm, faces=bm.faces)
+            bm.to_mesh(mesh)
+            bm.free()
 
             textures = pbu.get_textures(obj)
             for i, texture in enumerate(textures):
