@@ -1,9 +1,9 @@
-import hashlib
 import json
 import os
 from collections.abc import Callable
 
 import bpy
+import xxhash
 
 from .. import pogo_blend_utils as pbu
 from .gub_byte_array import GubByteArray
@@ -61,9 +61,7 @@ class HashCache:
         self._store_polygons(mesh, bytes)
         self._store_textures(obj, bytes)
 
-        hash = hashlib.new("sha256")
-        hash.update(bytes)
-        return hash.hexdigest()
+        return xxhash.xxh128_hexdigest(bytes)
 
     def hash_collider(self, obj) -> str:
         bytes = GubByteArray()
@@ -75,9 +73,7 @@ class HashCache:
         bytes.store_vec3f(obj.matrix_world.to_euler())
         bytes.store_vec3f(obj.matrix_world.to_scale())
 
-        hash = hashlib.new("sha256")
-        hash.update(bytes)
-        return hash.hexdigest()
+        return xxhash.xxh128_hexdigest(bytes)
 
     def _store_verts(self, mesh, bytes: GubByteArray):
         for vert in mesh.vertices:
