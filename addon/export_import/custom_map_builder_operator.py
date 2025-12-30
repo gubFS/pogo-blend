@@ -3,6 +3,7 @@ import os
 import time
 
 import bpy
+from bpy.app.handlers import persistent
 # ExportHelper is a helper class, defines filename and invoke() function which calls the file selector.
 from bpy_extras.io_utils import ExportHelper
 
@@ -104,11 +105,16 @@ class CustomMapBuilder(bpy.types.Operator):
         return self.execute(context)
 
 
+keymaps = []
+
+
+@persistent
+def post_save(file: str):
+    bpy.ops.pogo_blend.build_custom_map('INVOKE_DEFAULT')
+
+
 def menu_func(self, context):
     self.layout.operator(CustomMapBuilder.bl_idname, text="Build Pogostuck Custom Map")
-
-
-keymaps = []
 
 
 def register():
@@ -116,9 +122,11 @@ def register():
     bpy.utils.register_class(CustomMapBuilderFile)
     bpy.types.TOPBAR_MT_file_export.append(menu_func)
 
+    if pbu.get_preferences().build_on_save:
+        bpy.app.handlers.save_post.append(post_save)
+
     wm = bpy.context.window_manager
     kc = wm.keyconfigs.addon
-    print(kc)
     if kc:
         km = kc.keymaps.new(name="Object Mode", space_type='EMPTY')
         kmi = km.keymap_items.new(CustomMapBuilder.bl_idname, 'F5', 'PRESS')
@@ -129,6 +137,9 @@ def unregister():
     bpy.utils.unregister_class(CustomMapBuilder)
     bpy.utils.unregister_class(CustomMapBuilderFile)
     bpy.types.TOPBAR_MT_file_export.remove(menu_func)
+
+    if post_save in bpy.app.handlers.save_post:
+        bpy.app.handlers.save_post.remove(post_save)
 
     for km, kmi in keymaps:
         km.keymap_items.remove(kmi)

@@ -56,6 +56,12 @@ class PogoBlendPrefrences(bpy.types.AddonPreferences):
         description="Adds a panel to entities that shows all editiable fields. Not relevant in most normal use cases",
     )
 
+    build_on_save: bpy.props.BoolProperty(
+        default=False,
+        name="Build on save",
+        description="Builds the Custom Map whenever the Blender file is saved. Reload Blender to apply",
+    )
+
     # show_all_materials: bpy.props.BoolProperty(
     #     default=False,
     #     name="Show all materials",
@@ -78,6 +84,7 @@ class PogoBlendPrefrences(bpy.types.AddonPreferences):
         row.operator("pogo_blend.select_custom_maps_dir", text="", icon="FILE_FOLDER")
         layout.prop(self, "map_scale")
         layout.prop(self, "show_overrides")
+        layout.prop(self, "build_on_save")
         # layout.prop(self, "show_all_materials")
         # layout.prop(self, "show_all_actions")
 
