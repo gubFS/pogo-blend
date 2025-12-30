@@ -22,8 +22,9 @@ def draw_item(self, context):
 def register():
     bpy.utils.register_class(AddPogoMenu)
 
-    # lets add ourselves to the main header
-    bpy.types.VIEW3D_MT_add.append(draw_item)
+    add_menu = bpy.types.VIEW3D_MT_add
+    add_menu.append(lambda self, context: self.layout.separator())
+    add_menu.append(draw_item)
 
 
 def unregister():
