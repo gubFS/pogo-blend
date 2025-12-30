@@ -10,8 +10,12 @@ class AddBlock(bpy.types.Operator):
         bpy.ops.mesh.primitive_plane_add()
         block = context.object
 
+        bpy.ops.object.editmode_toggle()
+        bpy.ops.mesh.select_all(action='SELECT')
+        bpy.ops.transform.rotate(value=1.5708, orient_axis='X')
+        bpy.ops.object.editmode_toggle()
+
         block.name = "PogoBlock"
-        block.rotation_euler[0] = 1.570796
         entity = block.pogo_entity
         entity.flag_unlit = True
         entity.flag_polygon = True
