@@ -130,7 +130,7 @@ def build_custom_map(context, filepath, global_scale):
                     new_texture = pbu.get_unique_name(
                         os.path.splitext(os.path.basename(texture))[0],
                         ".tga",
-                        255,
+                        31,
                         used_names,
                     )
                     if new_texture == None:

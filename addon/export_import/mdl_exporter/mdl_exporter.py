@@ -147,6 +147,8 @@ class MDLExporter:
         if self.has_skin:
             for texture, skin_idx in self.skins.items():
                 texture = os.path.basename(texture)
+                if len(texture) > 31:
+                    print(f"WARNING: While MDL files can have skins with long filenames, it will crash when loaded in the A8 Engine if the filename is longer than 31 characters. Please use a shorter name than {texture}")
                 mdl.store_8(7)  # type?
                 mdl.store_8s(0, 3)  # unused
                 mdl.store_32(len(texture) + 1)
