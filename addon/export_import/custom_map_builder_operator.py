@@ -93,6 +93,12 @@ class CustomMapBuilder(bpy.types.Operator):
                 "The Custom Maps folder does not exist. Select a valid folder in the preferences for the Pogo Blend addon",
             )
             return {"CANCELLED"}
+        if pbu.get_custom_map().map_name == "":
+            self.report(
+                {'ERROR'},
+                "The map name cannot be empty"
+            )
+            return {'CANCELLED'}
 
         self.filepath = os.path.join(self.filepath, pbu.get_custom_map().map_name)
         if not os.path.exists(self.filepath):
