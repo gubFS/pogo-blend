@@ -16,7 +16,7 @@ class WMBEntity:
             math.degrees(rotation.x),
         )
         self.scale = obj.scale.copy()  # if entity.filename_override == "" else (1, 1, 1)
-        self.name = obj.name if entity.name_override == "" else entity.name_override
+        self.name = obj.name.replace(".", "_") if entity.name_override == "" else entity.name_override
 
         self.filename = (
             f"NOTSWITCHED"

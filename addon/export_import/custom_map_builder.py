@@ -115,7 +115,7 @@ def build_custom_map(context, filepath, global_scale):
 
         # export meshes
         for entities, obj, scale in meshes.values():
-            filename = pbu.get_unique_name(obj.name, ".mdl", 33, used_names)
+            filename = pbu.get_unique_name(obj.name.replace(".", "_"), ".mdl", 33, used_names)
             if filename == None:
                 print("WARNING: could not find a unique filename")
                 continue
@@ -160,7 +160,7 @@ def build_custom_map(context, filepath, global_scale):
 
         # colliders
         for obj, entity in colliders:
-            filename = pbu.get_unique_name(obj.name, "_col.mdl", 33, used_names)
+            filename = pbu.get_unique_name(obj.name.replace(".", "_"), "_col.mdl", 33, used_names)
             if filename == None:
                 print("WARNING: could not find a unique filename")
                 continue
