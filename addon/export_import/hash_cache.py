@@ -60,6 +60,7 @@ class HashCache:
         # self._store_edges(mesh, bytes)
         self._store_polygons(mesh, bytes)
         self._store_textures(obj, bytes)
+        self._store_modifiers(obj, bytes)
 
         return xxhash.xxh128_hexdigest(bytes)
 
@@ -69,6 +70,7 @@ class HashCache:
 
         self._store_verts(mesh, bytes)
         self._store_polygons(mesh, bytes)
+        self._store_modifiers(obj, bytes)
 
         bytes.store_vec3f(obj.matrix_world.to_euler())
         bytes.store_vec3f(obj.matrix_world.to_scale())
@@ -106,3 +108,32 @@ class HashCache:
 
     def _store_textures(self, obj, bytes: GubByteArray):
         bytes.store_strings(pbu.get_textures(obj))
+
+    def _store_modifiers(self, obj, bytes: GubByteArray):
+        bytes.store_32(len(obj.modifiers))
+        for modifier in obj.modifiers:
+            bytes.store_bool(modifier.is_active)
+            bytes.store_string(modifier.type)
+            match(modifier.type):
+                case 'ARRAY':
+                    bytes.store_32(modifier.count)
+                    bytes.store_bool(modifier.use_relative_offset)
+                    if modifier.use_relative_offset:
+                        bytes.store_vec3f(modifier.relative_offset_displace)
+                    bytes.store_bool(modifier.use_constant_offset)
+                    if modifier.use_constant_offset:
+                        bytes.store_vec3f(modifier.constant_offset_displace)
+                    bytes.store_bool(modifier.use_object_offset)
+                    if modifier.use_object_offset:
+                        if modifier.offset_object != None:
+                            bytes.store_vec3f(modifier.offset_object.matrix_world.translation)
+                case 'BEVEL':
+                    bytes.store_string(modifier.affect)
+                    bytes.store_string(modifier.offset_type)
+                    if modifier.offset_type != 'PERCENT':
+                        bytes.store_float(modifier.width)
+                    else:
+                        bytes.store_float(modifier.width_pct)
+                    bytes.store_string(modifier.limit_method)
+                    if modifier.limit_method == 'ANGLE':
+                        bytes.store_float(modifier.angle_limit)

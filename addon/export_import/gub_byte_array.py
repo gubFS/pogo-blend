@@ -11,6 +11,9 @@ class GubByteArray(bytearray):
 
     def get_position(self):
         return len(self)
+    
+    def store_bool(self, value):
+        self.pack("?", value)
 
     def store_8(self, value):
         self.pack("B", value)
