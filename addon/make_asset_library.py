@@ -128,6 +128,10 @@ config = {
                 "flag_unlit",
                 "flag_transparent",
             ],
+            "skills": {
+                "skill_1": 1.0,
+            },
+            "action": "skillset_act",
             "ambient": 100.0,
         },
     ],
@@ -172,6 +176,9 @@ def make_asset_library(context, filepath: str):
         if "flags" in mdl:
             for flag in mdl["flags"]:
                 obj.pogo_entity[flag] = True
+        if "skills" in mdl:
+            for skill, value in mdl["skills"].items():
+                obj.pogo_entity[skill] = value
         if "ambient" in mdl:
             obj.pogo_entity.ambient = mdl["ambient"]
 
