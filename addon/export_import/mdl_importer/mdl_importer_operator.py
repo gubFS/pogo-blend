@@ -103,6 +103,7 @@ def import_mdl(context, filepath, scale):
     obj.select_set(True)
     context.view_layer.objects.active = obj
 
+    empty_faces = set()
     if len(uvs) != 0:
         uv_layer = mesh.uv_layers.new(name="layer")
         for i, tri in enumerate(tris):
@@ -110,9 +111,12 @@ def import_mdl(context, filepath, scale):
                 tri.skin_idx if tri.skin_idx != 0xFFFFFFFF else 0
             )
             for j in range(3):
-                vec = Vector(uvs[tri.uvs[j]])
-                vec.y = 1 - vec.y
-                uv_layer.uv[(i * 3) + j].vector = vec
+                if tri.uvs[j] != 0xFFFF:
+                    vec = Vector(uvs[tri.uvs[j]])
+                    vec.y = 1 - vec.y
+                    uv_layer.uv[(i * 3) + j].vector = vec
+                else:
+                    empty_faces.add(mesh.polygons[i])
 
     for skin in skins:
         if skin == "":
@@ -130,6 +134,12 @@ def import_mdl(context, filepath, scale):
         disp = mat.node_tree.nodes["Principled BSDF"].inputs[0]
         mat.node_tree.links.new(disp, image_node.outputs[0])
         obj.data.materials.append(mat)
+
+    if len(empty_faces) != 0:
+        bpy.ops.object.material_slot_add()
+        face_idx = len(obj.material_slots) - 1
+        for face in empty_faces:
+            face.material_index = face_idx
 
 
 def skip(bytes: int) -> None:
