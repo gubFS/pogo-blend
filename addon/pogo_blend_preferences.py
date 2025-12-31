@@ -1,3 +1,6 @@
+import platform
+from pathlib import Path
+
 import bpy
 
 
@@ -98,6 +101,11 @@ def get_preferences():
 def register():
     bpy.utils.register_class(SelectCustomMapsDir)
     bpy.utils.register_class(PogoBlendPrefrences)
+
+    cmp = get_preferences().custom_maps_path
+    if cmp == None or cmp == "":
+        cmp = next(Path("/").rglob("steamapps/common/Pogostuck/CustomMaps"), "")
+    get_preferences().custom_maps_path = str(cmp)
 
 
 def unregister():
