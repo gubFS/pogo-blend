@@ -85,6 +85,8 @@ class PogoBlendPrefrences(bpy.types.AddonPreferences):
         layout.prop(self, "map_scale")
         layout.prop(self, "show_overrides")
         layout.prop(self, "build_on_save")
+        if bpy.ops.pogo_blend.make_asset_library.poll():
+            layout.operator("pogo_blend.make_asset_library")
         # layout.prop(self, "show_all_materials")
         # layout.prop(self, "show_all_actions")
 

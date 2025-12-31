@@ -72,7 +72,7 @@ class PogoEntity(bpy.types.PropertyGroup):
             self.action1 = self.action2
             self.action2 = "ndef"
         else:
-            if context.area.type == "PROPERTIES":
+            if context.area and context.area.type == "PROPERTIES":
                 self.set_action_defaults(context, True)
 
     def on_action2_change(self, context):

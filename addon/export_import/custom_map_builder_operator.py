@@ -55,6 +55,11 @@ class CustomMapBuilder(bpy.types.Operator):
         max=1000.0,
     )
 
+    @classmethod
+    def poll(cls, context):
+        custom_map_dir = pbu.get_preferences().custom_maps_path
+        return custom_map_dir != None and custom_map_dir != "" and "CustomMap" in bpy.data.collections
+
     def execute(self, context):
         start_time = time.time()
         try:
@@ -110,7 +115,11 @@ keymaps = []
 
 @persistent
 def post_save(file: str):
-    bpy.ops.pogo_blend.build_custom_map('INVOKE_DEFAULT')
+    if CustomMapBuilder.poll(bpy.context):
+        try:
+            bpy.ops.pogo_blend.build_custom_map('INVOKE_DEFAULT')
+        except Exception:
+            pass
 
 
 def menu_func(self, context):

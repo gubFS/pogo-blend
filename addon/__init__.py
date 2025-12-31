@@ -1,6 +1,10 @@
 import importlib
 import os
+from pathlib import Path
 
+import bpy
+
+from . import make_asset_library
 from . import pogo_blend_preferences as pbu
 from .export_import import custom_map_builder_operator
 from .export_import.mdl_exporter import mdl_exporter_operator
@@ -47,13 +51,27 @@ to_register = [
     add_pogo_reigon, 
     add_sprite, 
     create_collider,
+    make_asset_library,
 ]
+
 
 def register():
     for module in to_register:
         module.register()
 
+    asset_libraries = bpy.context.preferences.filepaths.asset_libraries
+    lib_id=asset_libraries.find("PogoBlend")
+    if lib_id == -1:
+        al = asset_libraries.new(name="PogoBlend", directory=str(Path(__file__).parent.joinpath("pogo_blend_asset_library")))
+        al.import_method = 'APPEND_REUSE'
+        al.use_relative_path = True
+
 
 def unregister():
     for module in to_register:
         module.unregister()
+
+    asset_libraries = bpy.context.preferences.filepaths.asset_libraries
+    lib_id=asset_libraries.find("PogoBlend")
+    if lib_id != -1:
+        asset_libraries.remove(asset_libraries[lib_id])
