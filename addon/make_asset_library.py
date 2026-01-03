@@ -9,6 +9,7 @@ config = {
     "models": [
         {
             "filename": "anvil.mdl",
+            "name": "Anvil",
             "material": "anvil_mat",
             "flags": [
                 "flag_unlit",
@@ -17,6 +18,7 @@ config = {
         },
         {
             "filename": "appA_slime3.mdl",
+            "name": "Slime",
             "material": "pinkSap_mat",
             "action": "pinkSap_act",
             "flags": [
@@ -28,6 +30,7 @@ config = {
         },
         {
             "filename": "cloud1.mdl",
+            "name": "Cloud1",
             "material": "cloud_mat",
             "flags": [
                 "flag_unlit",
@@ -35,6 +38,7 @@ config = {
         },
         {
             "filename": "cloud2.mdl",
+            "name": "Cloud2",
             "material": "cloud_mat",
             "flags": [
                 "flag_unlit",
@@ -42,6 +46,7 @@ config = {
         },
         {
             "filename": "dode.mdl",
+            "name": "Grape",
             "material": "fruit_mat",
             "flags": [
                 "flag_unlit",
@@ -49,6 +54,7 @@ config = {
         },
         {
             "filename": "dungeonWheel1.mdl",
+            "name": "Wheel",
             "material": "monoWheel_mat",
             "flags": [
                 "flag_unlit",
@@ -56,6 +62,7 @@ config = {
         },
         {
             "filename": "m3Thorn1.mdl",
+            "name": "Thorns",
             "material": "monoSpikes_mat",
             "action": "monolithThorn_act",
             "flags": [
@@ -65,6 +72,7 @@ config = {
         },
         {
             "filename": "moai.mdl",
+            "name": "Moai",
             "action": "moai_act",
             "flags": [
                 "flag_unlit",
@@ -73,6 +81,7 @@ config = {
         },
         {
             "filename": "modeBlock0.mdl",
+            "name": "Mode Block",
             "material": "fruitTex_mat",
             "flags": [
                 "flag_unlit",
@@ -80,6 +89,7 @@ config = {
         },
         {
             "filename": "mushroomFly1.mdl",
+            "name": "Mushroom1",
             "material": "fruitTexB_mat",
             "action": "mushroom_act",
             "flags": [
@@ -89,6 +99,7 @@ config = {
         },
         {
             "filename": "mushroomFly2.mdl",
+            "name": "Mushroom2",
             "material": "fruitTexB_mat",
             "action": "mushroom_act",
             "flags": [
@@ -98,6 +109,7 @@ config = {
         },
         {
             "filename": "mushroomTree2.mdl",
+            "name": "Brown Mushroom",
             "material": "fruitBNOSM_mat",
             "action": "mushroom_act",
             "flags": [
@@ -107,6 +119,7 @@ config = {
         },
         {
             "filename": "pencil.mdl",
+            "name": "Pencil",
             "material": "pencil_mat",
             "flags": [
                 "flag_unlit",
@@ -114,6 +127,7 @@ config = {
         },
         {
             "filename": "startFinishM.mdl",
+            "name": "Finish Line",
             "material": "startFinish_mat",
             "flags": [
                 "flag_unlit",
@@ -123,6 +137,7 @@ config = {
         },
         {
             "filename": "startingCurve.mdl",
+            "name": "Start Line",
             "material": "startFinish_mat",
             "flags": [
                 "flag_unlit",
@@ -136,10 +151,22 @@ config = {
         },
     ],
     "textures": [
-        "Models/colorPalette.tga",
-        "Textures/broBlock.tga",
-        "Textures/metalshutter1.tga",
-        "Textures/pixelBricks.tga",
+        {
+            "filename": "Models/colorPalette.tga",
+            "name": "Color Palette",
+        },
+        {
+            "filename": "Textures/broBlock.tga",
+            "name": "Bro Block",
+        },
+        {
+            "filename": "Textures/metalshutter1.tga",
+            "name": "Metal Shutter",
+        },
+        {
+            "filename": "Textures/pixelBricks.tga",
+            "name": "Pixel Bricks",
+        },
     ],
 }
 
@@ -163,6 +190,8 @@ def make_asset_library(context, filepath: str):
         obj = context.object
         obj.pogo_entity
         obj.pogo_entity.filename_override = mdl["filename"]
+        if "name" in mdl:
+            obj.name = mdl["name"]
         if "material" in mdl:
             try:
                 obj.pogo_entity.material = mdl["material"]
@@ -186,10 +215,16 @@ def make_asset_library(context, filepath: str):
 
         if "mark_materials" in mdl and mdl["mark_materials"]:
             for mat in obj.material_slots:
-                assets.append((mat.material, TEXTURE_CATALOG))
+                mat = mat.material
+                match(mat.name):
+                    case "gradientTest":
+                        mat.name = "Gradient"
+                    case "slimeBubbles":
+                        mat.name = "Slime Bubbles"
+                assets.append((mat, TEXTURE_CATALOG))
 
     for texture in config["textures"]:
-        texture_path = Path(base_map).joinpath(texture)
+        texture_path = Path(base_map).joinpath(texture["filename"])
         mat = bpy.data.materials.new(name=texture_path.stem)
         mat.use_nodes = True
         image_node = mat.node_tree.nodes.new(type="ShaderNodeTexImage")
@@ -197,15 +232,17 @@ def make_asset_library(context, filepath: str):
         image_node.image = img
         disp = mat.node_tree.nodes["Principled BSDF"].inputs[0]
         mat.node_tree.links.new(disp, image_node.outputs[0])
+        if "name" in texture:
+            mat.name = texture["name"]
         assets.append((mat, TEXTURE_CATALOG))
 
     for asset, catalog in assets:
         asset.asset_mark()
         asset.asset_generate_preview()
         ad = asset.asset_data
-        ad.author = "Henrik Felix Pohl"
-        ad.copyright = "Henrik Felix Pohl"
-        ad.description = "Only to be used for the purposes of making Pogostuck Custom Maps"
+        ad.author = "Superku"
+        ad.copyright = "Superku"
+        ad.description = ""
         ad.license = "Only to be used for the purposes of making Pogostuck Custom Maps"
         ad.catalog_id = catalog
 
