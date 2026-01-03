@@ -143,7 +143,7 @@ def register():
     wm = bpy.context.window_manager
     kc = wm.keyconfigs.addon
     if kc:
-        km = kc.keymaps.new(name="Object Mode", space_type='EMPTY')
+        km = kc.keymaps.new(name="Window", space_type='EMPTY')
         kmi = km.keymap_items.new(CustomMapBuilder.bl_idname, 'F5', 'PRESS')
         keymaps.append((km, kmi))
 
