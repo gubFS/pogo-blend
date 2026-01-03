@@ -32,7 +32,7 @@ class WMBReigon:
             ):
                 self.min_pos.y = -384
                 self.max_pos.y = -256
-            case "kill" | "reg_finish" | "gravityReg_":
+            case "kill" | "reg_finish" | "gravityReg_" | "gravityCircle":
                 self.min_pos.y = -64
                 self.max_pos.y = 64
             case "CP_":
