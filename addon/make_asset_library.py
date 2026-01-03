@@ -162,6 +162,7 @@ config = {
         {
             "filename": "Textures/metalshutter1.tga",
             "name": "Metal Shutter",
+            "include_author": False,
         },
         {
             "filename": "Textures/pixelBricks.tga",
@@ -211,7 +212,7 @@ def make_asset_library(context, filepath: str):
         if "ambient" in mdl:
             obj.pogo_entity.ambient = mdl["ambient"]
 
-        assets.append((obj, MODEL_CATALOG))
+        assets.append((mdl, obj, MODEL_CATALOG))
 
         if "mark_materials" in mdl and mdl["mark_materials"]:
             for mat in obj.material_slots:
@@ -221,7 +222,7 @@ def make_asset_library(context, filepath: str):
                         mat.name = "Gradient"
                     case "slimeBubbles":
                         mat.name = "Slime Bubbles"
-                assets.append((mat, TEXTURE_CATALOG))
+                assets.append((mdl, mat, TEXTURE_CATALOG))
 
     for texture in config["textures"]:
         texture_path = Path(base_map).joinpath(texture["filename"])
@@ -234,14 +235,15 @@ def make_asset_library(context, filepath: str):
         mat.node_tree.links.new(disp, image_node.outputs[0])
         if "name" in texture:
             mat.name = texture["name"]
-        assets.append((mat, TEXTURE_CATALOG))
+        assets.append((texture, mat, TEXTURE_CATALOG))
 
-    for asset, catalog in assets:
+    for conf, asset, catalog in assets:
         asset.asset_mark()
         asset.asset_generate_preview()
         ad = asset.asset_data
-        ad.author = "Superku"
-        ad.copyright = "Superku"
+        if "include_author" not in conf or conf["include_author"]:
+            ad.author = "Superku"
+            ad.copyright = "Superku"
         ad.description = ""
         ad.license = "Only to be used for the purposes of making Pogostuck Custom Maps"
         ad.catalog_id = catalog
