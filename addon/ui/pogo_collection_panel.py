@@ -64,7 +64,7 @@ class PogoCollectionPanel(bpy.types.Panel):
             return
         custom_map = collection.custom_map
 
-        layout.operator("pogo_blend.build_custom_map")
+        layout.operator("pogo_blend.build_custom_map", text="Build Custom Map")
 
         map_information_panel_header, map_information_panel = layout.panel(
             "map_information_panel"
