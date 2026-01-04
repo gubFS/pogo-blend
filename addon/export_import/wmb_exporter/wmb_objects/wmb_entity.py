@@ -4,11 +4,11 @@ from ...gub_byte_array import GubByteArray
 
 
 class WMBEntity:
-    def __init__(self, obj):
+    def __init__(self, obj, scale=50.0):
         entity = obj.pogo_entity
 
         self.type = 7  # 7 is the ID for entity types
-        self.origin = obj.matrix_world.to_translation().to_3d()
+        self.origin = obj.matrix_world.translation.to_3d() * scale
         rotation = obj.matrix_world.to_euler()
         self.angle = (
             math.degrees(rotation.z),
