@@ -51,6 +51,9 @@ def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
         scene.render.resolution_x = x
         scene.render.resolution_y = y
         camera.data.ortho_scale = scale
+        center = (top_right + bottom_left) * 0.5
+        center_world = obj.matrix_world.translation + center
+        camera.location = center_world
         camera.location[1] += bottom_left[1] - 1.0
 
         # create the grease pencil
@@ -74,9 +77,6 @@ def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
         bpy.ops.mesh.select_mode(type="VERT")
         bpy.ops.mesh.select_all(action="SELECT")
         bpy.ops.transform.resize(value=(1, 0, 1))
-        bpy.ops.mesh.edge_face_add()
-        bpy.ops.mesh.delete(type="ONLY_FACE")
-        bpy.ops.mesh.select_all(action="SELECT")
         bpy.ops.mesh.extrude_region_move(
             TRANSFORM_OT_translate={"value": (0, extrude_length, 0)}
         )
