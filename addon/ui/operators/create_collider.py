@@ -1,11 +1,9 @@
-import copy
-
 import bpy
 from mathutils import Vector
 
 
 def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
-    area = [area for area in bpy.context.screen.areas if area.type == "VIEW_3D"][0]
+    area = [area for area in bpy.context.screen.areas if area.type == 'VIEW_3D'][0]
     with bpy.context.temp_override(area=area):
         context = bpy.context
         scene = context.scene
@@ -18,7 +16,7 @@ def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
         c_active_object = context.view_layer.objects.active
 
         # select obj
-        bpy.ops.object.select_all(action="DESELECT")
+        bpy.ops.object.select_all(action='DESELECT')
         obj.select_set(True)
         context.view_layer.objects.active = obj
 
@@ -29,7 +27,7 @@ def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
             scale=(1, 1, 1),
         )
         camera = context.object
-        camera.data.type = "ORTHO"
+        camera.data.type = 'ORTHO'
         scene.camera = camera
         # find the real bounding box without rotation
         bottom_left = Vector(obj.bound_box[0])
@@ -57,38 +55,36 @@ def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
         camera.location[1] += bottom_left[1] - 1.0
 
         # create the grease pencil
-        bpy.ops.object.select_all(action="DESELECT")
+        bpy.ops.object.select_all(action='DESELECT')
         obj.select_set(True)
         context.view_layer.objects.active = obj
-        bpy.ops.object.grease_pencil_add(type="LINEART_OBJECT")
+        bpy.ops.object.grease_pencil_add(type='LINEART_OBJECT')
         pencil = context.object
 
         # configure lineart
         lineart = pencil.modifiers["Lineart"]
-        lineart.silhouette_filtering = "INDIVIDUAL"
+        lineart.silhouette_filtering = 'INDIVIDUAL'
         lineart.use_crease = False
         lineart.use_intersection = False
         lineart_data = pencil.data
         lineart_material = lineart.target_material
 
         # convert to mesh and extrude collider
-        bpy.ops.object.convert(target="MESH")
-        bpy.ops.object.mode_set(mode="EDIT")
-        bpy.ops.mesh.select_mode(type="VERT")
-        bpy.ops.mesh.select_all(action="SELECT")
+        bpy.ops.object.convert(target='MESH')
+        bpy.ops.object.mode_set(mode='EDIT')
+        bpy.ops.mesh.select_mode(type='VERT')
+        bpy.ops.mesh.select_all(action='SELECT')
         bpy.ops.transform.resize(value=(1, 0, 1))
-        bpy.ops.mesh.extrude_region_move(
-            TRANSFORM_OT_translate={"value": (0, extrude_length, 0)}
-        )
-        bpy.ops.mesh.select_all(action="SELECT")
+        bpy.ops.mesh.extrude_region_move(TRANSFORM_OT_translate={"value": (0, extrude_length, 0)})
+        bpy.ops.mesh.select_all(action='SELECT')
         bpy.ops.mesh.normals_make_consistent()
 
-        bpy.ops.object.mode_set(mode="OBJECT")
-        bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="BOUNDS")
+        bpy.ops.object.mode_set(mode='OBJECT')
+        bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
         bpy.ops.view3d.snap_cursor_to_active()
         scene.cursor.location.x = obj.matrix_world.translation.x
         scene.cursor.location.z = obj.matrix_world.translation.z
-        bpy.ops.object.origin_set(type="ORIGIN_CURSOR", center="BOUNDS")
+        bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='BOUNDS')
 
         collider_object = context.object
         collider_mesh = collider_object.data
@@ -117,7 +113,7 @@ def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
 
 def create_collider_object(obj, data=None):
     collider = bpy.data.objects.new(f"{obj.name}_col", data)
-    if data != None:
+    if data is not None:
         collider.data.name = collider.name
 
     collider.matrix_world.translation = obj.matrix_world.translation
@@ -143,17 +139,17 @@ def create_collider_object(obj, data=None):
 class CreatePogoCollider(bpy.types.Operator):
     bl_idname = "pogo_blend.create_collider"
     bl_label = "Create a Pogostuck Collider"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        objs = filter(lambda obj: obj.type == "MESH", context.selected_objects)
+        objs = filter(lambda obj: obj.type == 'MESH', context.selected_objects)
         objs = list(objs)
         if not objs:
-            self.report({"ERROR"}, "No mesh objects selected")
-            return {"CANCELLED"}
+            self.report({'ERROR'}, "No mesh objects selected")
+            return {'CANCELLED'}
         for obj in objs:
             create_collider(obj)
-        return {"FINISHED"}
+        return {'FINISHED'}
 
 
 def menu_func(self, context):

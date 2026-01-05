@@ -77,9 +77,7 @@ class MDLExporter:
                     vert *= scl
 
                 self.verts.append((loc * scale - center) + vert)
-                self.vert_normals.append(
-                    normal * -1
-                )  # GSA8 uses flipped normals or something
+                self.vert_normals.append(normal * -1)  # GSA8 uses flipped normals or something
 
             uvkeys = {}
             if has_skin:
@@ -99,9 +97,7 @@ class MDLExporter:
 
                 vert_indecies = []
                 uv_indecies = []
-                for i in range(
-                    2, -1, -1
-                ):  # loop in reverse because the normals are flipped in mdl files compared to blend
+                for i in range(2, -1, -1):  # loop in reverse because the normals are flipped in mdl files compared to blend
                     vert_indecies.append(obj_verts_index + tri.vertices[i])
                 if has_skin:
                     for vert_idx in tri.vertices:
@@ -119,9 +115,7 @@ class MDLExporter:
         mdl.store_string("MDL7")
         mdl.store_32(0)
         mdl.store_32(0)
-        mdl.store_32(
-            1
-        )  # group num may need to update but imma just do one group for now
+        mdl.store_32(1)  # group num may need to update but imma just do one group for now
         file_size_pos = mdl.get_position()
         mdl.store_32(0)  # file size, update at the end
         mdl.store_32(0)

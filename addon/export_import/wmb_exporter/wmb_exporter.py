@@ -24,9 +24,7 @@ class WMBExporter:
             encoded_objects.store_buffer(encoded_object)
 
         header.store_32_at(len(header), object_list_offset)
-        header.store_32_at(
-            len(objects_header) + len(encoded_objects), object_list_offset + 4
-        )
+        header.store_32_at(len(objects_header) + len(encoded_objects), object_list_offset + 4)
 
         with open(self.filepath, "wb") as f:
             f.write(header)

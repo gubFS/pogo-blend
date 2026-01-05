@@ -8,7 +8,7 @@ class AddSprite(bpy.types.IMAGE_OT_import_as_mesh_planes):
     def execute(self, context):
         ret_code = super().execute(context)
 
-        if ret_code == {"FINISHED"}:
+        if ret_code == {'FINISHED'}:
             sprite = context.object
             sprite.name = "PogoSprite"
             sprite.rotation_euler[0] = 1.570796

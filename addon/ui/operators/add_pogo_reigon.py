@@ -4,10 +4,10 @@ import bpy
 class AddPogoReigon(bpy.types.Operator):
     bl_idname = "pogo_blend.add_pogo_reigon"
     bl_label = "Add Pogo Reigon"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        bpy.ops.object.empty_add(type="CUBE")
+        bpy.ops.object.empty_add(type='CUBE')
         empty = context.object
 
         empty.name = "PogoReigon"
@@ -16,7 +16,7 @@ class AddPogoReigon(bpy.types.Operator):
             empty.lock_rotation[i] = True
         empty.pogo_reigon
 
-        return {"FINISHED"}
+        return {'FINISHED'}
 
 
 def register():

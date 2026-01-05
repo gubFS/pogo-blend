@@ -3,8 +3,8 @@ import bpy
 
 class AddBlock(bpy.types.Operator):
     bl_idname = "pogo_blend.add_block"
-    bl_label = "Add Pogo Block"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_label = 'Add Pogo Block'
+    bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
         bpy.ops.mesh.primitive_plane_add()
@@ -21,7 +21,7 @@ class AddBlock(bpy.types.Operator):
         entity.flag_polygon = True
         entity.flag_auto_collision = True
 
-        return {"FINISHED"}
+        return {'FINISHED'}
 
 
 def register():

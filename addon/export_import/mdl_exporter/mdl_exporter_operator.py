@@ -12,7 +12,7 @@ def export_to_mdl(context, filepath, only_selected, scale):
 
     objs = []
     for obj in objects:
-        if obj.type == "MESH":
+        if obj.type == 'MESH':
             objs.append(obj)
 
     print(f"Exporting {len(objs)} objects to mdl")
@@ -52,13 +52,13 @@ class MDLExporterOperator(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
     def execute(self, context):
         try:
             export_to_mdl(context, self.filepath, self.selected_only, self.global_scale)
-        except BaseException as e:
-            error_type = {"ERROR"}
+        except Exception as e:
+            error_type = {'ERROR'}
             self.report(error_type, str(e))
             raise e  # NOTE: Only for debugging purposes
-            return {"CANCELLED"}
+            return {'CANCELLED'}
         else:
-            return {"FINISHED"}
+            return {'FINISHED'}
 
 
 def menu_func_export(self, context):

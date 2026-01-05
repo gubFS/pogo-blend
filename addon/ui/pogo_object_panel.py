@@ -6,48 +6,48 @@ from .. import pogo_blend_preferences as pbu
 class AddPogoPathData(bpy.types.Operator):
     bl_idname = "pogo_blend.add_pogo_path_data"
     bl_label = "Add pogo data"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
         context.object.pogo_path
-        return {"FINISHED"}
+        return {'FINISHED'}
 
 
 class RemovePogoPathData(bpy.types.Operator):
     bl_idname = "pogo_blend.remove_pogo_path_data"
     bl_label = "Remove pogo data"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
         del context.object["pogo_path"]
-        return {"FINISHED"}
+        return {'FINISHED'}
 
 
 class AddPogoEntityData(bpy.types.Operator):
     bl_idname = "pogo_blend.add_pogo_entity_data"
     bl_label = "Add pogo data"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
         context.object.pogo_entity
-        return {"FINISHED"}
+        return {'FINISHED'}
 
 
 class RemovePogoEntityData(bpy.types.Operator):
     bl_idname = "pogo_blend.remove_pogo_entity_data"
     bl_label = "Remove pogo data"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
         del context.object["pogo_entity"]
-        return {"FINISHED"}
+        return {'FINISHED'}
 
 
 class PogoObjectPanel(bpy.types.Panel):
     bl_label = "Pogo Blend"
     bl_idname = "OBJECT_PT_object_pogo_blend"
-    bl_space_type = "PROPERTIES"
-    bl_region_type = "WINDOW"
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
     bl_context = "object"
 
     def draw(self, context):
@@ -55,11 +55,11 @@ class PogoObjectPanel(bpy.types.Panel):
         obj = context.object
 
         match obj.type:
-            case "MESH":
+            case 'MESH':
                 self.draw_mesh_panel(obj, layout)
-            case "CURVE":
+            case 'CURVE':
                 self.draw_curve_panel(obj, layout)
-            case "EMPTY":
+            case 'EMPTY':
                 self.draw_empty_panel(obj, layout)
             case _:
                 self.draw_not_relevant(layout)
@@ -142,8 +142,8 @@ class PogoObjectPanel(bpy.types.Panel):
                     text=skill_config["name"],
                 )
 
-        if action_config["path"] == True:
-            layout.prop(entity, "path", placeholder="Path", icon="OUTLINER_OB_CURVE")
+        if action_config["path"]:
+            layout.prop(entity, "path", placeholder="Path", icon='OUTLINER_OB_CURVE')
 
     def draw_empty_panel(self, obj, layout):
         if "pogo_reigon" not in obj:
@@ -159,9 +159,9 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
     bl_label = "Overrides"
     bl_idname = "OBJECT_PT_object_pogo_blend_override"
     bl_parent_id = "OBJECT_PT_object_pogo_blend"
-    bl_options = {"DEFAULT_CLOSED"}
-    bl_space_type = "PROPERTIES"
-    bl_region_type = "WINDOW"
+    bl_options = {'DEFAULT_CLOSED'}
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
     bl_context = "object"
 
     @classmethod
@@ -171,12 +171,14 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
     @classmethod
     def is_overridden(cls, obj) -> bool:
         entity = obj.pogo_entity
-        return entity.name_override != ""\
-            or entity.filename_override != ""\
-            or entity.material_override != ""\
-            or entity.action_override != ""\
-            or entity.string1_override != ""\
+        return (
+            entity.name_override != ""  #
+            or entity.filename_override != ""
+            or entity.material_override != ""
+            or entity.action_override != ""
+            or entity.string1_override != ""
             or entity.string2_override != ""
+        )
 
     def draw(self, context):
         layout = self.layout

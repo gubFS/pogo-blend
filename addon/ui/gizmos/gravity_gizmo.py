@@ -21,9 +21,7 @@ class PogoGravityArrow(bpy.types.Gizmo):
         obj = bpy.context.object
         power = obj.pogo_reigon.gravity_power / 999
         power = 1 - ((1 - power) ** 3)
-        self.matrix_offset = Matrix.Rotation(
-            math.radians(obj.pogo_reigon.gravity_angle) + 3.14, 4, "Y"
-        ) @ Matrix.Scale(power * 0.4, 4, Vector((0, 0, 1)))
+        self.matrix_offset = Matrix.Rotation(math.radians(obj.pogo_reigon.gravity_angle) + 3.14, 4, "Y") @ Matrix.Scale(power * 0.4, 4, Vector((0, 0, 1)))
 
     def draw(self, context):
         self._update_offset_matrix()
@@ -35,27 +33,22 @@ class PogoGravityArrow(bpy.types.Gizmo):
 
     def setup(self):
         if not hasattr(self, "custom_shape"):
-            self.custom_shape = self.new_custom_shape("TRIS", custom_shape_verts)
+            self.custom_shape = self.new_custom_shape('TRIS', custom_shape_verts)
 
 
 class GravityReigonGroup(bpy.types.GizmoGroup):
     bl_idname = "OBJECT_GGT_pogo_gravity_group"
-    bl_label = "PogoBlend Graviy Arrow"
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "WINDOW"
-    bl_options = {"3D", "PERSISTENT", "SCALE"}
+    bl_label = "PogoBlend Gravity Arrow"
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'WINDOW'
+    bl_options = {'3D', 'PERSISTENT', 'SCALE'}
 
     @classmethod
     def poll(cls, context):
         obj = context.object
-        return (
-            obj
-            and "pogo_reigon" in obj
-            and obj.pogo_reigon.reigon_type == "gravityReg_"
-        )
+        return obj and "pogo_reigon" in obj and obj.pogo_reigon.reigon_type == "gravityReg_"
 
     def setup(self, context):
-        obj = context.object
         gz = self.gizmos.new(PogoGravityArrow.bl_idname)
 
         gz.color = 1.0, 0.3, 1.0

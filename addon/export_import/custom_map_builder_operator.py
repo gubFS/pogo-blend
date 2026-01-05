@@ -4,7 +4,6 @@ import time
 
 import bpy
 from bpy.app.handlers import persistent
-# ExportHelper is a helper class, defines filename and invoke() function which calls the file selector.
 from bpy_extras.io_utils import ExportHelper
 
 from .. import pogo_blend_utils as pbu
@@ -32,9 +31,7 @@ class CustomMapBuilderFile(bpy.types.Operator, ExportHelper):
     )
 
     def execute(self, context):
-        return bpy.ops.pogo_blend.build_custom_map(
-            filepath=self.filepath, global_scale=self.global_scale
-        )
+        return bpy.ops.pogo_blend.build_custom_map(filepath=self.filepath, global_scale=self.global_scale)
 
     def invoke(self, context, event):
         self.global_scale = pbu.get_preferences().map_scale
@@ -58,46 +55,42 @@ class CustomMapBuilder(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         custom_map_dir = pbu.get_preferences().custom_maps_path
-        return custom_map_dir != None and custom_map_dir != "" and "CustomMap" in bpy.data.collections
+        return custom_map_dir is not None and custom_map_dir != "" and "CustomMap" in bpy.data.collections
 
     def execute(self, context):
         start_time = time.time()
         try:
             build_custom_map(context, self.filepath, self.global_scale)
-        except BaseException as e:
-            error_type = {"ERROR"}
+        except Exception as e:
+            error_type = {'ERROR'}
             if isinstance(type, pbu.ContextError):
-                error_type = {"ERROR_INVALID_CONTEXT"}
+                error_type = {'ERROR_INVALID_CONTEXT'}
             self.report(error_type, str(e))
-            raise e  # NOTE: For debugging purposes, should not be here
-            return {"FINISHED"}  # finished to so undo's are registered
+            return {'FINISHED'}  # finished to so undo's are registered
         else:
             self.report(
-                {"INFO"},
+                {'INFO'},
                 f"Custom Map built in {math.floor((time.time() - start_time) * 1000)}ms",
             )
-            return {"FINISHED"}
+            return {'FINISHED'}
 
     def invoke(self, context, event):
         self.filepath = pbu.get_preferences().custom_maps_path
         if self.filepath == "":
             self.report(
-                {"ERROR"},
+                {'ERROR'},
                 "The Custom Maps folder is not defined. Select it and try again. It can be accessed manually in the preferences for the Pogo Blend addon",
             )
             bpy.ops.pogo_blend.select_custom_maps_dir("INVOKE_DEFAULT")
-            return {"CANCELLED"}
+            return {'CANCELLED'}
         if not os.path.exists(self.filepath):
             self.report(
-                "ERROR",
+                'ERROR',
                 "The Custom Maps folder does not exist. Select a valid folder in the preferences for the Pogo Blend addon",
             )
-            return {"CANCELLED"}
+            return {'CANCELLED'}
         if pbu.get_custom_map().map_name == "":
-            self.report(
-                {'ERROR'},
-                "The map name cannot be empty"
-            )
+            self.report({'ERROR'}, "The map name cannot be empty")
             return {'CANCELLED'}
 
         self.filepath = os.path.join(self.filepath, pbu.get_custom_map().map_name)
@@ -107,10 +100,10 @@ class CustomMapBuilder(bpy.types.Operator):
                 pass
         elif ".pogo_blend" not in os.listdir(self.filepath):
             self.report(
-                {"ERROR"},
+                {'ERROR'},
                 f"The '{pbu.get_custom_map().map_name}' folder is not a PogoBlend folder. PogoBlend will delete files in the folder so either enter a new map name, safely delete the existing folder, or add a file named '.pogo_blend' in the folder.",
             )
-            return {"CANCELLED"}
+            return {'CANCELLED'}
         self.filepath = os.path.join(self.filepath, "customMap.wmb")
         self.global_scale = pbu.get_preferences().map_scale
         return self.execute(context)
@@ -143,7 +136,7 @@ def register():
     wm = bpy.context.window_manager
     kc = wm.keyconfigs.addon
     if kc:
-        km = kc.keymaps.new(name="Window", space_type='EMPTY')
+        km = kc.keymaps.new(name='Window', space_type='EMPTY')
         kmi = km.keymap_items.new(CustomMapBuilder.bl_idname, 'F5', 'PRESS')
         keymaps.append((km, kmi))
 

@@ -1,4 +1,3 @@
-import platform
 from pathlib import Path
 
 import bpy
@@ -7,25 +6,25 @@ import bpy
 class SelectCustomMapsDir(bpy.types.Operator):
     bl_idname = "pogo_blend.select_custom_maps_dir"
     bl_label = "Select the Custom Maps folder"
-    bl_options = {"REGISTER"}
+    bl_options = {'REGISTER'}
 
     directory: bpy.props.StringProperty(
         name="Custom Maps folder",
         description="New maps will be created in the selected folder",
-        subtype="DIR_PATH",
+        subtype='DIR_PATH',
     )
 
     # Filters folders
-    filter_folder: bpy.props.BoolProperty(default=True, options={"HIDDEN"})
+    filter_folder: bpy.props.BoolProperty(default=True, options={'HIDDEN'})
 
     def execute(self, context):
         get_preferences().custom_maps_path = self.directory
-        return {"FINISHED"}
+        return {'FINISHED'}
 
     def invoke(self, context, event):
         context.window_manager.fileselect_add(self)
         # Tells Blender to hang on for the slow user input
-        return {"RUNNING_MODAL"}
+        return {'RUNNING_MODAL'}
 
 
 class PogoBlendPrefrences(bpy.types.AddonPreferences):
@@ -84,7 +83,7 @@ class PogoBlendPrefrences(bpy.types.AddonPreferences):
         layout.prop(self, "mdl_exporter")
         row = layout.row()
         row.prop(self, "custom_maps_path")
-        row.operator("pogo_blend.select_custom_maps_dir", text="", icon="FILE_FOLDER")
+        row.operator("pogo_blend.select_custom_maps_dir", text="", icon='FILE_FOLDER')
         layout.prop(self, "map_scale")
         layout.prop(self, "show_overrides")
         layout.prop(self, "build_on_save")
@@ -103,7 +102,7 @@ def register():
     bpy.utils.register_class(PogoBlendPrefrences)
 
     cmp = get_preferences().custom_maps_path
-    if cmp == None or cmp == "":
+    if cmp is None or cmp == "":
         cmp = next(Path("/").rglob("steamapps/common/Pogostuck/CustomMaps"), "")
     get_preferences().custom_maps_path = str(cmp)
 

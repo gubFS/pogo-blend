@@ -1,4 +1,3 @@
-import copy
 import os
 
 import bpy
@@ -10,8 +9,12 @@ from .gub_byte_array import GubByteArray
 from .hash_cache import HashCache
 from .mdl_exporter.mdl_exporter import MDLExporter
 from .wmb_exporter.wmb_exporter import WMBExporter
-from .wmb_exporter.wmb_objects.wmb_entity import (PogoModeSetup, PogoSpawn,
-                                                  PogoStartLine, WMBEntity)
+from .wmb_exporter.wmb_objects.wmb_entity import (
+    PogoModeSetup,
+    PogoSpawn,
+    PogoStartLine,
+    WMBEntity,
+)
 from .wmb_exporter.wmb_objects.wmb_info import WMBInfo
 from .wmb_exporter.wmb_objects.wmb_path import PogoPathProgress, WMBPath
 from .wmb_exporter.wmb_objects.wmb_reigon import WMBReigon
@@ -24,20 +27,16 @@ def build_custom_map(context, filepath, global_scale):
     custom_map = pbu.get_custom_map()
 
     spawn = custom_map.spawn
-    if spawn == None:
+    if spawn is None:
         raise pbu.ContextError("You MUST choose a spawn on the 'CustomMap' collection")
 
     path_progress = custom_map.path_progress
-    if path_progress == None:
-        raise pbu.ContextError(
-            "You MUST choose a progrees path on the 'CustomMap' collection"
-        )
+    if path_progress is None:
+        raise pbu.ContextError("You MUST choose a progrees path on the 'CustomMap' collection")
 
     start_line = custom_map.start_line
-    if start_line == None:
-        raise pbu.ContextError(
-            "You MUST choose a starting line on the 'CustomMap' collection"
-        )
+    if start_line is None:
+        raise pbu.ContextError("You MUST choose a starting line on the 'CustomMap' collection")
 
     dirpath = os.path.dirname(filepath)
     cache = HashCache(os.path.join(dirpath, ".pogo_blend"))
@@ -71,7 +70,7 @@ def build_custom_map(context, filepath, global_scale):
             continue
 
         match obj.type:
-            case "MESH":
+            case 'MESH':
                 if "pogo_entity" not in obj:
                     continue
 
@@ -83,18 +82,12 @@ def build_custom_map(context, filepath, global_scale):
                         meshes[mesh] = ([entity], obj, global_scale)
                     else:
                         meshes[mesh][0].append(entity)
-                    if (
-                        obj.pogo_entity.flag_auto_collision
-                        and obj.pogo_entity.flag_polygon
-                    ):
+                    if obj.pogo_entity.flag_auto_collision and obj.pogo_entity.flag_polygon:
                         colliders.append((obj, entity))
-                if (
-                    obj.pogo_entity.path != None
-                    and not obj.pogo_entity.flag_auto_collision
-                ):
+                if obj.pogo_entity.path is not None and not obj.pogo_entity.flag_auto_collision:
                     paths_to_add.append((entity, obj.pogo_entity.path))
                 wmb_objects.append(entity)
-            case "EMPTY":
+            case 'EMPTY':
                 if "pogo_reigon" not in obj:
                     continue
                 if obj.pogo_reigon.reigon_type == "ndef":
@@ -104,7 +97,7 @@ def build_custom_map(context, filepath, global_scale):
                 if obj.pogo_reigon.reigon_type == "CP_":
                     splits_to_add[obj] = reigon
                 wmb_objects.append(reigon)
-            case "CURVE":
+            case 'CURVE':
                 if "pogo_path" not in obj:
                     continue
 
@@ -114,7 +107,7 @@ def build_custom_map(context, filepath, global_scale):
     # export meshes
     for entities, obj, scale in meshes.values():
         filename = pbu.get_unique_name(obj.name.replace(".", "_"), ".mdl", 33, used_names)
-        if filename == None:
+        if filename is None:
             print("WARNING: could not find a unique filename")
             continue
         used_files.add(filename)
@@ -131,7 +124,7 @@ def build_custom_map(context, filepath, global_scale):
                     31,
                     used_names,
                 )
-                if new_texture == None:
+                if new_texture is None:
                     print("WARNING: could not find a unique filename")
                     continue
                 else:
@@ -139,11 +132,7 @@ def build_custom_map(context, filepath, global_scale):
                     textures[texture] = new_texture
 
         if not cache.update_entity(filename, obj):
-            # print(f"skipping {mdlpath}")
             continue
-
-        # if os.path.exists(mdlpath):
-        #     print(f"WARNING: Overwriting '{mdlpath}'")
 
         mdl_exporter = MDLExporter(mdlpath, [obj], scale)
         for texture, slot_idx in mdl_exporter.skins.copy().items():
@@ -159,7 +148,7 @@ def build_custom_map(context, filepath, global_scale):
     # colliders
     for obj, entity in colliders:
         filename = pbu.get_unique_name(obj.name.replace(".", "_"), "_col.mdl", 33, used_names)
-        if filename == None:
+        if filename is None:
             print("WARNING: could not find a unique filename")
             continue
         used_files.add(filename)
@@ -169,21 +158,20 @@ def build_custom_map(context, filepath, global_scale):
             collider = create_collider.create_collider(obj, 64)
             MDLExporter(mdlpath, [collider], global_scale).export()
         else:
-            # print("skipping col")
             collider = create_collider.create_collider_object(obj)
 
         collider_entity = WMBEntity(collider, global_scale)
         collider_entity.filename = filename
         entity.flags &= ~(1 << 26)  # clear polygon
         entity.flags |= 1 << 9  # set passable
-        if obj.pogo_entity.path != None:
+        if obj.pogo_entity.path is not None:
             paths_to_add.append((collider_entity, obj.pogo_entity.path))
         wmb_objects.append(collider_entity)
 
         # cleanup generated collider
         mesh = collider.data
         bpy.data.objects.remove(collider, do_unlink=True)
-        if mesh != None:
+        if mesh is not None:
             bpy.data.meshes.remove(mesh, do_unlink=True)
 
     for entity, path in paths_to_add:
@@ -198,13 +186,7 @@ def build_custom_map(context, filepath, global_scale):
     for texture, new_texture in textures.items():
         export_texture(dirpath, new_texture, texture)
 
-    files_in_dictionary = set(
-        [
-            file
-            for file in os.listdir(dirpath)
-            if os.path.isfile(os.path.join(dirpath, file))
-        ]
-    )
+    files_in_dictionary = set([file for file in os.listdir(dirpath) if os.path.isfile(os.path.join(dirpath, file))])
     unused_files = files_in_dictionary.difference(used_files)
     for file in unused_files:
         for extension in [".mdl", ".tga", ".png"]:
@@ -241,19 +223,16 @@ def export_map_description(dirpath):
 def export_map_image(dirpath, custom_map):
     image_path = custom_map.map_image
 
-    if image_path == None:
-        return
-    if image_path == "":
+    if image_path is None or image_path == "":
         return
 
     try:
         img = Image.open(custom_map.map_image)
-        img.save(os.path.join(dirpath, "workshopPreview.png"), format="PNG")
-    except:
+        img.save(os.path.join(dirpath, "workshopPreview.png"), format='PNG')
+    except Exception:
         print("Could not load or save map image!")
 
 
 def export_texture(dirpath, image_name, image_path):
     img = Image.open(image_path)
-    img.save(os.path.join(dirpath, image_name), format="TGA")
-
+    img.save(os.path.join(dirpath, image_name), format='TGA')

@@ -6,55 +6,51 @@ from .. import pogo_blend_utils as pbu
 class EditMapDescription(bpy.types.Operator):
     bl_idname = "pogo_blend.edit_map_description"
     bl_label = "Edit Map Description"
-    bl_options = {"REGISTER"}
+    bl_options = {'REGISTER'}
 
     def execute(self, context):
         bpy.ops.wm.window_new()
-        context.area.ui_type = "TEXT_EDITOR"
+        context.area.ui_type = 'TEXT_EDITOR'
         if "levelDescription.txt" not in bpy.data.texts:
             bpy.ops.text.new()
             context.space_data.text.name = "levelDescription.txt"
         context.space_data.text = bpy.data.texts["levelDescription.txt"]
-        return {"FINISHED"}
+        return {'FINISHED'}
 
 
 class SelectMapImage(bpy.types.Operator):
     bl_idname = "pogo_blend.select_map_image"
     bl_label = "Select Map Image"
-    bl_options = {"REGISTER"}
+    bl_options = {'REGISTER'}
 
-    filepath: bpy.props.StringProperty(subtype="FILE_PATH")
-    filter_glob: bpy.props.StringProperty(
-        default="*.bmp;*.ico;*.jpeg;*.jpg;*.png;*.tga;*.webp"
-    )
+    filepath: bpy.props.StringProperty(subtype='FILE_PATH')
+    filter_glob: bpy.props.StringProperty(default="*.bmp;*.ico;*.jpeg;*.jpg;*.png;*.tga;*.webp")
 
     def execute(self, context):
         pbu.get_custom_map().map_image = self.filepath
-        return {"FINISHED"}
+        return {'FINISHED'}
 
     def invoke(self, context, event):
         context.window_manager.fileselect_add(self)
-        return {"RUNNING_MODAL"}
+        return {'RUNNING_MODAL'}
 
 
 class PogoSplitList(bpy.types.UIList):
     bl_idname = "POGO_UL_pogo_blend_split_list"
 
-    def draw_item(
-        self, context, layout, data, item, icon, active_data, active_propname
-    ):
-        if self.layout_type in {"DEFAULT", "COMPACT"}:
+    def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
+        if self.layout_type in {'DEFAULT', 'COMPACT'}:
             layout.label(text=item.split_reigon.name, translate=False, icon_value=icon)
-        elif self.layout_type == "GRID":
-            layout.alignment = "CENTER"
+        elif self.layout_type == 'GRID':
+            layout.alignment = 'CENTER'
             layout.label(text="", icon_value=icon)
 
 
 class PogoCollectionPanel(bpy.types.Panel):
     bl_label = "Pogo Blend"
     bl_idname = "COLLECTION_PT_collection_pogo_blend"
-    bl_space_type = "PROPERTIES"
-    bl_region_type = "WINDOW"
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
     bl_context = "collection"
 
     def draw(self, context):
@@ -66,9 +62,7 @@ class PogoCollectionPanel(bpy.types.Panel):
 
         layout.operator("pogo_blend.build_custom_map", text="Build Custom Map")
 
-        map_information_panel_header, map_information_panel = layout.panel(
-            "map_information_panel"
-        )
+        map_information_panel_header, map_information_panel = layout.panel("map_information_panel")
         map_information_panel_header.label(text="Map Information")
         if map_information_panel:
             map_information_panel.prop(custom_map, "map_name")
@@ -78,20 +72,12 @@ class PogoCollectionPanel(bpy.types.Panel):
             row.prop(custom_map, "map_image")
             row.operator("pogo_blend.select_map_image", icon="IMAGE_DATA", text="")
 
-        required_objects_panel_header, required_objects_panel = layout.panel(
-            "required_objects_panel"
-        )
+        required_objects_panel_header, required_objects_panel = layout.panel("required_objects_panel")
         required_objects_panel_header.label(text="Required Objects")
         if required_objects_panel:
-            required_objects_panel.prop(
-                custom_map, "spawn", placeholder="Empty", icon="EMPTY_DATA"
-            )
-            required_objects_panel.prop(
-                custom_map, "path_progress", placeholder="Curve", icon="CURVE_DATA"
-            )
-            required_objects_panel.prop(
-                custom_map, "start_line", placeholder="Mesh", icon="MESH_DATA"
-            )
+            required_objects_panel.prop(custom_map, "spawn", placeholder="Empty", icon="EMPTY_DATA")
+            required_objects_panel.prop(custom_map, "path_progress", placeholder="Curve", icon="CURVE_DATA")
+            required_objects_panel.prop(custom_map, "start_line", placeholder="Mesh", icon="MESH_DATA")
 
         splits_panel_header, splits_panel = layout.panel("splits_panel")
         splits_panel_header.label(text="Splits")
@@ -107,12 +93,8 @@ class PogoCollectionPanel(bpy.types.Panel):
             )
 
             col = row.column()
-            col.operator(
-                "pogo_blend.active_split_move", icon="TRIA_UP", text=""
-            ).direction = "UP"
-            col.operator(
-                "pogo_blend.active_split_move", icon="TRIA_DOWN", text=""
-            ).direction = "DOWN"
+            col.operator("pogo_blend.active_split_move", icon="TRIA_UP", text="").direction = 'UP'
+            col.operator("pogo_blend.active_split_move", icon="TRIA_DOWN", text="").direction = 'DOWN'
 
         mode_panel_header, mode_panel = layout.panel("mode_panel")
         mode_panel_header.label(text="Modes")

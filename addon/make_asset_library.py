@@ -181,13 +181,13 @@ def make_asset_library(context, filepath: str):
     if custom_maps_path == "":
         return
     base_map = Path(custom_maps_path).joinpath("BaseMap")
-    if base_map == None or base_map == "":
+    if base_map is None or base_map == "":
         return
 
     assets = []
     for mdl in config["models"]:
         path = Path(base_map).joinpath("Models", mdl["filename"])
-        import_mdl(context, path, 1/50)
+        import_mdl(context, path, 1 / 50)
         obj = context.object
         obj.pogo_entity
         obj.pogo_entity.filename_override = mdl["filename"]
@@ -217,7 +217,7 @@ def make_asset_library(context, filepath: str):
         if "mark_materials" in mdl and mdl["mark_materials"]:
             for mat in obj.material_slots:
                 mat = mat.material
-                match(mat.name):
+                match mat.name:
                     case "gradientTest":
                         mat.name = "Gradient"
                     case "slimeBubbles":
@@ -267,8 +267,7 @@ class MakeAssetLibraryOperator(bpy.types.Operator):
     bl_idname = "pogo_blend.make_asset_library"
     bl_label = "Make asset library"
     bl_description = "Make asset library"
-    bl_options = {"REGISTER", "UNDO"}
-
+    bl_options = {'REGISTER', 'UNDO'}
 
     @classmethod
     def poll(cls, context) -> bool:
@@ -286,14 +285,13 @@ class MakeAssetLibraryOperator(bpy.types.Operator):
 
         return True
 
-
     def execute(self, context):
         if bpy.data.is_dirty:
             bpy.ops.wm.save_mainfile()
         filepath = bpy.data.filepath
         bpy.ops.wm.read_homefile(app_template="", use_empty=True)
         bpy.app.timers.register(lambda: make_asset_library(context, filepath), first_interval=0.01)
-        return {'FINISHED'}
+        return {"FINISHED"}
 
 
 def register():

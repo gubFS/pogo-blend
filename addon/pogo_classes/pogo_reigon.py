@@ -10,7 +10,6 @@ class PogoReigon(bpy.types.PropertyGroup):
     def update_reigon_type(self, context):
         obj = context.object
         new_type = obj.pogo_reigon.reigon_type
-        custom_map_collection = pbu.get_custom_map_collection()
         custom_map = pbu.get_custom_map()
 
         splits = {}
@@ -25,20 +24,14 @@ class PogoReigon(bpy.types.PropertyGroup):
             if obj in splits:
                 split = custom_map.splits.remove(splits[obj])
 
-    reigon_type: bpy.props.EnumProperty(
-        items=reigon_types, name="Reigon Type", update=update_reigon_type
-    )
+    reigon_type: bpy.props.EnumProperty(items=reigon_types, name="Reigon Type", update=update_reigon_type)
 
     def update_gravity_angle(self, context):
         if self.gravity_angle < 0 or self.gravity_angle >= 360:
             self.gravity_angle = self.gravity_angle % 360
 
-    gravity_angle: bpy.props.IntProperty(
-        name="Gravity angle", update=update_gravity_angle
-    )  # 90 is -x 180 is +z
-    gravity_power: bpy.props.IntProperty(
-        name="Gravity power", default=100, min=0, max=999
-    )
+    gravity_angle: bpy.props.IntProperty(name="Gravity angle", update=update_gravity_angle)  # 90 is -x 180 is +z
+    gravity_power: bpy.props.IntProperty(name="Gravity power", default=100, min=0, max=999)
 
 
 def register():

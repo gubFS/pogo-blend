@@ -2,7 +2,6 @@ import json
 import os
 from collections.abc import Callable
 
-import bpy
 import xxhash
 
 from .. import pogo_blend_utils as pbu
@@ -114,8 +113,8 @@ class HashCache:
         for modifier in obj.modifiers:
             bytes.store_bool(modifier.is_active)
             bytes.store_string(modifier.type)
-            match(modifier.type):
-                case 'ARRAY':
+            match modifier.type:
+                case "ARRAY":
                     bytes.store_32(modifier.count)
                     bytes.store_bool(modifier.use_relative_offset)
                     if modifier.use_relative_offset:
@@ -125,15 +124,15 @@ class HashCache:
                         bytes.store_vec3f(modifier.constant_offset_displace)
                     bytes.store_bool(modifier.use_object_offset)
                     if modifier.use_object_offset:
-                        if modifier.offset_object != None:
+                        if modifier.offset_object is not None:
                             bytes.store_vec3f(modifier.offset_object.matrix_world.translation)
-                case 'BEVEL':
+                case "BEVEL":
                     bytes.store_string(modifier.affect)
                     bytes.store_string(modifier.offset_type)
-                    if modifier.offset_type != 'PERCENT':
+                    if modifier.offset_type != "PERCENT":
                         bytes.store_float(modifier.width)
                     else:
                         bytes.store_float(modifier.width_pct)
                     bytes.store_string(modifier.limit_method)
-                    if modifier.limit_method == 'ANGLE':
+                    if modifier.limit_method == "ANGLE":
                         bytes.store_float(modifier.angle_limit)

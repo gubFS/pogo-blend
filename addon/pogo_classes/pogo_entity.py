@@ -1,6 +1,3 @@
-import json
-import os
-
 import bpy
 
 from .. import pogo_blend_utils as pbu
@@ -15,10 +12,8 @@ class PogoEntity(bpy.types.PropertyGroup):
     string2_override: bpy.props.StringProperty()
 
     material_enums = [("ndef", "", "No material", 0)]
-    material_enums.extend(pbu.get_enum_list("pogo_classes/materials.yaml", False)) #pbu.get_preferences().show_all_materials))
-    material: bpy.props.EnumProperty(
-        items=material_enums, name="Material", default="ndef"
-    )
+    material_enums.extend(pbu.get_enum_list("pogo_classes/materials.yaml", False))  # pbu.get_preferences().show_all_materials))
+    material: bpy.props.EnumProperty(items=material_enums, name="Material", default="ndef")
 
     flag_invisible: bpy.props.BoolProperty(name="Invisble")  # = 8,
     flag_passable: bpy.props.BoolProperty(name="Passable")  # = 9,
@@ -27,9 +22,7 @@ class PogoEntity(bpy.types.PropertyGroup):
     flag_shadow: bpy.props.BoolProperty(name="Shadow")  # = 18, #
     flag_metal: bpy.props.BoolProperty(name="Kill")  # = 22, # kill
     flag_cast: bpy.props.BoolProperty(name="Cast")  # = 23, #
-    flag_polygon: bpy.props.BoolProperty(
-        name="Collision"
-    )  # = 26, # collision. if polygon isn't set then its passable
+    flag_polygon: bpy.props.BoolProperty(name="Collision")  # = 26, # collision. if polygon isn't set then its passable
 
     flag_overlay: bpy.props.BoolProperty()  # = 12,
     flag_flare: bpy.props.BoolProperty()  # = 15,
@@ -43,11 +36,11 @@ class PogoEntity(bpy.types.PropertyGroup):
     albedo: bpy.props.FloatProperty(name="Albedo", default=50.0)
 
     action_enums = [("ndef", "", "No action", 0)]
-    action_enums.extend(pbu.get_enum_list("pogo_classes/actions.yaml", False)) # pbu.get_preferences().show_all_actions))
+    action_enums.extend(pbu.get_enum_list("pogo_classes/actions.yaml", False))  # pbu.get_preferences().show_all_actions))
 
     actions = pbu.parse_yaml("pogo_classes/actions.yaml")
     for key, config in actions.items():
-        if config == None:
+        if config is None:
             config = {}
             actions[key] = config
         config.setdefault("name", key)
@@ -72,11 +65,11 @@ class PogoEntity(bpy.types.PropertyGroup):
             self.action1 = self.action2
             self.action2 = "ndef"
         else:
-            if context.area and context.area.type == "PROPERTIES":
+            if context.area and context.area.type == 'PROPERTIES':
                 self.set_action_defaults(context, True)
 
     def on_action2_change(self, context):
-        if context.area.type == "PROPERTIES":
+        if context.area.type == 'PROPERTIES':
             self.set_action_defaults(context, False)
 
     def set_action_defaults(self, context, is_action1: bool) -> None:
@@ -111,12 +104,8 @@ class PogoEntity(bpy.types.PropertyGroup):
         for value in all_values:
             self.property_unset(value)
 
-    action1: bpy.props.EnumProperty(
-        items=action_enums, name="Action", default="ndef", update=on_action1_change
-    )
-    action2: bpy.props.EnumProperty(
-        items=action_enums, name="Action2", default="ndef", update=on_action2_change
-    )
+    action1: bpy.props.EnumProperty(items=action_enums, name="Action", default="ndef", update=on_action1_change)
+    action2: bpy.props.EnumProperty(items=action_enums, name="Action2", default="ndef", update=on_action2_change)
 
     flag_1: bpy.props.BoolProperty(name="flag_1")  # = 0,
     flag_2: bpy.props.BoolProperty(name="flag_2")  # = 1,
@@ -129,9 +118,7 @@ class PogoEntity(bpy.types.PropertyGroup):
 
     flag_auto_collision: bpy.props.BoolProperty(name="Auto Collision")
 
-    path: bpy.props.PointerProperty(
-        type=bpy.types.Object, name="Path", poll=lambda prop, obj: "pogo_path" in obj
-    )
+    path: bpy.props.PointerProperty(type=bpy.types.Object, name="Path", poll=lambda prop, obj: "pogo_path" in obj)
 
     skill_1: bpy.props.FloatProperty(name="skill_1")
     skill_2: bpy.props.FloatProperty(name="skill_2")

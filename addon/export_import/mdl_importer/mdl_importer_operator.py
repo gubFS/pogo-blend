@@ -13,18 +13,14 @@ file: BufferedReader
 
 
 class MDLTri:
-    def __init__(
-        self, verts: tuple[int, int, int], uvs: tuple[int, int, int], skin_idx: int
-    ):
+    def __init__(self, verts: tuple[int, int, int], uvs: tuple[int, int, int], skin_idx: int):
         self.verts = verts[::-1]
         self.uvs = uvs[::-1]
         self.skin_idx = skin_idx
 
 
 class MDLVert:
-    def __init__(
-        self, vert: tuple[float, float, float], normal: tuple[float, float, float]
-    ):
+    def __init__(self, vert: tuple[float, float, float], normal: tuple[float, float, float]):
         self.vert = vert
         self.normal = normal
 
@@ -93,13 +89,11 @@ def import_mdl(context, filepath, scale):
     # file read done
     name = Path(filepath).stem
     mesh = bpy.data.meshes.new(name=name)
-    mesh.from_pydata(
-        list(vert.vert for vert in verts), [], list(tri.verts for tri in tris)
-    )
+    mesh.from_pydata(list(vert.vert for vert in verts), [], list(tri.verts for tri in tris))
     obj = bpy.data.objects.new(name=name, object_data=mesh)
     context.collection.objects.link(obj)
     obj.location = context.scene.cursor.location
-    bpy.ops.object.select_all(action="DESELECT")
+    bpy.ops.object.select_all(action='DESELECT')
     obj.select_set(True)
     context.view_layer.objects.active = obj
 
@@ -107,9 +101,7 @@ def import_mdl(context, filepath, scale):
     if len(uvs) != 0:
         uv_layer = mesh.uv_layers.new(name="layer")
         for i, tri in enumerate(tris):
-            mesh.polygons[i].material_index = (
-                tri.skin_idx if tri.skin_idx != 0xFFFFFFFF else 0
-            )
+            mesh.polygons[i].material_index = tri.skin_idx if tri.skin_idx != 0xFFFFFFFF else 0
             for j in range(3):
                 if tri.uvs[j] != 0xFFFF:
                     vec = Vector(uvs[tri.uvs[j]])
@@ -128,7 +120,7 @@ def import_mdl(context, filepath, scale):
             continue
         mat = bpy.data.materials.new(name=Path(skin).stem)
         mat.use_nodes = True
-        image_node = mat.node_tree.nodes.new(type="ShaderNodeTexImage")
+        image_node = mat.node_tree.nodes.new(type='ShaderNodeTexImage')
         img = bpy.data.images.load(imagepath)
         image_node.image = img
         disp = mat.node_tree.nodes["Principled BSDF"].inputs[0]
@@ -176,13 +168,13 @@ class MDLImporterOperator(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
     bl_idname = "pogo_blend.import_mdl"
     bl_label = "Import mesh from MDL (Gamestudio A8)"
     bl_description = "Imports meshes from MDL files."
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options = {'REGISTER', 'UNDO'}
 
     filename_ext = ".mdl"
 
     filter_glob: bpy.props.StringProperty(
         default="*.mdl",
-        options={"HIDDEN"},
+        options={'HIDDEN'},
         maxlen=255,  # Max internal buffer length, longer would be clamped.
     )
 
@@ -202,12 +194,12 @@ class MDLImporterOperator(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
         try:
             import_mdl(context, self.filepath, self.global_scale)
         except BaseException as e:
-            error_type = {"ERROR"}
+            error_type = {'ERROR'}
             self.report(error_type, str(e))
             raise e  # NOTE: Only for debugging purposes
-            return {"CANCELLED"}
+            return {'CANCELLED'}
         else:
-            return {"FINISHED"}
+            return {'FINISHED'}
 
 
 def menu_func(self, context):

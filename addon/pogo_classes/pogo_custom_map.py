@@ -18,14 +18,14 @@ class ActiveSplitMove(bpy.types.Operator):
         current_idx = custom_map.active_split_idx
 
         new_idx = current_idx
-        if self.direction == "DOWN":
+        if self.direction == 'DOWN':
             new_idx = min(current_idx + 1, len(custom_map.splits) - 1)
-        elif self.direction == "UP":
+        elif self.direction == 'UP':
             new_idx = max(current_idx - 1, 0)
         custom_map.splits.move(current_idx, new_idx)
         custom_map.active_split_idx = new_idx
 
-        return {"FINISHED"}
+        return {'FINISHED'}
 
 
 class PogoCustomMap(bpy.types.PropertyGroup):
@@ -36,7 +36,9 @@ class PogoCustomMap(bpy.types.PropertyGroup):
     active_split_idx: bpy.props.IntProperty()
 
     spawn: bpy.props.PointerProperty(
-        type=bpy.types.Object, name="Spawn", poll=lambda prop, obj: obj.type == "EMPTY"
+        type=bpy.types.Object,
+        name="Spawn",
+        poll=lambda prop, obj: obj.type == 'EMPTY',
     )
 
     path_progress: bpy.props.PointerProperty(
