@@ -1,11 +1,10 @@
-import bpy
 from mathutils import Vector
 
 from ...gub_byte_array import GubByteArray
 
 
 class WMBReigon:
-    def __init__(self, obj):
+    def __init__(self, obj, scale: float = 50.0):
         self.type = 8  # 8 is the ID of the type for reigons
 
         self.name = obj.pogo_reigon.reigon_type
@@ -17,15 +16,15 @@ class WMBReigon:
         self.min_pos = Vector((-1, -1, -1))
         self.max_pos = Vector((1, 1, 1))
 
-        self.min_pos *= obj.matrix_world.to_scale().to_3d() * obj.empty_display_size
-        self.max_pos *= obj.matrix_world.to_scale().to_3d() * obj.empty_display_size
+        self.min_pos *= obj.matrix_world.to_scale().to_3d() * obj.empty_display_size * scale
+        self.max_pos *= obj.matrix_world.to_scale().to_3d() * obj.empty_display_size * scale
 
-        self.min_pos += obj.matrix_world.translation
-        self.max_pos += obj.matrix_world.translation
+        self.min_pos += obj.matrix_world.translation * scale
+        self.max_pos += obj.matrix_world.translation * scale
 
         match obj.pogo_reigon.reigon_type:
             case (
-                "modearea_double"
+                "modearea_double"  #
                 | "modearea_puzzle"
                 | "modearea_nobonk"
                 | "moearea_noboost"

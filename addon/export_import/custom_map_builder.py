@@ -93,7 +93,7 @@ def build_custom_map(context, filepath, global_scale):
                 if obj.pogo_reigon.reigon_type == "ndef":
                     continue
 
-                reigon = WMBReigon(obj)
+                reigon = WMBReigon(obj, global_scale)
                 if obj.pogo_reigon.reigon_type == "CP_":
                     splits_to_add[obj] = reigon
                 wmb_objects.append(reigon)
@@ -102,7 +102,7 @@ def build_custom_map(context, filepath, global_scale):
                     continue
 
                 paths.append(obj)
-                wmb_objects.append(WMBPath(obj))
+                wmb_objects.append(WMBPath(obj, global_scale))
 
     # export meshes
     for entities, obj, scale in meshes.values():

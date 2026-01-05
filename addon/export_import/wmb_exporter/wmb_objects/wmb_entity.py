@@ -18,21 +18,13 @@ class WMBEntity:
         self.scale = obj.scale.copy()  # if entity.filename_override == "" else (1, 1, 1)
         self.name = obj.name.replace(".", "_") if entity.name_override == "" else entity.name_override
 
-        self.filename = (
-            f"NOTSWITCHED"
-            if entity.filename_override == ""
-            else entity.filename_override
-        )
+        self.filename = "NOTSWITCHED" if entity.filename_override == "" else entity.filename_override
 
         if entity.action_override != "":
             self.action = entity.action_override
             self.string1 = entity.string1_override
             self.string2 = entity.string2_override
-        elif (
-            entity.action2 == "ndef"
-            or entity.string1_override != ""
-            or entity.string2_override != ""
-        ):
+        elif entity.action2 == "ndef" or entity.string1_override != "" or entity.string2_override != "":
             self.action = entity.action1 if entity.action1 != "ndef" else ""
             self.string1 = entity.string1_override
             self.string2 = entity.string2_override
@@ -47,11 +39,7 @@ class WMBEntity:
         self.albedo = entity.albedo
         self.path = 0
         self.entity2 = 0
-        self.material = (
-            entity.material
-            if entity.material_override == ""
-            else entity.material_override
-        )
+        self.material = entity.material if entity.material_override == "" else entity.material_override
 
     def to_bytes(self) -> GubByteArray:
         is_old = self.is_old()  # 'old' entity types use less space
@@ -83,7 +71,7 @@ class WMBEntity:
 
     def is_old(self) -> bool:
         return (
-            self.albedo == 50.0
+            self.albedo == 50.0  #
             and self.path == 0
             and self.entity2 == 0
             and self.material == "ndef"

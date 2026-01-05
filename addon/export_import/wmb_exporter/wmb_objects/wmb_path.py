@@ -1,10 +1,8 @@
-import mathutils
-
 from ...gub_byte_array import GubByteArray
 
 
 class WMBPath:
-    def __init__(self, obj):
+    def __init__(self, obj, global_scale: float = 50.0):
         self.type = 6  # 6 is the ID for path types
         self.name = obj.name
 
@@ -15,6 +13,7 @@ class WMBPath:
             point = point.co.to_3d()
             point.rotate(obj.matrix_world.to_euler())
             point = point * scale + location
+            point *= global_scale
             self.points.append(point)
 
     def to_bytes(self) -> GubByteArray:
@@ -22,9 +21,7 @@ class WMBPath:
 
         bytes.store_32(self.type)
         bytes.store_string(self.name, 20)
-        bytes.store_float(
-            len(self.points)
-        )  # number of points, as a float for who knows why
+        bytes.store_float(len(self.points))  # number of points, as a float for who knows why
         bytes.store_32s(0, 3)  # unused
 
         # number of edges, which is 3 + no_of_edges * 5, for some reason
