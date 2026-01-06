@@ -8,21 +8,21 @@ ndef:
 
 appAGeoDefault_mat:
   name: Geometry
-  description: The default material. Has defined edges. Albedo changes greyscale
+  description: The default material for regular geometry
   ambient: Brightness
   albedo: Greyscale
 cmFruitTex_mat:
   name: Fruit Tex
-  description: Like 'Geometry' but... fruit? Albedo changes greyscale
+  description: Like 'Geometry' but... fruit?
   ambient: Brightness
   albedo: Greyscale
 fruitTex_mat:
   name: Fruit Tex Reflective
-  description: Like 'Fruit Tex' but more reflective. Cannot use greyscale
+  description: Like 'Fruit Tex' but more reflective
   ambient: Brightness
 map3FruitDefault_mat:
   name: Fruit
-  description: '"Fruity" material. Albedo changes greyscale'
+  description: '"Fruity" material'
   ambient: Brightness
   albedo: Greyscale
 cmUnlit:
