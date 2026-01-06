@@ -76,6 +76,7 @@ map3Chain_mat:
   name: Chain
   description: Used for Map 3 chains. Glossy metal-like material
 pencil_mat:
+  hidden: true
   name: Pencil
   description: Used for the pencil. Has a light wood look
 anvil_mat:
@@ -85,17 +86,20 @@ cloud_mat:
   name: Cloud
   description: Used for the clouds. White material, with grey parts
 monoSpikes_mat:
+  hidden: true
   name: Thorns
   description: Used for the thorns
 monoWheel_mat:
+  hidden: true
   name: Wheel
   description: Used for the wheel
 startFinish_mat:
+  hidden: true
   name: Start Finish
   description: Used for the starting and finishing lines
 mat_bug:
-  description: similar to traffic cone
   hidden: true
+  description: similar to traffic cone
 mountain_mat:
   hidden: true
 coconut_mat:
