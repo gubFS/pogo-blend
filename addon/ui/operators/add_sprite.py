@@ -12,11 +12,15 @@ class AddSprite(bpy.types.IMAGE_OT_import_as_mesh_planes):
 
         if ret_code == {'FINISHED'}:
             sprite = context.object
-            sprite.name = "PogoSprite"
-            sprite.rotation_euler[0] = 1.570796
 
+            bpy.ops.object.editmode_toggle()
+            bpy.ops.mesh.select_all(action='SELECT')
+            bpy.ops.transform.rotate(value=1.5708, orient_axis='X', orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, False, False), mirror=True)
+            bpy.ops.object.editmode_toggle()
+
+            sprite.name = "PogoSprite"
             entity = sprite.pogo_entity
-            entity.flag_unlit = True
+            entity.material = "cmUnlit"
 
         return ret_code
 
