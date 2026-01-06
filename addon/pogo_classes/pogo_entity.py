@@ -246,7 +246,7 @@ class PogoEntity(bpy.types.PropertyGroup):
             | self.flag_7 << 6
             | self.flag_8 << 7
             | self.flag_invisible << 8
-            | ((self.flag_transparent & self.compare_material_config("albedo", "Transparency")) | self.compare_material_config("transparent")) << 10
+            | (self.flag_transparent & (self.compare_material_config("albedo", "Transparency") | (self.material_override != "")) | self.compare_material_config("transparent")) << 10
             | self.flag_overlay << 12
             | self.flag_flare << 15
             | self.flag_nofilter << 16
