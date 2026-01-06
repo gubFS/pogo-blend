@@ -35,7 +35,7 @@ class HashCache:
         if key in self.cache and self.cache[key] == hash:
             return False
 
-        self.cache.update({key: hash})
+        self.cache[key] = hash
         return True
 
     def update_entity(self, key: str, obj) -> bool:

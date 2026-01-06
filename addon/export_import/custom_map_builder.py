@@ -49,7 +49,9 @@ def build_custom_map(context, filepath, global_scale):
         PogoPathProgress(path_progress),
         PogoStartLine(start_line),
     ]
-    meshes = {start_line.data: ([wmb_objects[-1]], start_line, global_scale)} if start_line.pogo_entity.filename_override == "" else {}
+    meshes = {}
+    if start_line.pogo_entity.filename_override == "":
+        meshes[start_line.data] = ([wmb_objects[-1]], start_line, global_scale)
     textures = {}
     paths = [path_progress]
     paths_to_add = []
