@@ -91,10 +91,19 @@ class PogoObjectPanel(bpy.types.Panel):
         layout.prop(obj, "rotation_euler", text="Rotation")
         layout.prop(obj, "scale")
 
-        layout.prop(entity, "material")
+        if entity.material_override == "":
+            layout.prop(entity, "material")
+        else:
+            row = layout.row()
+            row.alignment = 'LEFT'
+            row.scale_x = 3.0
+            row.label(text="Material: ")
+            override_text = row.row()
+            override_text.enabled = False
+            override_text.label(text=entity.material_override)
 
         row = layout.row()
-        if entity.material in entity.materials:
+        if entity.material_override == "" and entity.material in entity.materials:
             ambient = entity.materials[entity.material]["ambient"]
             if ambient is not None:
                 row.prop(entity, "ambient", text=ambient)
