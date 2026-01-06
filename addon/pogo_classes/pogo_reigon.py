@@ -8,7 +8,7 @@ class PogoReigon(bpy.types.PropertyGroup):
     reigon_types.extend(pbu.get_enum_list("pogo_classes/reigon_types.yaml", True))
 
     def update_reigon_type(self, context):
-        obj = context.object
+        obj = self.rna_ancestors()[-1]
         new_type = obj.pogo_reigon.reigon_type
         custom_map = pbu.get_custom_map()
 
