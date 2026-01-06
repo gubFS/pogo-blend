@@ -90,16 +90,21 @@ class PogoObjectPanel(bpy.types.Panel):
         layout.prop(obj, "location")
         layout.prop(obj, "rotation_euler", text="Rotation")
         layout.prop(obj, "scale")
+
         layout.prop(entity, "material")
 
         row = layout.row()
-        row.prop(entity, "ambient")
-        row.prop(entity, "albedo")
+        if entity.material in entity.materials:
+            ambient = entity.materials[entity.material]["ambient"]
+            if ambient is not None:
+                row.prop(entity, "ambient", text=ambient)
+            albedo = entity.materials[entity.material]["albedo"]
+            if albedo is not None:
+                row.prop(entity, "albedo", text=albedo)
 
         row = layout.row()
         col = row.column()
         col.prop(entity, "flag_invisible")
-        col.prop(entity, "flag_transparent")
         col.prop(entity, "flag_polygon")
         if entity.flag_polygon:
             col.prop(entity, "flag_auto_collision")
@@ -196,6 +201,11 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
             layout.prop(entity, "filename_override")
         if show_override or entity.material_override != "":
             layout.prop(entity, "material_override")
+
+        if show_override:
+            row = layout.row()
+            row.prop(entity, "ambient", text="ambient")
+            row.prop(entity, "albedo", text="albedo")
 
         if show_override:
             row = layout.row()

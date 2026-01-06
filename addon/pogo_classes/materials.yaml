@@ -1,25 +1,42 @@
 ---
+ndef:
+  name: ""
+  description: No Material
+  id: 0
+  ambient: Brightness
+  albedo: Transparency
+
 appAGeoDefault_mat:
   name: Geometry
   description: The default material. Has defined edges. Albedo changes greyscale
+  ambient: Brightness
+  albedo: Greyscale
 cmFruitTex_mat:
   name: Fruit Tex
   description: Like 'Geometry' but... fruit? Albedo changes greyscale
+  ambient: Brightness
+  albedo: Greyscale
 fruitTex_mat:
   name: Fruit Tex Reflective
   description: Like 'Fruit Tex' but more reflective. Cannot use greyscale
+  ambient: Brightness
 map3FruitDefault_mat:
   name: Fruit
   description: '"Fruity" material. Albedo changes greyscale'
+  ambient: Brightness
+  albedo: Greyscale
 cmUnlit:
   name: Unlit
   description: Unlit material
+  albedo: Transparency
 cmPixelated:
   name: Pixelated
   description: Shows the texture with no modificaitons
+  albedo: Transparency
 characterSimple_mat:
   name: Character
   description: Bright and high contrast material
+  ambient: Brightness
 
 wood_mat:
   name: Wood
@@ -30,6 +47,7 @@ pogostickGold_mat:
 mymetal_mat:
   name: Metal
   description: Glossy metal material
+  ambient: Brightness
 
 iceSnow_mat:
   name: Ice
@@ -41,16 +59,21 @@ map3ClothBee_mat:
 appAGeoXRay_mat:
   name: XRay Geometry
   description: Hiddes the entity when the players comes too close. Otherwise same as 'Geometry' material
+  ambient: Brightness
+  albedo: Greyscale
 toggleBlock_mat:
   name: Toggle Block
   description: Should be used with the 'Toggle Block' action. Dithers the entity
+  ambient: Brightness
 
 slime_mat:
   name: Sap
   description: Used for regular sap. Transparent flag should be set when using this material. Scrolls the texture
+  transparent: true
 pinkSap_mat:
   name: Pink Sap
   description: Used for the pink sap. Transparent flag should be set when using this material. Scrolls the texture
+  transparent: true
 map3GoldSlime_mat:
   name: Boost Juice
   description: Used for boost juice. Looks like gold. Scrolls the texture
@@ -65,16 +88,21 @@ cmNormalmapping:
 fruit_mat:
   name: Fruit1
   description: Main material used in Map 1
+  ambient: Brightness
 map3FruitTex_mat:
   name: Fruit Tex Mirrored
   description: Same as 'Fruit Tex' but mirrors tiling textures
+  ambient: Brightness
+  albedo: Greyscale
 
 egg_mat:
   name: Egg
   description: Looks like the egg
+  ambient: Brightness
 map3Chain_mat:
   name: Chain
   description: Used for Map 3 chains. Glossy metal-like material
+  ambient: Brightness
 pencil_mat:
   hidden: true
   name: Pencil

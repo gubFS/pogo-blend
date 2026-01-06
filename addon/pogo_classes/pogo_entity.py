@@ -1,3 +1,5 @@
+from typing import Any
+
 import bpy
 
 from .. import pogo_blend_utils as pbu
@@ -11,12 +13,25 @@ class PogoEntity(bpy.types.PropertyGroup):
     string1_override: bpy.props.StringProperty()
     string2_override: bpy.props.StringProperty()
 
-    material_enums = [("ndef", "", "No material", 0)]
+    material_enums = []
     material_enums.extend(pbu.get_enum_list("pogo_classes/materials.yaml", False))  # pbu.get_preferences().show_all_materials))
+
+    materials = pbu.parse_yaml("pogo_classes/materials.yaml")
+    for key, config in materials.items():
+        if config is None:
+            config = {}
+            materials[key] = config
+        config.setdefault("name", key)
+        config.setdefault("description", "")
+        # config.setdefault("id", -1)
+        config.setdefault("ambient", None)
+        config.setdefault("albedo", None)
+        config.setdefault("transparent", None)
+
     material: bpy.props.EnumProperty(items=material_enums, name="Material", description="The material on the entity. Changes the look of the entity", default="ndef")
 
     flag_invisible: bpy.props.BoolProperty(name="Invisble", description="Makes the entity invisible")  # = 8,
-    flag_transparent: bpy.props.BoolProperty(name="Transparent", description="Makes the entity transparent. Albedo changes the transparency percentage. Does not work with most materials")  # = 10,
+    flag_transparent: bpy.props.BoolProperty(name="Transparent", description="Makes the entity transparent. Albedo changes the transparency percentage. Does not work with most materials", default=True)  # = 10,
     flag_unlit: bpy.props.BoolProperty(name="Unlit", description="Makes entity ignore lighting and appear \"flat\". Only relevant without any material", default=True)  # = 17,
     flag_shadow: bpy.props.BoolProperty(name="Shadow", description="Add a glow shadow to the entity")  # = 18, #
     flag_metal: bpy.props.BoolProperty(name="Kill", description="Kills the player on contact. (looks metallic if there's no material and it's not unlit)")  # = 22, # kill
@@ -153,6 +168,9 @@ class PogoEntity(bpy.types.PropertyGroup):
     skill_19: bpy.props.FloatProperty(name="skill_19")
     skill_20: bpy.props.FloatProperty(name="skill_20")
 
+    def compare_material_config(self, key: str, comparision: Any = True) -> bool:
+        return self.material in self.materials and self.materials[self.material][key] == comparision
+
     def copy_from(self, other) -> None:
         self.name_override = other.name_override
         self.filename_override = other.filename_override
@@ -228,11 +246,11 @@ class PogoEntity(bpy.types.PropertyGroup):
             | self.flag_7 << 6
             | self.flag_8 << 7
             | self.flag_invisible << 8
-            | self.flag_transparent << 10
+            | ((self.flag_transparent & self.compare_material_config("albedo", "Transparency")) | self.compare_material_config("transparent")) << 10
             | self.flag_overlay << 12
             | self.flag_flare << 15
             | self.flag_nofilter << 16
-            | self.flag_unlit << 17
+            | (self.flag_unlit & (self.material != "ndef")) << 17
             | (self.flag_shadow | self.flag_cast) << 18
             | self.flag_nofog << 20
             | self.flag_bright << 21

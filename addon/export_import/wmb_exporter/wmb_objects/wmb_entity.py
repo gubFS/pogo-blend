@@ -35,8 +35,18 @@ class WMBEntity:
 
         self.skills = entity.get_skills()
         self.flags = entity.get_flags()
-        self.ambient = entity.ambient
-        self.albedo = entity.albedo
+        self.ambient = (
+            entity.ambient
+            if entity.material_override != ""  #
+            or not entity.compare_material_config("ambient", None)
+            else 0.0
+        )
+        self.albedo = (
+            entity.albedo
+            if entity.material_override != ""  #
+            or not entity.compare_material_config("albedo", None)
+            else 50.0
+        )
         self.path = 0
         self.entity2 = 0
         self.material = entity.material if entity.material_override == "" else entity.material_override
