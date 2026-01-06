@@ -139,6 +139,7 @@ def create_collider_object(obj, data=None):
 class CreatePogoCollider(bpy.types.Operator):
     bl_idname = "pogo_blend.create_collider"
     bl_label = "Create a Pogostuck Collider"
+    bl_description = "Creates a collider around the selected objects, based on their sideview"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):

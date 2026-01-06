@@ -6,6 +6,7 @@ from .. import pogo_blend_utils as pbu
 class EditMapDescription(bpy.types.Operator):
     bl_idname = "pogo_blend.edit_map_description"
     bl_label = "Edit Map Description"
+    bl_description = "Opens the Map Description in a text editor"
     bl_options = {'REGISTER'}
 
     def execute(self, context):
@@ -21,6 +22,7 @@ class EditMapDescription(bpy.types.Operator):
 class SelectMapImage(bpy.types.Operator):
     bl_idname = "pogo_blend.select_map_image"
     bl_label = "Select Map Image"
+    bl_description = "Opens a file explorer to select the image"
     bl_options = {'REGISTER'}
 
     filepath: bpy.props.StringProperty(subtype='FILE_PATH')

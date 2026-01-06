@@ -13,17 +13,19 @@ class PogoEntity(bpy.types.PropertyGroup):
 
     material_enums = [("ndef", "", "No material", 0)]
     material_enums.extend(pbu.get_enum_list("pogo_classes/materials.yaml", False))  # pbu.get_preferences().show_all_materials))
-    material: bpy.props.EnumProperty(items=material_enums, name="Material", default="ndef")
+    material: bpy.props.EnumProperty(items=material_enums, name="Material", description="The material on the entity. Changes the look of the entity", default="ndef")
 
-    flag_invisible: bpy.props.BoolProperty(name="Invisble")  # = 8,
-    flag_passable: bpy.props.BoolProperty(name="Passable")  # = 9,
-    flag_transparent: bpy.props.BoolProperty(name="Transparent")  # = 10,
-    flag_unlit: bpy.props.BoolProperty(name="Unlit")  # = 17,
-    flag_shadow: bpy.props.BoolProperty(name="Shadow")  # = 18, #
-    flag_metal: bpy.props.BoolProperty(name="Kill")  # = 22, # kill
-    flag_cast: bpy.props.BoolProperty(name="Cast")  # = 23, #
-    flag_polygon: bpy.props.BoolProperty(name="Collision")  # = 26, # collision. if polygon isn't set then its passable
+    flag_invisible: bpy.props.BoolProperty(name="Invisble", description="Makes the entity invisible")  # = 8,
+    flag_transparent: bpy.props.BoolProperty(name="Transparent", description="Makes the entity transparent. Albedo changes the transparency percentage. Does not work with most materials")  # = 10,
+    flag_unlit: bpy.props.BoolProperty(name="Unlit", description="Makes entity ignore lighting and appear \"flat\". Only relevant without any material", default=True)  # = 17,
+    flag_shadow: bpy.props.BoolProperty(name="Shadow", description="Add a glow shadow to the entity")  # = 18, #
+    flag_metal: bpy.props.BoolProperty(name="Kill", description="Kills the player on contact. (looks metallic if there's no material and it's not unlit)")  # = 22, # kill
+    flag_cast: bpy.props.BoolProperty(name="Background", description="Blurs the entity and places it in the background")
+    flag_polygon: bpy.props.BoolProperty(name="Collision", description="Enable collsion with the entity. Collides where it's Y-position is 0")  # = 26, # collision. if polygon isn't set then its passable
 
+    flag_auto_collision: bpy.props.BoolProperty(name="Auto Collision", description="Create a collider for the entity that matches it's sideview no matter the Y-position")
+
+    flag_passable: bpy.props.BoolProperty()  # = 9,
     flag_overlay: bpy.props.BoolProperty()  # = 12,
     flag_flare: bpy.props.BoolProperty()  # = 15,
     flag_nofilter: bpy.props.BoolProperty()  # = 16,
@@ -32,8 +34,8 @@ class PogoEntity(bpy.types.PropertyGroup):
     flag_local: bpy.props.BoolProperty()  # = 25,
     flag_bbox: bpy.props.BoolProperty()  # = 29,
 
-    ambient: bpy.props.FloatProperty(name="Ambient")
-    albedo: bpy.props.FloatProperty(name="Albedo", default=50.0)
+    ambient: bpy.props.FloatProperty(name="Brightness", description="The brightness of the entity between -100% and 100% (does not work on some materials)", min=-100.0, max=100.0)
+    albedo: bpy.props.FloatProperty(name="Albedo", description="General purpose percentage slider. The effect changes depending on other settings", default=100.0, min=0.0, max=100.0)
 
     action_enums = [("ndef", "", "No action", 0)]
     action_enums.extend(pbu.get_enum_list("pogo_classes/actions.yaml", False))  # pbu.get_preferences().show_all_actions))
@@ -49,15 +51,27 @@ class PogoEntity(bpy.types.PropertyGroup):
         config.setdefault("skills", {})
         config.setdefault("path", False)
 
+        flags_to_delete = set()
         for flag, flag_config in config["flags"].items():
+            if "hidden" in flag_config and flag_config["hidden"]:
+                flags_to_delete.add(flag)
+                continue
             flag_config.setdefault("name", flag)
             flag_config.setdefault("description", "")
             flag_config.setdefault("default", False)
+        for flag in flags_to_delete:
+            del config["flags"][flag]
 
+        skills_to_delete = set()
         for skill, skill_config in config["skills"].items():
+            if "hidden" in skill_config and skill_config["hidden"]:
+                skills_to_delete.add(skill)
+                continue
             skill_config.setdefault("name", skill)
             skill_config.setdefault("description", "")
             skill_config.setdefault("default", 0.0)
+        for skill in skills_to_delete:
+            del config["skills"][skill]
 
     def on_action1_change(self, context):
         value = self.action1
@@ -104,8 +118,8 @@ class PogoEntity(bpy.types.PropertyGroup):
         for value in all_values:
             self.property_unset(value)
 
-    action1: bpy.props.EnumProperty(items=action_enums, name="Action", default="ndef", update=on_action1_change)
-    action2: bpy.props.EnumProperty(items=action_enums, name="Action2", default="ndef", update=on_action2_change)
+    action1: bpy.props.EnumProperty(items=action_enums, name="Action", description="Changes the behavior of the entity", default="ndef", update=on_action1_change)
+    action2: bpy.props.EnumProperty(items=action_enums, name="Action2", description="Changes the secondary behavior of the entity", default="ndef", update=on_action2_change)
 
     flag_1: bpy.props.BoolProperty(name="flag_1")  # = 0,
     flag_2: bpy.props.BoolProperty(name="flag_2")  # = 1,
@@ -113,12 +127,10 @@ class PogoEntity(bpy.types.PropertyGroup):
     flag_4: bpy.props.BoolProperty(name="flag_4")  # = 3,
     flag_5: bpy.props.BoolProperty(name="flag_5")  # = 4,
     flag_6: bpy.props.BoolProperty(name="flag_6")  # = 5,
-    flag_7: bpy.props.BoolProperty(name="Ice")  # = 6, # ICE
-    flag_8: bpy.props.BoolProperty(name="Bonk")  # = 7, # NO BONK
+    flag_7: bpy.props.BoolProperty(name="Ice", description="Makes the entity have ice physics (may overlap with some actions flags)")  # = 6, # ICE
+    flag_8: bpy.props.BoolProperty(name="Bonk", description="Bonks the player on contact no matter what (may overlap with some action flags)")  # = 7, # NO BONK
 
-    flag_auto_collision: bpy.props.BoolProperty(name="Auto Collision")
-
-    path: bpy.props.PointerProperty(type=bpy.types.Object, name="Path", poll=lambda prop, obj: "pogo_path" in obj)
+    path: bpy.props.PointerProperty(type=bpy.types.Object, name="Path", description="Attached path", poll=lambda prop, obj: "pogo_path" in obj)
 
     skill_1: bpy.props.FloatProperty(name="skill_1")
     skill_2: bpy.props.FloatProperty(name="skill_2")
@@ -221,7 +233,7 @@ class PogoEntity(bpy.types.PropertyGroup):
             | self.flag_flare << 15
             | self.flag_nofilter << 16
             | self.flag_unlit << 17
-            | self.flag_shadow << 18
+            | (self.flag_shadow | self.flag_cast) << 18
             | self.flag_nofog << 20
             | self.flag_bright << 21
             | self.flag_metal << 22

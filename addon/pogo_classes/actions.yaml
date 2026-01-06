@@ -1,15 +1,207 @@
 ---
-mushroom_act:
+mushroomFullObj_act:
+  name: Mushroom
+  description: Makes the entity bounce like a mushroom
+bgObject_act:
+  name: Parralax
+  description: Moves the entity based on the players position. Normally used to move background entities
   flags:
-    flag_5:
-      name: bounce_light
+    flag_6:
+      name: Stay on bottom
+    flag_7:
+      name: Fixed X-axis
+    flag_8:
+      name: Fixed Z-axis
   skills:
     skill_1:
-      name: Power
-mushroomFullObj_act:
-execString12acts:
-  hidden: true
+      name: X-axis factor
+      default: 1.0
+    skill_2:
+      name: Z-axis factor
+      default: 1.0
+    skill_3:
+      name: greyScale
+      hidden: true
+    skill_5:
+      name: skill43
+      hidden: true
+POI_act:
+  name: POI
+  description: Makes the player look at this entity
+  flags:
+    flag_6:
+      name: Scary
+    flag_7:
+      name: Mega
+  skills:
+    skill_1:
+      name: vecsk41
+      hidden: true
+    skill_2:
+      name: vecsk42
+      hidden: true
+    skill_3:
+      name: vecsk43
+      hidden: true
+    skill_4:
+      name: vecsk44
+      hidden: true
+
+monolithThorn_act:
+  name: Thorn
+  description: Knocks the player over on contact, or sends them to the nearest point on the attached path
+  path: true
+slime_act:
+  name: Sap
+  description: Knocks the player over on contact. Yellow particles
+pinkSap_act:
+  name: Pink Sap
+  description: Knocks the player over on contact. Pink particles
+coconutSlippery:
+  name: Coconut
+  description: Knocks the player over on contact. White particles
+boostjuice_act:
+  name: Boost Juice
+  description: Gives the player a boost on contact
+
+map3Wheel_act:
+  name: Wheel
+  description: Spins the entity around it's center
+  flags:
+    flag_3:
+      name: Continuous Rotation
+    flag_4:
+      name: Sine Rotation
+  skills:
+    skill_1:
+      name: Rotate Speed
+      default: 1.5
+    skill_2:
+      name: Sine Base
+    skill_3:
+      name: Sine Amount
+      default: 45.0
+
+moveSine_act:
+  name: Move Sine
+  description: Move the entity along its axes following a Sine Wave
+  flags:
+    flag_3:
+      name: Y-axis changes brightness
+  skills:
+    skill_1:
+      name: X-axis distance
+    skill_2:
+      name: Z-axis distance
+    skill_3:
+      name: X-axis speed
+      default: 5.0
+    skill_4:
+      name: Z-axis speed
+      default: 5.0
+    skill_5:
+      name: X-axis offest
+    skill_6:
+      name: Z-axis offset
+    skill_7:
+      name: Y-axis distance
+    skill_8:
+      name: Y-axis speed
+      default: 5.0
+    skill_9:
+      name: Y-axis offset
+    skill_11:
+      name: Y-axis ambient factor
+      default: 0.25
+moveLoop_act:
+  name: Move Loop
+  description: Moves the entity a certain distance and then resets it's position. Like Map 2 bees
+  skills:
+    skill_1:
+      name: X-axis distance
+    skill_2:
+      name: Z-axis distance
+    skill_3:
+      name: Speed
+      default: 5.0
+    skill_5:
+      name: Offset
+
+toggleBlock_act:
+  name: Toggle Block
+  description: Toggle the entities state/collision everytime the player jumps/boosts. Can be used with the 'Toggle Block' material
+  flags:
+    flag_3:
+      name: Toggle only on boost
+    flag_4:
+      name: Group 2
+    flag_5:
+      name: Turn invisible
+  skills:
+    skill_1:
+      name: Red/Blue tint
+      default: 0.0
+    skill_2:
+      name: Dither amount
+      default: 1.0
+    skill_3:
+      name: Dither factor
+      default: 0.65
+toggleSine_act:
+  name: Toggle Sine
+  description: Toggle the entites state/collision based on time passed
+  flags:
+    flag_3:
+      name: Toggle background
+    flag_5:
+      name: Toggle invisible
+  skills:
+    skill_1:
+      name: Speed
+      default: 5.0
+    skill_2:
+      name: Offset
+    skill_3:
+      name: Brightness shift
+      default: -35.0
+runStateToggle:
+  name: Run State Toggle
+  description: Show or hide the entity depending on the state of the current run
+  flags:
+    flag_3:
+      name: Show before run
+    flag_4:
+      name: Show during run
+    flag_5:
+      name: Show after run
+    flag_6:
+      name: Only collide if shown
+    flag_7:
+      name: Fade in
+  skills:
+    skill_1:
+      name: Fade in speed
+      default: 10.0
+    skill_2:
+      name: dofade_sk41
+      hidden: true
+    skill_3:
+      name: Do fade alpha
+    skill_4:
+      name: Do smooth step
+    skill_5:
+      name: Do overshoot
+    skill_6:
+      name: Overshoot factor
+      default: 1.35
+
+water_act:
+  name: Water Visual
+  description: Adds a flowing water visual to the entity
+
 skillset_act:
+  name: Skill set
+  description: Used to pass skills as variables to shaders
   skills:
     skill_1:
       name: vecsk41
@@ -20,107 +212,24 @@ skillset_act:
     skill_4:
       name: vecsk44
     skill_5:
-      name: greyScale
+      name: Greyscale
     skill_6:
       name: vecsk46
     skill_7:
       name: vecsk47
     skill_8:
       name: vecsk48
-slime_act:
-POI_act:
+
+mushroom_act:
+  name: Mushroom Bones
+  description: Used for mushrooms. Only works if the entity has bones
   flags:
-    flag_6:
-      name: scary
-    flag_7:
-      name: mega
-  skills:
-    skill_1:
-      name: vecsk41
-    skill_2:
-      name: vecsk42
-    skill_3:
-      name: vecsk43
-    skill_4:
-      name: vecsk44
-monolithThorn_act:
-  path: true
-coconutSlippery:
-pinkSap_act:
-boostjuice_act:
-map3Wheel_act:
-  flags:
-    flag_3:
-      name: continuousRotation
-    flag_4:
-      name: sine_Rotation
-  skills:
-    skill_1:
-      name: rotateSpeed
-      default: 1.5
-    skill_2:
-      name: sine_base
-    skill_3:
-      name: sine_amount
-      default: 45.0
-moveSine_act:
-  flags:
-    flag_3:
-      name: y_changesAmbient
-  skills:
-    skill_1:
-      name: x_dist
-    skill_2:
-      name: z_dist
-    skill_3:
-      name: x_speedfac
-      default: 5.0
-    skill_4:
-      name: z_speedfac
-      default: 5.0
-    skill_5:
-      name: x_AngOffset
-    skill_6:
-      name: z_AngOffset
-    skill_7:
-      name: y_dist
-    skill_8:
-      name: y_speedfac
-      default: 5.0
-    skill_9:
-      name: y_AngOffset
-    skill_11:
-      name: y_ambientEffect
-      default: 0.25
-moveLoop_act:
-  skills:
-    skill_1:
-      name: x_dist
-    skill_2:
-      name: z_dist
-    skill_3:
-      name: speedfac
-      default: 5.0
-    skill_5:
-      name: angOffset
-toggleBlock_act:
-  flags:
-    flag_3:
-      name: boost_toggle
-    flag_4:
-      name: group_2
     flag_5:
-      name: turn_invisible
+      name: Light Bounce
   skills:
     skill_1:
-      name: redBlueTintFac
-      default: 1.0
-    skill_2:
-      name: dither_scale
-      default: 1.0
-    skill_3:
-      name: dither_fac
-      default: 0.65
+      name: Power
+
 customMapSetup_act:
   hidden: true
   flags:
@@ -136,68 +245,6 @@ customMapSetup_act:
       name: mushroom_power
     flag_8:
       name: iceMode
-toggleSine_act:
-  flags:
-    flag_3:
-      name: turn_background
-    flag_5:
-      name: turn_invisible
-  skills:
-    skill_1:
-      name: speedFac
-      default: 5.0
-    skill_2:
-      name: offset
-    skill_3:
-      name: ambient_shift
-      default: -35.0
-bgObject_act:
-  flags:
-    flag_6:
-      name: bottom_z
-    flag_7:
-      name: fixed_x
-    flag_8:
-      name: fixed_z
-  skills:
-    skill_1:
-      name: fac_x
-      default: 1.0
-    skill_2:
-      name: fac_z
-      default: 1.0
-    skill_3:
-      name: greyScale
-    skill_5:
-      name: skill43
-runStateToggle:
-  flags:
-    flag_3:
-      name: show_start
-    flag_4:
-      name: show_sun
-    flag_5:
-      name: show_end
-    flag_6:
-      name: turn_passable
-    flag_7:
-      name: fade_scale
-  skills:
-    skill_1:
-      name: fade_speed
-      default: 10.0
-    skill_2:
-      name: dofade_sk41
-    skill_3:
-      name: dofade_alpha
-    skill_4:
-      name: dosmoothstep
-    skill_5:
-      name: doovershoot
-    skill_6:
-      name: overshoot_fac
-      default: 1.35
-water_act:
-  name: Water Visual
-  description: Adds a flowing water visual to the mesh
+execString12acts:
+  hidden: true
 ...

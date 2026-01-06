@@ -33,12 +33,13 @@ class PogoBlendPrefrences(bpy.types.AddonPreferences):
     mdl_importer: bpy.props.BoolProperty(
         default=False,
         name="MDL Importer",
-        description="Add mdl impoterter to importers",
+        description="Add the MDL-impoterter to importers",
     )
+
     mdl_exporter: bpy.props.BoolProperty(
         default=False,
         name="MDL Exporter",
-        description="Add mdl exporter to exporters",
+        description="Add the MDL-exporter to exporters",
     )
 
     custom_maps_path: bpy.props.StringProperty(
@@ -46,6 +47,7 @@ class PogoBlendPrefrences(bpy.types.AddonPreferences):
         name="Custom Maps folder",
         description="The path to the folder where custom maps will be put",
     )
+
     map_scale: bpy.props.FloatProperty(
         default=50.0,
         name="Map Scale",
@@ -79,14 +81,19 @@ class PogoBlendPrefrences(bpy.types.AddonPreferences):
     def draw(self, context):
         layout = self.layout
 
-        layout.prop(self, "mdl_importer")
-        layout.prop(self, "mdl_exporter")
         row = layout.row()
         row.prop(self, "custom_maps_path")
         row.operator("pogo_blend.select_custom_maps_dir", text="", icon='FILE_FOLDER')
-        layout.prop(self, "map_scale")
+
+        row = layout.row()
+        row.prop(self, "build_on_save")
+        row.prop(self, "map_scale")
+
+        row = layout.row()
+        row.prop(self, "mdl_importer")
+        row.prop(self, "mdl_exporter")
+
         layout.prop(self, "show_overrides")
-        layout.prop(self, "build_on_save")
         if bpy.ops.pogo_blend.make_asset_library.poll():
             layout.operator("pogo_blend.make_asset_library")
         # layout.prop(self, "show_all_materials")

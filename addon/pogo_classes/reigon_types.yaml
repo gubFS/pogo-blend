@@ -4,7 +4,7 @@ kill:
   description: Kills the player
 CP_:
   name: Split
-  description: Triggers a split
+  description: Triggers a split. The split name is the name of the object
 modearea_double:
   name: Double Jump
   description: Enables Double Jump mode

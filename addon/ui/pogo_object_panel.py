@@ -99,18 +99,18 @@ class PogoObjectPanel(bpy.types.Panel):
         row = layout.row()
         col = row.column()
         col.prop(entity, "flag_invisible")
-        col.prop(entity, "flag_unlit")
         col.prop(entity, "flag_transparent")
         col.prop(entity, "flag_polygon")
         if entity.flag_polygon:
             col.prop(entity, "flag_auto_collision")
+            col.prop(entity, "flag_metal")
 
         col = row.column()
         col.prop(entity, "flag_shadow")
         col.prop(entity, "flag_cast")
-        col.prop(entity, "flag_metal")
-        col.prop(entity, "flag_7")
-        col.prop(entity, "flag_8")
+        if entity.flag_polygon:
+            col.prop(entity, "flag_7")
+            col.prop(entity, "flag_8")
 
         layout.row().prop(entity, "action1")
         if entity.action1 in entity.actions:

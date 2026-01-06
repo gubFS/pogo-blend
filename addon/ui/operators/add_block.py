@@ -4,6 +4,7 @@ import bpy
 class AddBlock(bpy.types.Operator):
     bl_idname = "pogo_blend.add_block"
     bl_label = 'Add Pogo Block'
+    bl_description = "Adds a square with settings for making quick geometry"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -17,7 +18,7 @@ class AddBlock(bpy.types.Operator):
 
         block.name = "PogoBlock"
         entity = block.pogo_entity
-        entity.flag_unlit = True
+        entity.material = "cmUnlit"
         entity.flag_polygon = True
         entity.flag_auto_collision = True
 

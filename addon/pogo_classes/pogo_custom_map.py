@@ -10,6 +10,7 @@ class PogoSplit(bpy.types.PropertyGroup):
 class ActiveSplitMove(bpy.types.Operator):
     bl_idname = "pogo_blend.active_split_move"
     bl_label = "Move active split"
+    bl_description = "Moves the selected split"
 
     direction: bpy.props.StringProperty()
 
@@ -29,39 +30,42 @@ class ActiveSplitMove(bpy.types.Operator):
 
 
 class PogoCustomMap(bpy.types.PropertyGroup):
-    map_name: bpy.props.StringProperty(name="Map Name")
-    map_image: bpy.props.StringProperty(name="Map Image")
+    map_name: bpy.props.StringProperty(name="Map Name", description="The name of the map")
+    map_image: bpy.props.StringProperty(name="Map Image", description="The path to the image used for the map")
 
     splits: bpy.props.CollectionProperty(type=PogoSplit, name="Splits")
-    active_split_idx: bpy.props.IntProperty()
+    active_split_idx: bpy.props.IntProperty(name="Active Split")
 
     spawn: bpy.props.PointerProperty(
         type=bpy.types.Object,
         name="Spawn",
+        description="The location where the player will spawn",
         poll=lambda prop, obj: obj.type == 'EMPTY',
     )
 
     path_progress: bpy.props.PointerProperty(
         type=bpy.types.Object,
         name="Progress Path",
+        description="The path used to track progress through the map. Determines the percentage completion",
         poll=lambda prop, obj: "pogo_path" in obj,
     )
     start_line: bpy.props.PointerProperty(
         type=bpy.types.Object,
         name="Start Line",
+        description="The start line. This entity will dissapear once the run is started",
         poll=lambda prop, obj: "pogo_entity" in obj,
     )
 
-    double_jump: bpy.props.BoolProperty(name="Double Jump")
-    puzzle: bpy.props.BoolProperty(name="Puzzle")
-    no_boost: bpy.props.BoolProperty(name="No boost")
-    no_bonk: bpy.props.BoolProperty(name="No bonk")
+    double_jump: bpy.props.BoolProperty(name="Double Jump", description="Enable Double Jump mode")
+    puzzle: bpy.props.BoolProperty(name="Puzzle", description="Enable Puzzle mode")
+    no_boost: bpy.props.BoolProperty(name="No boost", description="Enable No Boost mode")
+    no_bonk: bpy.props.BoolProperty(name="No bonk", description="Enable No Bonk mode. The player will die when bonking on anything")
     mushroom_power: bpy.props.BoolProperty(
         name="Mushroom power",
-        description="Enables mushrooms to have a bounce power",
+        description="Enables mushrooms to have a bounce power. I don't know why you would turn this off...",
         default=True,
     )
-    ice: bpy.props.BoolProperty(name="Ice")
+    ice: bpy.props.BoolProperty(name="Ice", description="Enable Ice mode")
 
 
 def register():

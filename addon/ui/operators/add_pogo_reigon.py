@@ -4,6 +4,7 @@ import bpy
 class AddPogoReigon(bpy.types.Operator):
     bl_idname = "pogo_blend.add_pogo_reigon"
     bl_label = "Add Pogo Reigon"
+    bl_description = "Adds a Pogo Reigon"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):

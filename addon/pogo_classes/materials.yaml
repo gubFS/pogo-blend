@@ -1,57 +1,115 @@
 ---
 appAGeoDefault_mat:
-  description: albedo changes greyscale of object, 50 albedo is 50% greyscale. 100 albedo is no greyscale
+  name: Geometry
+  description: The default material. Has defined edges. Albedo changes greyscale
+cmFruitTex_mat:
+  name: Fruit Tex
+  description: Like 'Geometry' but... fruit? Albedo changes greyscale
+fruitTex_mat:
+  name: Fruit Tex Reflective
+  description: Like 'Fruit Tex' but more reflective. Cannot use greyscale
+map3FruitDefault_mat:
+  name: Fruit
+  description: '"Fruity" material. Albedo changes greyscale'
+cmUnlit:
+  name: Unlit
+  description: Unlit material
+cmPixelated:
+  name: Pixelated
+  description: Shows the texture with no modificaitons
+characterSimple_mat:
+  name: Character
+  description: Bright and high contrast material
+
+wood_mat:
+  name: Wood
+  description: Wood material
+pogostickGold_mat:
+  name: Gold
+  description: Gold material
+mymetal_mat:
+  name: Metal
+  description: Glossy metal material
+
+iceSnow_mat:
+  name: Ice
+  description: Looks like ice
+map3ClothBee_mat:
+  name: Bee
+  description: Looks like the hair on the bees
+
 appAGeoXRay_mat:
+  name: XRay Geometry
+  description: Hiddes the entity when the players comes too close. Otherwise same as 'Geometry' material
+toggleBlock_mat:
+  name: Toggle Block
+  description: Should be used with the 'Toggle Block' action. Dithers the entity
+
+slime_mat:
+  name: Sap
+  description: Used for regular sap. Transparent flag should be set when using this material. Scrolls the texture
+pinkSap_mat:
+  name: Pink Sap
+  description: Used for the pink sap. Transparent flag should be set when using this material. Scrolls the texture
+map3GoldSlime_mat:
+  name: Boost Juice
+  description: Used for boost juice. Looks like gold. Scrolls the texture
+
+snowFG_mat:
+  name: Falling
+  description: Scrolls the multiple of the texture downwards. Can be used to make snow fall or other particles
+cmNormalmapping:
+  name: Normal Mapping
+  description: idk, something with normal maps
+
+fruit_mat:
+  name: Fruit1
+  description: Main material used in Map 1
+map3FruitTex_mat:
+  name: Fruit Tex Mirrored
+  description: Same as 'Fruit Tex' but mirrors tiling textures
+
+egg_mat:
+  name: Egg
+  description: Looks like the egg
+map3Chain_mat:
+  name: Chain
+  description: Used for Map 3 chains. Glossy metal-like material
+pencil_mat:
+  name: Pencil
+  description: Used for the pencil. Has a light wood look
 anvil_mat:
   name: Anvil
+  description: Used for the anvil. Has a cast iron look
+cloud_mat:
+  name: Cloud
+  description: Used for the clouds. White material, with grey parts
+monoSpikes_mat:
+  name: Thorns
+  description: Used for the thorns
+monoWheel_mat:
+  name: Wheel
+  description: Used for the wheel
+startFinish_mat:
+  name: Start Finish
+  description: Used for the starting and finishing lines
 mat_bug:
   description: similar to traffic cone
   hidden: true
-characterSimple_mat:
-cloud_mat:
-coconut_mat:
-  hidden: true
-cmFruitTex_mat:
-  description: this is the same material as map3FruitTex_mat, except that texture coordinates are not mirrored when they leave the 0..1 square area
-egg_mat:
-fruit_mat:
-  description: map 1 main material, uses gradientTest mostly
-fruitTex_mat:
-  description: map 1 main material but uses custom textures, such as for the red mushrooms
-iceSnow_mat:
-map3Carrots_mat:
-  hidden: true
-map3Chain_mat:
-map3ClothBee_mat:
-map3Eggplants_mat:
-  hidden: true
-map3FruitDefault_mat:
-  description: see map 1 notes
-  hidden: true
-map3FruitTex_mat:
-  hidden: true
-map3GoldSlime_mat:
-mymetal_mat:
-monoSpikes_mat:
-monoWheel_mat:
 mountain_mat:
   hidden: true
-pencil_mat:
-pinkSap_mat:
+coconut_mat:
+  hidden: true
+map3Carrots_mat:
+  hidden: true
+map3Eggplants_mat:
+  hidden: true
 pogostick_mat:
   hidden: true
-pogostickGold_mat:
-slime_mat:
-startFinish_mat:
-toggleBlock_mat:
 mat_trafficCone:
   hidden: true
 mat_ushanka:
   hidden: true
 viking_mat:
   hidden: true
-wood_mat:
-cmNormalmapping:
-cmUnlit:
-cmPixelated:
 ...

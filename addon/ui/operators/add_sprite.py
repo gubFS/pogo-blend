@@ -4,6 +4,8 @@ import bpy
 class AddSprite(bpy.types.IMAGE_OT_import_as_mesh_planes):
     bl_idname = "pogo_blend.add_sprite"
     bl_label = "Add Pogo Sprite"
+    bl_description = "Opens a file explorer to select an image. Then creates a plane and applies the image as a texture"
+    bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
         ret_code = super().execute(context)

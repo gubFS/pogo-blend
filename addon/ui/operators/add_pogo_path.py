@@ -4,6 +4,7 @@ import bpy
 class AddPogoPath(bpy.types.Operator):
     bl_idname = "pogo_blend.add_pogo_path"
     bl_label = "Add Pogo Path"
+    bl_description = "Adds a Pogo Path"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
