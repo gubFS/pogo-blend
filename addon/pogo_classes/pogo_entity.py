@@ -28,7 +28,7 @@ class PogoEntity(bpy.types.PropertyGroup):
         config.setdefault("albedo", None)
         config.setdefault("transparent", None)
 
-    material: bpy.props.EnumProperty(items=material_enums, name="Material", description="The material on the entity. Changes the look of the entity", default="ndef")
+    material: bpy.props.EnumProperty(items=material_enums, name="Material", description="The material on the entity. Changes the look of the entity", default="appAGeoDefault_mat")
 
     flag_invisible: bpy.props.BoolProperty(name="Invisble", description="Makes the entity invisible")  # = 8,
     flag_transparent: bpy.props.BoolProperty(name="Transparent", description="Makes the entity transparent. Albedo changes the transparency percentage. Does not work with most materials", default=True)  # = 10,
