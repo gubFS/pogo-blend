@@ -42,6 +42,7 @@ class CustomMapBuilder(bpy.types.Operator):
     bl_idname = "pogo_blend.build_custom_map"
     bl_label = "Export Project to a Pogostuck Map"
     bl_description = "Exports this project to a Pogostuck Custom Map"
+    bl_options = {'BLOCKING'}
 
     filepath: bpy.props.StringProperty(name="File path")
 
@@ -58,21 +59,21 @@ class CustomMapBuilder(bpy.types.Operator):
         return custom_map_dir is not None and custom_map_dir != "" and "CustomMap" in bpy.data.collections
 
     def execute(self, context):
+        context.window.cursor_set('WAIT')
         start_time = time.time()
         try:
             build_custom_map(context, self.filepath, self.global_scale)
+            self.report(
+                {'INFO'},
+                f"Custom Map built in {math.floor((time.time() - start_time) * 1000)}ms",
+            )
         except Exception as e:
             error_type = {'ERROR'}
             if isinstance(type, pbu.ContextError):
                 error_type = {'ERROR_INVALID_CONTEXT'}
             self.report(error_type, str(e))
-            return {'FINISHED'}  # finished to so undo's are registered
-        else:
-            self.report(
-                {'INFO'},
-                f"Custom Map built in {math.floor((time.time() - start_time) * 1000)}ms",
-            )
-            return {'FINISHED'}
+        context.window.cursor_set('DEFAULT')
+        return {'FINISHED'}
 
     def invoke(self, context, event):
         self.filepath = pbu.get_preferences().custom_maps_path

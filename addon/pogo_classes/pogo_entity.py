@@ -98,7 +98,7 @@ class PogoEntity(bpy.types.PropertyGroup):
                 self.set_action_defaults(context, True)
 
     def on_action2_change(self, context):
-        if context.area.type == 'PROPERTIES':
+        if context.area and context.area.type == 'PROPERTIES':
             self.set_action_defaults(context, False)
 
     def set_action_defaults(self, context, is_action1: bool) -> None:
