@@ -2,33 +2,42 @@ import bpy
 from mathutils import Vector
 
 
-def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
-    area = [area for area in bpy.context.screen.areas if area.type == 'VIEW_3D'][0]
-    with bpy.context.temp_override(area=area):
+class CreateColliderContext:
+    def __enter__(self):
+        area = [area for area in bpy.context.screen.areas if area.type == 'VIEW_3D'][0]
+        self.temp_override = bpy.context.temp_override(area=area)
+        self.temp_override.__enter__()
+
         context = bpy.context
         scene = context.scene
 
-        # note context for cleanup
-        c_camera = scene.camera
-        c_resolution = (scene.render.resolution_x, scene.render.resolution_y)
-        c_cursor = scene.cursor.location.copy()
-        c_selected_objects = context.selected_objects
-        c_active_object = context.view_layer.objects.active
+        self.c_camera = scene.camera
+        self.c_resolution = (scene.render.resolution_x, scene.render.resolution_y)
+        self.c_cursor = scene.cursor.location.copy()
+        self.c_selected_objects = context.selected_objects
+        self.c_active_object = context.view_layer.objects.active
+
+        # add camera
+        bpy.ops.object.camera_add(
+            location=(0, 0, 0),
+            rotation=(1.570796, 0, 0),
+            scale=(1, 1, 1),
+        )
+        self.camera = context.object
+        self.camera.data.type = 'ORTHO'
+        scene.camera = self.camera
+
+        return self
+
+    def create_collider(self, obj, extrude_length=4.0) -> bpy.types.Object:
+        context = bpy.context
+        scene = context.scene
 
         # select obj
         bpy.ops.object.select_all(action='DESELECT')
         obj.select_set(True)
         context.view_layer.objects.active = obj
 
-        # add camera
-        bpy.ops.object.camera_add(
-            location=obj.matrix_world.translation,
-            rotation=(1.570796, 0, 0),
-            scale=(1, 1, 1),
-        )
-        camera = context.object
-        camera.data.type = 'ORTHO'
-        scene.camera = camera
         # find the real bounding box without rotation
         bottom_left = Vector(obj.bound_box[0])
         top_right = Vector(obj.bound_box[0])
@@ -46,13 +55,13 @@ def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
         x = int(diff[0] * 100)
         y = int(diff[2] * 100)
         scale = max(diff[0], diff[2]) + 1.0
-        scene.render.resolution_x = x
-        scene.render.resolution_y = y
-        camera.data.ortho_scale = scale
         center = (top_right + bottom_left) * 0.5
         center_world = obj.matrix_world.translation + center
-        camera.location = center_world
-        camera.location[1] += bottom_left[1] - 1.0
+        scene.render.resolution_x = x
+        scene.render.resolution_y = y
+        self.camera.data.ortho_scale = scale
+        self.camera.location = center_world
+        self.camera.location[1] += bottom_left[1] - 1.0
 
         # create the grease pencil
         bpy.ops.object.select_all(action='DESELECT')
@@ -88,52 +97,58 @@ def create_collider(obj, extrude_length=4.0) -> bpy.types.Object:
 
         collider_object = context.object
         collider_mesh = collider_object.data
-        collider = create_collider_object(obj, collider_mesh)
+        collider = self.create_collider_object(obj, collider_mesh)
         bpy.data.objects.remove(collider_object, do_unlink=True)
 
         # cleanup
-        camera_data = camera.data
         bpy.data.materials.remove(lineart_material, do_unlink=True)
         bpy.data.grease_pencils_v3.remove(lineart_data, do_unlink=True)
-        bpy.data.objects.remove(camera, do_unlink=True)
-        bpy.data.cameras.remove(camera_data, do_unlink=True)
-
-        scene.camera = c_camera
-        scene.render.resolution_x = c_resolution[0]
-        scene.render.resolution_y = c_resolution[1]
-
-        scene.cursor.location = c_cursor
-
-        for obj in c_selected_objects:
-            obj.select_set(True)
-        context.view_layer.objects.active = c_active_object
 
         return collider
 
+    def create_collider_object(self, obj, data=None):
+        collider = bpy.data.objects.new(f"{obj.name}_col", data)
+        if data is not None:
+            collider.data.name = collider.name
 
-def create_collider_object(obj, data=None):
-    collider = bpy.data.objects.new(f"{obj.name}_col", data)
-    if data is not None:
-        collider.data.name = collider.name
+        collider.matrix_world.translation = obj.matrix_world.translation
+        collider.matrix_world.translation[1] = 0
 
-    collider.matrix_world.translation = obj.matrix_world.translation
-    collider.matrix_world.translation[1] = 0
+        obj.users_collection[0].objects.link(collider)
 
-    obj.users_collection[0].objects.link(collider)
+        collider.pogo_entity
+        if "pogo_entity" in obj:
+            collider.pogo_entity.copy_from(obj.pogo_entity)
+        collider.pogo_entity.flag_passable = False
+        collider.pogo_entity.flag_invisible = True
+        collider.pogo_entity.flag_unlit = True
+        collider.pogo_entity.flag_polygon = True
+        collider.pogo_entity.flag_auto_collision = False
+        collider.pogo_entity.ambient = 0.0
+        collider.pogo_entity.albedo = 50.0
+        collider.pogo_entity.material = "ndef"
 
-    collider.pogo_entity
-    if "pogo_entity" in obj:
-        collider.pogo_entity.copy_from(obj.pogo_entity)
-    collider.pogo_entity.flag_passable = False
-    collider.pogo_entity.flag_invisible = True
-    collider.pogo_entity.flag_unlit = True
-    collider.pogo_entity.flag_polygon = True
-    collider.pogo_entity.flag_auto_collision = False
-    collider.pogo_entity.ambient = 0.0
-    collider.pogo_entity.albedo = 50.0
-    collider.pogo_entity.material = "ndef"
+        return collider
 
-    return collider
+    def __exit__(self, exc_type, exc_value, traceback):
+        context = bpy.context
+        scene = context.scene
+
+        camera_data = self.camera.data
+        bpy.data.objects.remove(self.camera, do_unlink=True)
+        bpy.data.cameras.remove(camera_data, do_unlink=True)
+
+        scene.camera = self.c_camera
+        scene.render.resolution_x = self.c_resolution[0]
+        scene.render.resolution_y = self.c_resolution[1]
+
+        scene.cursor.location = self.c_cursor
+
+        for obj in self.c_selected_objects:
+            obj.select_set(True)
+        context.view_layer.objects.active = self.c_active_object
+
+        self.temp_override.__exit__()
 
 
 class CreatePogoCollider(bpy.types.Operator):
@@ -148,8 +163,9 @@ class CreatePogoCollider(bpy.types.Operator):
         if not objs:
             self.report({'ERROR'}, "No mesh objects selected")
             return {'CANCELLED'}
-        for obj in objs:
-            create_collider(obj)
+        with CreateColliderContext() as ctx:
+            for obj in objs:
+                ctx.create_collider(obj)
         return {'FINISHED'}
 
 

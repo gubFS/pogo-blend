@@ -148,33 +148,34 @@ def build_custom_map(context, filepath, global_scale):
         mdl_exporter.export()
 
     # colliders
-    for obj, entity in colliders:
-        filename = pbu.get_unique_name(obj.name.replace(".", "_"), "_col.mdl", 33, used_names)
-        if filename is None:
-            print("WARNING: could not find a unique filename")
-            continue
-        used_files.add(filename)
-        mdlpath = os.path.join(dirpath, filename)
+    with create_collider.CreateColliderContext() as ctx:
+        for obj, entity in colliders:
+            filename = pbu.get_unique_name(obj.name.replace(".", "_"), "_col.mdl", 33, used_names)
+            if filename is None:
+                print("WARNING: could not find a unique filename")
+                continue
+            used_files.add(filename)
+            mdlpath = os.path.join(dirpath, filename)
 
-        if cache.update_collider(filename, obj):
-            collider = create_collider.create_collider(obj, 64)
-            MDLExporter(mdlpath, [collider], global_scale).export()
-        else:
-            collider = create_collider.create_collider_object(obj)
+            if cache.update_collider(filename, obj):
+                collider = ctx.create_collider(obj, 64)
+                MDLExporter(mdlpath, [collider], global_scale).export()
+            else:
+                collider = ctx.create_collider_object(obj)
 
-        collider_entity = WMBEntity(collider, global_scale)
-        collider_entity.filename = filename
-        entity.flags &= ~(1 << 26)  # clear polygon
-        entity.flags |= 1 << 9  # set passable
-        if obj.pogo_entity.path is not None:
-            paths_to_add.append((collider_entity, obj.pogo_entity.path))
-        wmb_objects.append(collider_entity)
+            collider_entity = WMBEntity(collider, global_scale)
+            collider_entity.filename = filename
+            entity.flags &= ~(1 << 26)  # clear polygon
+            entity.flags |= 1 << 9  # set passable
+            if obj.pogo_entity.path is not None:
+                paths_to_add.append((collider_entity, obj.pogo_entity.path))
+            wmb_objects.append(collider_entity)
 
-        # cleanup generated collider
-        mesh = collider.data
-        bpy.data.objects.remove(collider, do_unlink=True)
-        if mesh is not None:
-            bpy.data.meshes.remove(mesh, do_unlink=True)
+            # cleanup generated collider
+            mesh = collider.data
+            bpy.data.objects.remove(collider, do_unlink=True)
+            if mesh is not None:
+                bpy.data.meshes.remove(mesh, do_unlink=True)
 
     for entity, path in paths_to_add:
         entity.path = paths.index(path) + 1
