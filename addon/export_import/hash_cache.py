@@ -12,6 +12,7 @@ class HashCache:
     def __init__(self, filepath):
         self.filepath = filepath
         self.cache = {}
+        self.temp_cache = {}
         self.load()
 
     def load(self):
@@ -28,6 +29,7 @@ class HashCache:
         with open(self.filepath, "w") as f:
             json_string = json.dumps(self.cache)
             f.write(json_string)
+        self.temp_cache.clear()
 
     def _update(self, key: str, obj, hash_func: Callable) -> bool:
         hash = hash_func(obj)
@@ -54,27 +56,40 @@ class HashCache:
         bytes = GubByteArray()
         mesh = obj.data
 
-        self._store_verts(mesh, bytes)
-        self._store_uvs(mesh, bytes)
-        # self._store_edges(mesh, bytes)
-        self._store_polygons(mesh, bytes)
-        self._store_textures(obj, bytes)
-        self._store_modifiers(obj, bytes)
+        self._store_buffer(mesh, self._store_verts, bytes)
+        self._store_buffer(mesh, self._store_uvs, bytes)
+        # self._store_buffer(mesh, self._store_edges, bytes)
+        self._store_buffer(mesh, self._store_polygons, bytes)
+        self._store_buffer(obj, self._store_textures, bytes)
+        self._store_buffer(obj, self._store_modifiers, bytes)
 
-        return xxhash.xxh128_hexdigest(bytes)
+        return self._hash_bytearray(bytes)
 
     def hash_collider(self, obj) -> str:
         bytes = GubByteArray()
         mesh = obj.data
 
-        self._store_verts(mesh, bytes)
-        self._store_polygons(mesh, bytes)
-        self._store_modifiers(obj, bytes)
+        self._store_buffer(mesh, self._store_verts, bytes)
+        self._store_buffer(mesh, self._store_polygons, bytes)
+        self._store_buffer(obj, self._store_modifiers, bytes)
 
         bytes.store_vec3f(obj.matrix_world.to_euler())
         bytes.store_vec3f(obj.matrix_world.to_scale())
 
+        return self._hash_bytearray(bytes)
+
+    def _hash_bytearray(self, bytes: bytearray) -> str:
         return xxhash.xxh128_hexdigest(bytes)
+
+    def _store_buffer(self, value, store_func: Callable, bytes: GubByteArray):
+        buffer = self.temp_cache.get(value, {}).get(store_func, None)
+        if buffer is None:
+            buffer = GubByteArray()
+            store_func(value, buffer)
+            # hash = self._hash_bytearray(bytes_to_hash)
+            self.temp_cache.setdefault(value, {})
+            self.temp_cache[value][store_func] = buffer
+        bytes.store_buffer(buffer)
 
     def _store_verts(self, mesh, bytes: GubByteArray):
         verts = []
