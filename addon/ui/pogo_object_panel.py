@@ -1,45 +1,57 @@
 import bpy
 
-from .. import pogo_blend_preferences as pbu
+from .. import pogo_blend_utils as pbu
 
 
-class AddPogoPathData(bpy.types.Operator):
+class AddPogoPathData(pbu.AltOperator):
     bl_idname = "pogo_blend.add_pogo_path_data"
-    bl_label = "Add pogo data"
+    bl_label = "Add Pogo Data"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        context.object.pogo_path
+        objs = context.selected_objects if self.use_alt else [context.object]
+        for obj in objs:
+            if obj.type == 'CURVE':
+                obj.pogo_path
         return {'FINISHED'}
 
 
-class RemovePogoPathData(bpy.types.Operator):
+class RemovePogoPathData(pbu.AltOperator):
     bl_idname = "pogo_blend.remove_pogo_path_data"
-    bl_label = "Remove pogo data"
+    bl_label = "Remove Pogo Data"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        del context.object["pogo_path"]
+        objs = context.selected_objects if self.use_alt else [context.object]
+        for obj in objs:
+            if "pogo_path" in obj:
+                del obj["pogo_path"]
         return {'FINISHED'}
 
 
-class AddPogoEntityData(bpy.types.Operator):
+class AddPogoEntityData(pbu.AltOperator):
     bl_idname = "pogo_blend.add_pogo_entity_data"
-    bl_label = "Add pogo data"
+    bl_label = "Add Pogo Data"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        context.object.pogo_entity
+        objs = context.selected_objects if self.use_alt else [context.object]
+        for obj in objs:
+            if obj.type == 'MESH':
+                obj.pogo_entity
         return {'FINISHED'}
 
 
-class RemovePogoEntityData(bpy.types.Operator):
+class RemovePogoEntityData(pbu.AltOperator):
     bl_idname = "pogo_blend.remove_pogo_entity_data"
-    bl_label = "Remove pogo data"
+    bl_label = "Remove Pogo Data"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        del context.object["pogo_entity"]
+        objs = context.selected_objects if self.use_alt else [context.object]
+        for obj in objs:
+            if "pogo_entity" in obj:
+                del obj["pogo_entity"]
         return {'FINISHED'}
 
 

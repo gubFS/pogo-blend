@@ -17,6 +17,14 @@ class ContextError(Exception):
     pass
 
 
+class AltOperator(bpy.types.Operator):
+    use_alt: bpy.props.BoolProperty()
+
+    def invoke(self, context, event):
+        self.use_alt = event.alt
+        return self.execute(context)
+
+
 def get_custom_map_collection() -> bpy.types.Collection:
     try:
         return bpy.data.collections["CustomMap"]
