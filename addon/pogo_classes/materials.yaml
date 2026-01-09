@@ -83,7 +83,7 @@ snowFG_mat:
   description: Scrolls the multiple of the texture downwards. Can be used to make snow fall or other particles
 cmNormalmapping:
   name: Normal Mapping
-  description: idk, something with normal maps
+  description: Uses the second texture on the entity as a normal map.
 
 fruit_mat:
   name: Fruit1
