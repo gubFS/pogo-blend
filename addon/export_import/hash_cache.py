@@ -151,3 +151,8 @@ class HashCache:
                     bytes.store_string(modifier.limit_method)
                     if modifier.limit_method == "ANGLE":
                         bytes.store_float(modifier.angle_limit)
+                case "EDGE_SPLIT":
+                    bytes.store_bool(modifier.use_edge_angle)
+                    if modifier.use_edge_angle:
+                        bytes.store_float(modifier.split_angle)
+                    bytes.store_bool(modifier.use_edge_sharp)
