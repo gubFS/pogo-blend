@@ -194,7 +194,7 @@ def build_custom_map(context, filepath, global_scale):
     unused_files = files_in_dictionary.difference(used_files)
     for file in unused_files:
         for extension in [".mdl", ".tga", ".png"]:
-            if file.endswith(extension):
+            if not file.startswith("_") and file.endswith(extension):
                 fullpath = os.path.join(dirpath, file)
                 os.remove(fullpath)
 
