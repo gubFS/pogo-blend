@@ -115,6 +115,7 @@ config = {
             "flags": [
                 "flag_unlit",
                 "flag_polygon",
+                "flag_5",
             ],
         },
         {
