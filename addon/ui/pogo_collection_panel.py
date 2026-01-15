@@ -37,6 +37,17 @@ class SelectMapImage(bpy.types.Operator):
         return {'RUNNING_MODAL'}
 
 
+class RefreshSplits(bpy.types.Operator):
+    bl_idname = "pogo_blend.refresh_splits"
+    bl_label = "Refresh Splits"
+    bl_description = "Refreshes the splits"
+    bl_options = {'REGISTER'}
+
+    def execute(self, context):
+        pbu.get_custom_map().update_splits()
+        return {'FINISHED'}
+
+
 class PogoSplitList(bpy.types.UIList):
     bl_idname = "POGO_UL_pogo_blend_split_list"
 
@@ -97,6 +108,7 @@ class PogoCollectionPanel(bpy.types.Panel):
             col = row.column()
             col.operator("pogo_blend.active_split_move", icon="TRIA_UP", text="").direction = 'UP'
             col.operator("pogo_blend.active_split_move", icon="TRIA_DOWN", text="").direction = 'DOWN'
+            col.operator("pogo_blend.refresh_splits", icon="FILE_REFRESH", text="")
 
         mode_panel_header, mode_panel = layout.panel("mode_panel")
         mode_panel_header.label(text="Modes")
@@ -116,6 +128,7 @@ class PogoCollectionPanel(bpy.types.Panel):
 def register():
     bpy.utils.register_class(EditMapDescription)
     bpy.utils.register_class(SelectMapImage)
+    bpy.utils.register_class(RefreshSplits)
     bpy.utils.register_class(PogoSplitList)
     bpy.utils.register_class(PogoCollectionPanel)
 
@@ -123,5 +136,6 @@ def register():
 def unregister():
     bpy.utils.unregister_class(EditMapDescription)
     bpy.utils.unregister_class(SelectMapImage)
+    bpy.utils.unregister_class(RefreshSplits)
     bpy.utils.unregister_class(PogoSplitList)
     bpy.utils.unregister_class(PogoCollectionPanel)

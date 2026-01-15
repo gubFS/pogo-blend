@@ -8,21 +8,8 @@ class PogoRegion(bpy.types.PropertyGroup):
     region_types.extend(pbu.get_enum_list("pogo_classes/region_types.yaml", True))
 
     def update_region_type(self, context):
-        obj = self.rna_ancestors()[-1]
-        new_type = obj.pogo_region.region_type
         custom_map = pbu.get_custom_map()
-
-        splits = {}
-        for i, split in enumerate(custom_map.splits.values()):
-            splits[split.split_region] = i
-
-        if new_type == "CP_":
-            if obj not in splits:
-                split = custom_map.splits.add()
-                split.split_region = obj
-        else:
-            if obj in splits:
-                split = custom_map.splits.remove(splits[obj])
+        custom_map.update_splits()
 
     region_type: bpy.props.EnumProperty(items=region_types, name="Region Type", update=update_region_type)
 

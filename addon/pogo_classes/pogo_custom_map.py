@@ -36,6 +36,24 @@ class PogoCustomMap(bpy.types.PropertyGroup):
     splits: bpy.props.CollectionProperty(type=PogoSplit, name="Splits")
     active_split_idx: bpy.props.IntProperty(name="Active Split")
 
+    def update_splits(self):
+        custom_map_collection = pbu.get_custom_map_collection()
+        actual_splits_set = set([obj for obj in custom_map_collection.all_objects if "pogo_region" in obj and obj.pogo_region.region_type == "CP_"])
+        splits_set = set([split.split_region for split in self.splits])
+        splits_to_remove = splits_set.difference(actual_splits_set)
+        splits_to_add = actual_splits_set.difference(splits_set)
+        for split in splits_to_remove:
+            idx = -1
+            for i, splt in enumerate(self.splits):
+                if splt.split_region == split:
+                    idx = i
+                    break
+            if idx != -1:
+                self.splits.remove(idx)
+        for split in splits_to_add:
+            added_split = self.splits.add()
+            added_split.split_region = split
+
     spawn: bpy.props.PointerProperty(
         type=bpy.types.Object,
         name="Spawn",

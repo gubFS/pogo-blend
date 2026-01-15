@@ -25,6 +25,7 @@ used_names = set()
 def build_custom_map(context, filepath, global_scale):
     custom_map_collection = pbu.get_custom_map_collection()
     custom_map = pbu.get_custom_map()
+    custom_map.update_splits()
 
     spawn = custom_map.spawn
     if spawn is None:
