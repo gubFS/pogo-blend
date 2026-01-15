@@ -19,9 +19,9 @@ class PogoGravityArrow(bpy.types.Gizmo):
 
     def _update_offset_matrix(self):
         obj = bpy.context.object
-        power = obj.pogo_reigon.gravity_power / 999
+        power = obj.pogo_region.gravity_power / 999
         power = 1 - ((1 - power) ** 3)
-        self.matrix_offset = Matrix.Rotation(math.radians(obj.pogo_reigon.gravity_angle) + 3.14, 4, "Y") @ Matrix.Scale(power * 0.4, 4, Vector((0, 0, 1)))
+        self.matrix_offset = Matrix.Rotation(math.radians(obj.pogo_region.gravity_angle) + 3.14, 4, "Y") @ Matrix.Scale(power * 0.4, 4, Vector((0, 0, 1)))
 
     def draw(self, context):
         self._update_offset_matrix()
@@ -36,7 +36,7 @@ class PogoGravityArrow(bpy.types.Gizmo):
             self.custom_shape = self.new_custom_shape('TRIS', custom_shape_verts)
 
 
-class GravityReigonGroup(bpy.types.GizmoGroup):
+class GravityRegionGroup(bpy.types.GizmoGroup):
     bl_idname = "OBJECT_GGT_pogo_gravity_group"
     bl_label = "PogoBlend Gravity Arrow"
     bl_space_type = 'VIEW_3D'
@@ -46,7 +46,7 @@ class GravityReigonGroup(bpy.types.GizmoGroup):
     @classmethod
     def poll(cls, context):
         obj = context.object
-        return obj and "pogo_reigon" in obj and obj.pogo_reigon.reigon_type == "gravityReg_"
+        return obj and "pogo_region" in obj and obj.pogo_region.region_type == "gravityReg_"
 
     def setup(self, context):
         gz = self.gizmos.new(PogoGravityArrow.bl_idname)
@@ -65,9 +65,9 @@ class GravityReigonGroup(bpy.types.GizmoGroup):
 
 def register():
     bpy.utils.register_class(PogoGravityArrow)
-    bpy.utils.register_class(GravityReigonGroup)
+    bpy.utils.register_class(GravityRegionGroup)
 
 
 def unregister():
     bpy.utils.unregister_class(PogoGravityArrow)
-    bpy.utils.unregister_class(GravityReigonGroup)
+    bpy.utils.unregister_class(GravityRegionGroup)

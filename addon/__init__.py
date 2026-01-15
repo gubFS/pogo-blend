@@ -7,13 +7,13 @@ from . import pogo_blend_preferences as pbu
 from .export_import import custom_map_builder_operator
 from .export_import.mdl_exporter import mdl_exporter_operator
 from .export_import.mdl_importer import mdl_importer_operator
-from .pogo_classes import pogo_custom_map, pogo_entity, pogo_path, pogo_reigon
+from .pogo_classes import pogo_custom_map, pogo_entity, pogo_path, pogo_region
 from .ui import add_pogo_menu, pogo_collection_panel, pogo_object_panel
 from .ui.gizmos import gravity_gizmo
 from .ui.operators import (
     add_block,
     add_pogo_path,
-    add_pogo_reigon,
+    add_pogo_region,
     add_sprite,
     create_collider,
 )
@@ -46,14 +46,14 @@ to_register = [
     pogo_custom_map,
     pogo_entity,
     pogo_path,
-    pogo_reigon,
+    pogo_region,
     add_pogo_menu,
     pogo_collection_panel,
     pogo_object_panel,
     gravity_gizmo,
     add_block,
     add_pogo_path,
-    add_pogo_reigon,
+    add_pogo_region,
     add_sprite,
     create_collider,
     make_asset_library,

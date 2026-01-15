@@ -10,7 +10,7 @@ class AddPogoMenu(bpy.types.Menu):
 
         layout.operator("pogo_blend.add_block", text="Block", icon='CUBE')
         layout.operator("pogo_blend.add_sprite", text="Sprite", icon='IMAGE_DATA')
-        layout.operator("pogo_blend.add_pogo_reigon", text="Reigon", icon='MESH_PLANE')
+        layout.operator("pogo_blend.add_pogo_region", text="Region", icon='MESH_PLANE')
         layout.operator("pogo_blend.add_pogo_path", text="Path", icon='CON_FOLLOWPATH')
 
 

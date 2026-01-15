@@ -42,7 +42,7 @@ class PogoSplitList(bpy.types.UIList):
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
         if self.layout_type in {'DEFAULT', 'COMPACT'}:
-            layout.label(text=item.split_reigon.name, translate=False, icon_value=icon)
+            layout.label(text=item.split_region.name, translate=False, icon_value=icon)
         elif self.layout_type == 'GRID':
             layout.alignment = 'CENTER'
             layout.label(text="", icon_value=icon)

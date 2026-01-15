@@ -3,15 +3,15 @@ from mathutils import Vector
 from ...gub_byte_array import GubByteArray
 
 
-class WMBReigon:
+class WMBRegion:
     def __init__(self, obj, scale: float = 50.0):
-        self.type = 8  # 8 is the ID of the type for reigons
+        self.type = 8  # 8 is the ID of the type for regions
 
-        self.name = obj.pogo_reigon.reigon_type
-        match obj.pogo_reigon.reigon_type:
+        self.name = obj.pogo_region.region_type
+        match obj.pogo_region.region_type:
             case "gravityReg_":
-                self.name += str(int(obj.pogo_reigon.gravity_angle))
-                self.name += "_" + str(int(obj.pogo_reigon.gravity_power))
+                self.name += str(int(obj.pogo_region.gravity_angle))
+                self.name += "_" + str(int(obj.pogo_region.gravity_power))
 
         self.min_pos = Vector((-1, -1, -1))
         self.max_pos = Vector((1, 1, 1))
@@ -22,7 +22,7 @@ class WMBReigon:
         self.min_pos += obj.matrix_world.translation * scale
         self.max_pos += obj.matrix_world.translation * scale
 
-        match obj.pogo_reigon.reigon_type:
+        match obj.pogo_region.region_type:
             case (
                 "modearea_double"  #
                 | "modearea_puzzle"

@@ -4,7 +4,7 @@ from .. import pogo_blend_utils as pbu
 
 
 class PogoSplit(bpy.types.PropertyGroup):
-    split_reigon: bpy.props.PointerProperty(type=bpy.types.Object)
+    split_region: bpy.props.PointerProperty(type=bpy.types.Object)
 
 
 class ActiveSplitMove(bpy.types.Operator):

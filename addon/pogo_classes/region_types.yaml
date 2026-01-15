@@ -19,10 +19,10 @@ modearea_noboost:
   description: Disables boosting
 gravityReg_:
   name: Gravity Direction
-  description: Changes the gravity direciton in the reigon
+  description: Changes the gravity direciton in the region
 gravityCircle:
   name: Gravity Center
-  description: A gravity reigon that pulls the player to the center of the reigon
+  description: A gravity region that pulls the player to the center of the region
 reg_finish:
   name: Finish
   description: Finishes the map when entered

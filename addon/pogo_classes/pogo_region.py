@@ -3,28 +3,28 @@ import bpy
 from .. import pogo_blend_utils as pbu
 
 
-class PogoReigon(bpy.types.PropertyGroup):
-    reigon_types = [("ndef", "", "No reigon type", 0)]
-    reigon_types.extend(pbu.get_enum_list("pogo_classes/reigon_types.yaml", True))
+class PogoRegion(bpy.types.PropertyGroup):
+    region_types = [("ndef", "", "No region type", 0)]
+    region_types.extend(pbu.get_enum_list("pogo_classes/region_types.yaml", True))
 
-    def update_reigon_type(self, context):
+    def update_region_type(self, context):
         obj = self.rna_ancestors()[-1]
-        new_type = obj.pogo_reigon.reigon_type
+        new_type = obj.pogo_region.region_type
         custom_map = pbu.get_custom_map()
 
         splits = {}
         for i, split in enumerate(custom_map.splits.values()):
-            splits[split.split_reigon] = i
+            splits[split.split_region] = i
 
         if new_type == "CP_":
             if obj not in splits:
                 split = custom_map.splits.add()
-                split.split_reigon = obj
+                split.split_region = obj
         else:
             if obj in splits:
                 split = custom_map.splits.remove(splits[obj])
 
-    reigon_type: bpy.props.EnumProperty(items=reigon_types, name="Reigon Type", update=update_reigon_type)
+    region_type: bpy.props.EnumProperty(items=region_types, name="Region Type", update=update_region_type)
 
     def update_gravity_angle(self, context):
         if self.gravity_angle < 0 or self.gravity_angle >= 360:
@@ -35,10 +35,10 @@ class PogoReigon(bpy.types.PropertyGroup):
 
 
 def register():
-    bpy.utils.register_class(PogoReigon)
-    bpy.types.Object.pogo_reigon = bpy.props.PointerProperty(type=PogoReigon)
+    bpy.utils.register_class(PogoRegion)
+    bpy.types.Object.pogo_region = bpy.props.PointerProperty(type=PogoRegion)
 
 
 def unregister():
-    bpy.utils.unregister_class(PogoReigon)
-    del bpy.types.Object.pogo_reigon
+    bpy.utils.unregister_class(PogoRegion)
+    del bpy.types.Object.pogo_region

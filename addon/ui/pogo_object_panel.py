@@ -172,13 +172,13 @@ class PogoObjectPanel(bpy.types.Panel):
             layout.prop(entity, "path", placeholder="Path", icon='OUTLINER_OB_CURVE')
 
     def draw_empty_panel(self, obj, layout):
-        if "pogo_reigon" not in obj:
+        if "pogo_region" not in obj:
             self.draw_not_relevant(layout)
             return
-        layout.prop(obj.pogo_reigon, "reigon_type")
-        if obj.pogo_reigon.reigon_type == "gravityReg_":
-            layout.prop(obj.pogo_reigon, "gravity_angle")
-            layout.prop(obj.pogo_reigon, "gravity_power")
+        layout.prop(obj.pogo_region, "region_type")
+        if obj.pogo_region.region_type == "gravityReg_":
+            layout.prop(obj.pogo_region, "gravity_angle")
+            layout.prop(obj.pogo_region, "gravity_power")
 
 
 class PogoObjectPanelOverrides(bpy.types.Panel):

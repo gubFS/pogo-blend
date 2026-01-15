@@ -1,28 +1,28 @@
 import bpy
 
 
-class AddPogoReigon(bpy.types.Operator):
-    bl_idname = "pogo_blend.add_pogo_reigon"
-    bl_label = "Add Pogo Reigon"
-    bl_description = "Adds a Pogo Reigon"
+class AddPogoRegion(bpy.types.Operator):
+    bl_idname = "pogo_blend.add_pogo_region"
+    bl_label = "Add Pogo Region"
+    bl_description = "Adds a Pogo Region"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
         bpy.ops.object.empty_add(type='CUBE')
         empty = context.object
 
-        empty.name = "PogoReigon"
+        empty.name = "PogoRegion"
         empty.scale.y = 0
         for i in range(3):
             empty.lock_rotation[i] = True
-        empty.pogo_reigon
+        empty.pogo_region
 
         return {'FINISHED'}
 
 
 def register():
-    bpy.utils.register_class(AddPogoReigon)
+    bpy.utils.register_class(AddPogoRegion)
 
 
 def unregister():
-    bpy.utils.unregister_class(AddPogoReigon)
+    bpy.utils.unregister_class(AddPogoRegion)

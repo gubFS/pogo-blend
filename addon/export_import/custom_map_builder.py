@@ -17,7 +17,7 @@ from .wmb_exporter.wmb_objects.wmb_entity import (
 )
 from .wmb_exporter.wmb_objects.wmb_info import WMBInfo
 from .wmb_exporter.wmb_objects.wmb_path import PogoPathProgress, WMBPath
-from .wmb_exporter.wmb_objects.wmb_reigon import WMBReigon
+from .wmb_exporter.wmb_objects.wmb_region import WMBRegion
 
 used_names = set()
 
@@ -90,15 +90,15 @@ def build_custom_map(context, filepath, global_scale):
                     paths_to_add.append((entity, obj.pogo_entity.path))
                 wmb_objects.append(entity)
             case 'EMPTY':
-                if "pogo_reigon" not in obj:
+                if "pogo_region" not in obj:
                     continue
-                if obj.pogo_reigon.reigon_type == "ndef":
+                if obj.pogo_region.region_type == "ndef":
                     continue
 
-                reigon = WMBReigon(obj, global_scale)
-                if obj.pogo_reigon.reigon_type == "CP_":
-                    splits_to_add[obj] = reigon
-                wmb_objects.append(reigon)
+                region = WMBRegion(obj, global_scale)
+                if obj.pogo_region.region_type == "CP_":
+                    splits_to_add[obj] = region
+                wmb_objects.append(region)
             case 'CURVE':
                 if "pogo_path" not in obj:
                     continue
@@ -205,7 +205,7 @@ def export_splits(dirpath, custom_map, splits):
     filepath = os.path.join(dirpath, "splitSetup.txt")
     bytes = GubByteArray()
     for i, split in enumerate(custom_map.splits.values()):
-        split = split.split_reigon
+        split = split.split_region
         splits[split].name += str(i)
         bytes.store_string(f"{split.name}\n")
     with open(filepath, "wb") as f:
