@@ -8,7 +8,12 @@ from .export_import import custom_map_builder_operator
 from .export_import.mdl_exporter import mdl_exporter_operator
 from .export_import.mdl_importer import mdl_importer_operator
 from .pogo_classes import pogo_custom_map, pogo_entity, pogo_path, pogo_region
-from .ui import add_pogo_menu, pogo_collection_panel, pogo_object_panel
+from .ui import (
+    add_pogo_menu,
+    object_pogo_menu,
+    pogo_collection_panel,
+    pogo_object_panel,
+)
 from .ui.gizmos import gravity_gizmo
 from .ui.operators import (
     add_block,
@@ -16,6 +21,7 @@ from .ui.operators import (
     add_pogo_region,
     add_sprite,
     create_collider,
+    modifiers,
 )
 
 # Uncomment the following for quick reloading of addon. Only for use in development.
@@ -48,6 +54,7 @@ to_register = [
     pogo_path,
     pogo_region,
     add_pogo_menu,
+    object_pogo_menu,
     pogo_collection_panel,
     pogo_object_panel,
     gravity_gizmo,
@@ -56,6 +63,7 @@ to_register = [
     add_pogo_region,
     add_sprite,
     create_collider,
+    modifiers,
     make_asset_library,
 ]
 

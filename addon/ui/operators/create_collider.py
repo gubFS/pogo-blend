@@ -178,16 +178,9 @@ class CreatePogoCollider(bpy.types.Operator):
         return {'FINISHED'}
 
 
-def menu_func(self, context):
-    self.layout.separator()
-    self.layout.operator(CreatePogoCollider.bl_idname, text="Create a Pogostuck Collider")
-
-
 def register():
     bpy.utils.register_class(CreatePogoCollider)
-    bpy.types.VIEW3D_MT_object.append(menu_func)
 
 
 def unregister():
     bpy.utils.unregister_class(CreatePogoCollider)
-    bpy.types.VIEW3D_MT_object.remove(menu_func)
