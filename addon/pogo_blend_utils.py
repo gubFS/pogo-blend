@@ -18,10 +18,13 @@ class ContextError(Exception):
 
 
 class AltOperator(bpy.types.Operator):
-    use_alt: bpy.props.BoolProperty()
+    objs: list
 
     def invoke(self, context, event):
-        self.use_alt = event.alt
+        if event.alt:
+            self.objs = context.selected_objects
+        else:
+            self.objs = [context.object]
         return self.execute(context)
 
 

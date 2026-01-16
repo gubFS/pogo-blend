@@ -9,8 +9,7 @@ class AddPogoPathData(pbu.AltOperator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        objs = context.selected_objects if self.use_alt else [context.object]
-        for obj in objs:
+        for obj in self.objs:
             if obj.type == 'CURVE':
                 obj.pogo_path
         return {'FINISHED'}
@@ -22,8 +21,7 @@ class RemovePogoPathData(pbu.AltOperator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        objs = context.selected_objects if self.use_alt else [context.object]
-        for obj in objs:
+        for obj in self.objs:
             if "pogo_path" in obj:
                 del obj["pogo_path"]
         return {'FINISHED'}
@@ -35,8 +33,7 @@ class AddPogoEntityData(pbu.AltOperator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        objs = context.selected_objects if self.use_alt else [context.object]
-        for obj in objs:
+        for obj in self.objs:
             if obj.type == 'MESH':
                 obj.pogo_entity
         return {'FINISHED'}
@@ -48,8 +45,7 @@ class RemovePogoEntityData(pbu.AltOperator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        objs = context.selected_objects if self.use_alt else [context.object]
-        for obj in objs:
+        for obj in self.objs:
             if "pogo_entity" in obj:
                 del obj["pogo_entity"]
         return {'FINISHED'}
