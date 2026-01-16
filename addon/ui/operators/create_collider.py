@@ -38,6 +38,21 @@ class CreateColliderContext:
         obj.select_set(True)
         context.view_layer.objects.active = obj
 
+        # preprocessing
+        bpy.ops.object.convert(target='MESH', keep_original=True, merge_customdata=False)
+        obj = context.object
+        bpy.ops.object.editmode_toggle()
+        bpy.ops.mesh.select_all(action='SELECT')
+        bpy.ops.transform.resize(
+            value=(1, 0, 1),
+            orient_type='GLOBAL',
+            orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
+            orient_matrix_type='GLOBAL',
+            constraint_axis=(False, True, False),
+        )
+        bpy.ops.mesh.remove_doubles()
+        bpy.ops.object.editmode_toggle()
+
         # find the real bounding box without rotation
         bottom_left = Vector(obj.bound_box[0])
         top_right = Vector(obj.bound_box[0])
@@ -107,9 +122,12 @@ class CreateColliderContext:
         bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='BOUNDS')
 
         collider = self.create_collider_object(obj, collider_mesh)
-        bpy.data.objects.remove(collider_object, do_unlink=True)
 
         # cleanup
+        obj_mesh = obj.data
+        bpy.data.objects.remove(obj, do_unlink=True)
+        bpy.data.meshes.remove(obj_mesh, do_unlink=True)
+        bpy.data.objects.remove(collider_object, do_unlink=True)
         bpy.data.materials.remove(lineart_material, do_unlink=True)
         bpy.data.grease_pencils_v3.remove(lineart_data, do_unlink=True)
 
