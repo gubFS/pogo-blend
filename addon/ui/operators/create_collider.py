@@ -78,8 +78,19 @@ class CreateColliderContext:
         lineart_data = pencil.data
         lineart_material = lineart.target_material
 
+        # move the objects so no other object will occlude the outline
+        self.camera.matrix_world.translation.y -= 1000
+        obj.matrix_world.translation.y -= 1000
+
         # convert to mesh and extrude collider
         bpy.ops.object.convert(target='MESH')
+        collider_object = context.object
+        collider_mesh = collider_object.data
+
+        self.camera.matrix_world.translation.y += 1000
+        obj.matrix_world.translation.y += 1000
+        collider_object.matrix_world.translation.y += 1000
+
         bpy.ops.object.mode_set(mode='EDIT')
         bpy.ops.mesh.select_mode(type='VERT')
         bpy.ops.mesh.select_all(action='SELECT')
@@ -95,8 +106,6 @@ class CreateColliderContext:
         scene.cursor.location.z = obj.matrix_world.translation.z
         bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='BOUNDS')
 
-        collider_object = context.object
-        collider_mesh = collider_object.data
         collider = self.create_collider_object(obj, collider_mesh)
         bpy.data.objects.remove(collider_object, do_unlink=True)
 
