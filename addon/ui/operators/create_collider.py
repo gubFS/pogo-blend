@@ -1,6 +1,8 @@
 import bpy
 from mathutils import Vector
 
+from ... import pogo_blend_utils as pbu
+
 
 class CreateColliderContext:
     def __enter__(self):
@@ -179,20 +181,19 @@ class CreateColliderContext:
         self.temp_override.__exit__()
 
 
-class CreatePogoCollider(bpy.types.Operator):
+class CreatePogoCollider(pbu.AltOperator):
     bl_idname = "pogo_blend.create_collider"
     bl_label = "Create a Pogostuck Collider"
     bl_description = "Creates a collider around the selected objects, based on their sideview"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        objs = filter(lambda obj: obj.type == 'MESH', context.selected_objects)
-        objs = list(objs)
-        if not objs:
+        self.objs = [obj for obj in self.objs if obj.type == 'MESH']
+        if len(self.objs) == 0:
             self.report({'ERROR'}, "No mesh objects selected")
             return {'CANCELLED'}
         with CreateColliderContext() as ctx:
-            for obj in objs:
+            for obj in self.objs:
                 ctx.create_collider(obj)
         return {'FINISHED'}
 
