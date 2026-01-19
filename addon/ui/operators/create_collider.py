@@ -41,21 +41,16 @@ class CreateColliderContext:
         # preprocessing
         bpy.ops.object.convert(target='MESH', keep_original=True, merge_customdata=False)
         obj = context.object
+        obj_mesh = obj.data
         bpy.ops.object.editmode_toggle()
         bpy.ops.mesh.select_all(action='SELECT')
-        bpy.ops.transform.resize(
-            value=(1, 0, 1),
-            orient_type='GLOBAL',
-            orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
-            orient_matrix_type='GLOBAL',
-            constraint_axis=(False, True, False),
-        )
-        bpy.ops.mesh.remove_doubles()
+        bpy.ops.mesh.remove_doubles(threshold=0.001)
+        bpy.ops.mesh.dissolve_limited(angle_limit=0.001)
         bpy.ops.object.editmode_toggle()
 
         # find the real bounding box without rotation
-        bottom_left = Vector(obj.bound_box[0])
-        top_right = Vector(obj.bound_box[0])
+        bottom_left = Vector((0, 0, 0))
+        top_right = Vector((0, 0, 0))
         for vec in obj.bound_box:
             vec = Vector(vec)
             vec.rotate(obj.matrix_world.to_euler())
@@ -67,16 +62,16 @@ class CreateColliderContext:
             top_right.y = max(top_right.y, vec.y)
             top_right.z = max(top_right.z, vec.z)
         diff = top_right - bottom_left
-        x = int(diff[0] * 100)
-        y = int(diff[2] * 100)
-        scale = max(diff[0], diff[2]) + 1.0
+        x = int(diff.x * 100)
+        y = int(diff.z * 100)
+        scale = max(diff.x, diff.z) + 1.0
         center = (top_right + bottom_left) * 0.5
         center_world = obj.matrix_world.translation + center
         scene.render.resolution_x = x
         scene.render.resolution_y = y
         self.camera.data.ortho_scale = scale
         self.camera.location = center_world
-        self.camera.location[1] += bottom_left[1] - 1.0
+        self.camera.location.y += diff.y * -0.5 - 1.0
 
         # create the grease pencil
         bpy.ops.object.select_all(action='DESELECT')
@@ -90,6 +85,8 @@ class CreateColliderContext:
         lineart.silhouette_filtering = 'INDIVIDUAL'
         lineart.use_crease = False
         lineart.use_intersection = False
+        lineart.use_back_face_culling = True
+        lineart.use_clip_plane_boundaries = False
         lineart_data = pencil.data
         lineart_material = lineart.target_material
 
@@ -112,7 +109,7 @@ class CreateColliderContext:
         bpy.ops.transform.resize(value=(1, 0, 1))
         bpy.ops.mesh.extrude_region_move(TRANSFORM_OT_translate={"value": (0, extrude_length, 0)})
         bpy.ops.mesh.select_all(action='SELECT')
-        bpy.ops.mesh.normals_make_consistent()
+        bpy.ops.mesh.dissolve_limited(angle_limit=0.001)
 
         bpy.ops.object.mode_set(mode='OBJECT')
         bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
@@ -121,10 +118,13 @@ class CreateColliderContext:
         scene.cursor.location.z = obj.matrix_world.translation.z
         bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='BOUNDS')
 
+        bpy.ops.object.mode_set(mode='EDIT')
+        bpy.ops.mesh.normals_make_consistent(inside=False)
+        bpy.ops.object.mode_set(mode='OBJECT')
+
         collider = self.create_collider_object(obj, collider_mesh)
 
         # cleanup
-        obj_mesh = obj.data
         bpy.data.objects.remove(obj, do_unlink=True)
         bpy.data.meshes.remove(obj_mesh, do_unlink=True)
         bpy.data.objects.remove(collider_object, do_unlink=True)
@@ -171,6 +171,7 @@ class CreateColliderContext:
 
         scene.cursor.location = self.c_cursor
 
+        bpy.ops.object.select_all(action='DESELECT')
         for obj in self.c_selected_objects:
             obj.select_set(True)
         context.view_layer.objects.active = self.c_active_object
