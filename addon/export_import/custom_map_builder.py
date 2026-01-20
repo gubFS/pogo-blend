@@ -87,6 +87,8 @@ def build_custom_map(context, filepath, global_scale):
                         meshes[mesh][0].append(entity)
                     if obj.pogo_entity.flag_auto_collision and obj.pogo_entity.flag_polygon:
                         colliders.append((obj, entity))
+                else:
+                    used_files.add(obj.pogo_entity.filename_override)
                 if obj.pogo_entity.path is not None and not obj.pogo_entity.flag_auto_collision:
                     paths_to_add.append((entity, obj.pogo_entity.path))
                 wmb_objects.append(entity)
