@@ -311,6 +311,9 @@ class MakeAssetLibraryOperator(bpy.types.Operator):
 
     def execute(self, context):
         if bpy.data.is_dirty:
+            if not bpy.data.is_saved:
+                self.report({'ERROR_INVALID_CONTEXT'}, "Save your current Blender file first, or create an empty one with no changes")
+                return {'CANCELLED'}
             bpy.ops.wm.save_mainfile()
         filepath = bpy.data.filepath
         bpy.ops.wm.read_homefile(app_template="", use_empty=True)
