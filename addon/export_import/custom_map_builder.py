@@ -45,7 +45,7 @@ def build_custom_map(context, filepath, global_scale):
 
     wmb_objects = [
         WMBInfo(),
-        PogoSpawn(spawn),
+        PogoSpawn(spawn, global_scale),
         PogoModeSetup(custom_map),
         PogoPathProgress(path_progress),
         PogoStartLine(start_line),

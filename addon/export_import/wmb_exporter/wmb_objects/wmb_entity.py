@@ -100,9 +100,9 @@ class WMBEntity:
 
 
 class PogoSpawn(WMBEntity):
-    def __init__(self, obj):
+    def __init__(self, obj, scale: float):
         self.type = 7  # 7 is the ID for entity types
-        self.origin = obj.location
+        self.origin = obj.matrix_world.translation * scale
         self.angle = (0, 0, 0)
         self.scale = (1, 1, 1)
         self.name = "spawn1"
