@@ -86,7 +86,7 @@ class CustomMapBuilder(bpy.types.Operator):
             return {'CANCELLED'}
         if not os.path.exists(self.filepath):
             self.report(
-                'ERROR',
+                {'ERROR'},
                 "The Custom Maps folder does not exist. Select a valid folder in the preferences for the Pogo Blend addon",
             )
             return {'CANCELLED'}
