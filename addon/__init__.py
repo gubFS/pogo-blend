@@ -22,6 +22,7 @@ from .ui.operators import (
     add_sprite,
     create_collider,
     modifiers,
+    presets,
 )
 
 # Uncomment the following for quick reloading of addon. Only for use in development.
@@ -64,6 +65,7 @@ to_register = [
     add_sprite,
     create_collider,
     modifiers,
+    presets,
     make_asset_library,
 ]
 
