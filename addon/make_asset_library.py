@@ -272,15 +272,24 @@ def make_asset_library(context, filepath: str):
         ad.license = "Only to be used for the purposes of making Pogostuck Custom Maps"
         ad.catalog_id = catalog
 
-        bpy.app.timers.register(lambda: go_back(filepath))
+    view_3d_area = [area for area in bpy.context.screen.areas if area.type == 'VIEW_3D'][0]
+    view_3d_area.ui_type = 'ASSETS'
+    bpy.app.timers.register(lambda: set_library(view_3d_area))  # the area params takes a frame to initialize so wait for that
+    bpy.app.timers.register(lambda: go_back(filepath))
+
+
+def set_library(area):
+    area.spaces.active.params.asset_library_reference = 'LOCAL'
 
 
 def go_back(filepath: str):
+    bpy.context.window.cursor_set('WAIT')
     if bpy.app.is_job_running('RENDER_PREVIEW'):
         return 0.1
     asset_libary_dir = Path(__file__).parent.joinpath("pogo_blend_asset_library")
     pogostuck = Path(asset_libary_dir).joinpath("pogostuck.blend")
     bpy.ops.wm.save_mainfile(filepath=str(pogostuck))
+    bpy.context.window.cursor_set('DEFAULT')
     if filepath != "":
         bpy.ops.wm.open_mainfile(filepath=filepath)
     else:
