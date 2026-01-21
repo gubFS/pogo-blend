@@ -2,7 +2,7 @@ import bpy
 
 
 class AddPogoMenu(bpy.types.Menu):
-    bl_label = "Pogo Blend"
+    bl_label = "PogoBlend"
     bl_idname = "ADD_MT_pogo_blend_menu"
 
     def draw(self, context):

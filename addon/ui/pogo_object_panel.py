@@ -52,7 +52,7 @@ class RemovePogoEntityData(pbu.AltOperator):
 
 
 class PogoObjectPanel(bpy.types.Panel):
-    bl_label = "Pogo Blend"
+    bl_label = "PogoBlend"
     bl_idname = "OBJECT_PT_object_pogo_blend"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'

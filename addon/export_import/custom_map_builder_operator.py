@@ -80,14 +80,14 @@ class CustomMapBuilder(bpy.types.Operator):
         if self.filepath == "":
             self.report(
                 {'ERROR'},
-                "The Custom Maps folder is not defined. Select it and try again. It can be accessed manually in the preferences for the Pogo Blend addon",
+                "The Custom Maps folder is not defined. Select it and try again. It can be accessed manually in the preferences for the PogoBlend addon",
             )
             bpy.ops.pogo_blend.select_custom_maps_dir("INVOKE_DEFAULT")
             return {'CANCELLED'}
         if not os.path.exists(self.filepath):
             self.report(
                 {'ERROR'},
-                "The Custom Maps folder does not exist. Select a valid folder in the preferences for the Pogo Blend addon",
+                "The Custom Maps folder does not exist. Select a valid folder in the preferences for the PogoBlend addon",
             )
             return {'CANCELLED'}
         if pbu.get_custom_map().map_name == "":

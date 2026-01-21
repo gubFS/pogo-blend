@@ -62,7 +62,7 @@ class PogoSplitList(bpy.types.UIList):
 
 
 class PogoCollectionPanel(bpy.types.Panel):
-    bl_label = "Pogo Blend"
+    bl_label = "PogoBlend"
     bl_idname = "COLLECTION_PT_collection_pogo_blend"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'

@@ -14,7 +14,7 @@ class ModifiersMenu(bpy.types.Menu):
 
 
 class ObjectPogoMenu(bpy.types.Menu):
-    bl_label = "Pogo Blend"
+    bl_label = "PogoBlend"
     bl_idname = "OBJECT_MT_pogo_blend_menu"
 
     def draw(self, context):
