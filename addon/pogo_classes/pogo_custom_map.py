@@ -70,7 +70,7 @@ class PogoCustomMap(bpy.types.PropertyGroup):
     start_line: bpy.props.PointerProperty(
         type=bpy.types.Object,
         name="Start Line",
-        description="The start line. This entity will dissapear once the run is started",
+        description="The start line. This entity will dissapear once the run is started. The run will start once the player leaves a circle of roughly 475 pogo units in diameter, from the origin of this object",
         poll=lambda prop, obj: "pogo_entity" in obj,
     )
 
