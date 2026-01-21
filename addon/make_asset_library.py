@@ -35,6 +35,7 @@ config = {
             "flags": [
                 "flag_unlit",
             ],
+            "reuse_materials": "anvil.mdl",
         },
         {
             "filename": "cloud2.mdl",
@@ -43,6 +44,7 @@ config = {
             "flags": [
                 "flag_unlit",
             ],
+            "reuse_materials": "anvil.mdl",
         },
         {
             "filename": "dode.mdl",
@@ -51,6 +53,7 @@ config = {
             "flags": [
                 "flag_unlit",
             ],
+            "reuse_materials": "anvil.mdl",
         },
         {
             "filename": "dungeonWheel1.mdl",
@@ -69,6 +72,7 @@ config = {
                 "flag_unlit",
                 "flag_polygon",
             ],
+            "reuse_materials": "anvil.mdl",
         },
         {
             "filename": "moai.mdl",
@@ -78,6 +82,7 @@ config = {
                 "flag_unlit",
                 "flag_polygon",
             ],
+            "reuse_materials": "anvil.mdl",
         },
         {
             "filename": "modeBlock0.mdl",
@@ -106,6 +111,7 @@ config = {
                 "flag_unlit",
                 "flag_polygon",
             ],
+            "reuse_materials": "mushroomFly1.mdl",
         },
         {
             "filename": "mushroomTree2.mdl",
@@ -117,6 +123,7 @@ config = {
                 "flag_polygon",
                 "flag_5",
             ],
+            "reuse_materials": "anvil.mdl",
         },
         {
             "filename": "pencil.mdl",
@@ -153,6 +160,7 @@ config = {
             },
             "action": "skillset_act",
             "ambient": 100.0,
+            "reuse_materials": "startFinishM.mdl",
         },
     ],
     "textures": [
@@ -190,6 +198,7 @@ def make_asset_library(context, filepath: str):
         return
 
     assets = []
+    materials = {}
     for mdl in config["models"]:
         path = Path(base_map).joinpath("Models", mdl["filename"])
         import_mdl(context, path, 1 / 50)
@@ -228,6 +237,16 @@ def make_asset_library(context, filepath: str):
                     case "slimeBubbles":
                         mat.name = "Slime Bubbles"
                 assets.append((mdl, mat, TEXTURE_CATALOG))
+
+        if "reuse_materials" not in mdl or mdl["reuse_materials"] == "":
+            materials[mdl["filename"]] = [material_slot.material for material_slot in obj.material_slots]
+        else:
+            reused_materials = materials.get(mdl["reuse_materials"], [])
+            for i, material_slot in enumerate(obj.material_slots):
+                if i >= len(reused_materials):
+                    break
+                material_slot.material = reused_materials[i]
+    bpy.ops.outliner.orphans_purge()  # get rid of the images generated on reused materials
 
     for texture in config["textures"]:
         texture_path = Path(base_map).joinpath(texture["filename"])
