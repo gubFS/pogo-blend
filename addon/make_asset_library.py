@@ -134,6 +134,10 @@ config = {
                 "flag_unlit",
                 "flag_transparent",
             ],
+            "skills": {
+                "skill_1": 1.0,
+            },
+            "action": "skillset_act",
             "ambient": 100.0,
         },
         {
