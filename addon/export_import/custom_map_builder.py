@@ -1,7 +1,6 @@
 import os
 
 import bpy
-from PIL import Image
 
 from .. import pogo_blend_utils as pbu
 from ..ui.operators import create_collider
@@ -224,16 +223,14 @@ def export_map_description(dirpath):
 
 
 def export_map_image(dirpath, custom_map):
-    image_path = custom_map.map_image
-
-    if image_path is None or image_path == "":
+    image = custom_map.map_image
+    if image is None:
         return
 
-    try:
-        img = Image.open(custom_map.map_image)
-        img.save(os.path.join(dirpath, "workshopPreview.png"), format='PNG')
-    except Exception:
-        print("Could not load or save map image!")
+    old_format = image.file_format
+    image.file_format = 'PNG'
+    image.save(filepath=os.path.join(dirpath, "workshopPreview.png"), save_copy=True)
+    image.file_format = old_format
 
 
 def export_texture(dirpath: str, texture: dict):

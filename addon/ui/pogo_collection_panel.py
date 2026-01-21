@@ -21,24 +21,6 @@ class EditMapDescription(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class SelectMapImage(bpy.types.Operator):
-    bl_idname = "pogo_blend.select_map_image"
-    bl_label = "Select Map Image"
-    bl_description = "Opens a file explorer to select the image"
-    bl_options = {'REGISTER'}
-
-    filepath: bpy.props.StringProperty(subtype='FILE_PATH')
-    filter_glob: bpy.props.StringProperty(default="*.bmp;*.ico;*.jpeg;*.jpg;*.png;*.tga;*.webp")
-
-    def execute(self, context):
-        pbu.get_custom_map().map_image = self.filepath
-        return {'FINISHED'}
-
-    def invoke(self, context, event):
-        context.window_manager.fileselect_add(self)
-        return {'RUNNING_MODAL'}
-
-
 class RefreshSplits(bpy.types.Operator):
     bl_idname = "pogo_blend.refresh_splits"
     bl_label = "Refresh Splits"
@@ -91,9 +73,7 @@ class PogoCollectionPanel(bpy.types.Panel):
 
             map_information_panel.operator("pogo_blend.edit_map_description")
 
-            row = map_information_panel.row()
-            row.prop(custom_map, "map_image")
-            row.operator("pogo_blend.select_map_image", icon="IMAGE_DATA", text="")
+            map_information_panel.template_ID(custom_map, "map_image", text="Map Image", open="image.open")
 
         required_objects_panel_header, required_objects_panel = layout.panel("required_objects_panel")
         required_objects_panel_header.label(text="Required Objects")
@@ -137,7 +117,6 @@ class PogoCollectionPanel(bpy.types.Panel):
 
 def register():
     bpy.utils.register_class(EditMapDescription)
-    bpy.utils.register_class(SelectMapImage)
     bpy.utils.register_class(RefreshSplits)
     bpy.utils.register_class(PogoSplitList)
     bpy.utils.register_class(PogoCollectionPanel)
@@ -145,7 +124,6 @@ def register():
 
 def unregister():
     bpy.utils.unregister_class(EditMapDescription)
-    bpy.utils.unregister_class(SelectMapImage)
     bpy.utils.unregister_class(RefreshSplits)
     bpy.utils.unregister_class(PogoSplitList)
     bpy.utils.unregister_class(PogoCollectionPanel)

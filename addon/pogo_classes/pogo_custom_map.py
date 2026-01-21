@@ -31,7 +31,7 @@ class ActiveSplitMove(bpy.types.Operator):
 
 class PogoCustomMap(bpy.types.PropertyGroup):
     map_name: bpy.props.StringProperty(name="Map Name", description="The name of the map")
-    map_image: bpy.props.StringProperty(name="Map Image", description="The path to the image used for the map")
+    map_image: bpy.props.PointerProperty(type=bpy.types.Image, name="Map Image", description="The image used for the map thumbnail")
 
     splits: bpy.props.CollectionProperty(type=PogoSplit, name="Splits")
     active_split_idx: bpy.props.IntProperty(name="Active Split")
