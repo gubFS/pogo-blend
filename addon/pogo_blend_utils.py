@@ -29,7 +29,11 @@ class AltOperator(bpy.types.Operator):
     def execute(self, context):
         for obj in self.objs:
             self.execute_obj(obj)
+        self.post_execute()
         return {'FINISHED'}
+
+    def post_execute(self):
+        pass
 
     def invoke(self, context, event):
         if event.alt:
