@@ -158,6 +158,3 @@ class PogoStartLine(WMBEntity):
     def __init__(self, obj):
         super().__init__(obj)
         self.name = "startLine"
-        self.action = "skillset_act"
-        self.flags |= 1 << 0  # flag_1
-        self.skills = [1.0]
