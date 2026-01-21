@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import bpy
 
 from .. import pogo_blend_utils as pbu
@@ -78,7 +80,15 @@ class PogoCollectionPanel(bpy.types.Panel):
         map_information_panel_header, map_information_panel = layout.panel("map_information_panel")
         map_information_panel_header.label(text="Map Information")
         if map_information_panel:
-            map_information_panel.prop(custom_map, "map_name")
+            row = map_information_panel.row()
+            row.prop(custom_map, "map_name")
+            path = pbu.get_preferences().custom_maps_path
+            if path != "" and Path(path).exists():
+                map_path = Path(path).joinpath(custom_map.map_name)
+                if map_path.exists():
+                    path = str(map_path)
+                row.operator("wm.path_open", text="", icon='FILE_FOLDER').filepath = path
+
             map_information_panel.operator("pogo_blend.edit_map_description")
 
             row = map_information_panel.row()
