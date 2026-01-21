@@ -34,7 +34,7 @@ class PogoEntity(bpy.types.PropertyGroup):
     flag_transparent: bpy.props.BoolProperty(name="Transparent", description="Makes the entity transparent. Albedo changes the transparency percentage. Does not work with most materials", default=True)  # = 10,
     flag_unlit: bpy.props.BoolProperty(name="Unlit", description="Makes entity ignore lighting and appear \"flat\". Only relevant without any material", default=True)  # = 17,
     flag_shadow: bpy.props.BoolProperty(name="Shadow", description="Add a glow shadow to the entity")  # = 18, #
-    flag_metal: bpy.props.BoolProperty(name="Kill", description="Kills the player on contact. (looks metallic if there's no material and it's not unlit)")  # = 22, # kill
+    flag_metal: bpy.props.BoolProperty(name="Kill", description="Kills the player on contact. (looks metallic if there's no material)")  # = 22, # kill
     flag_cast: bpy.props.BoolProperty(name="Background", description="Blurs the entity and places it in the background")
     flag_polygon: bpy.props.BoolProperty(name="Collision", description="Enable collsion with the entity. Collides where it's Y-position is 0")  # = 26, # collision. if polygon isn't set then its passable
 
