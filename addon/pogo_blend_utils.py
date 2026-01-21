@@ -112,7 +112,7 @@ def get_enum_list(filepath: str, show_all: bool) -> list[tuple]:
                 key,
                 config["name"] if "name" in config else key,
                 config["description"] if "description" in config else "",
-                xxhash.xxh32_intdigest(key) & 0b1111_1111_1111_1111_1111_1111_0000_0000  # idk why the enums are weird but they are so this is the solution
+                xxhash.xxh32_intdigest(key) & 0b0111_1111_1111_1111_1111_1111_0000_0000  # idk why the enums are weird but they are so this is the solution
                 if "id" not in config
                 else config["id"],
             )
