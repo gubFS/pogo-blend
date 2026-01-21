@@ -122,9 +122,9 @@ def build_custom_map(context, filepath, global_scale):
         mdlpath = os.path.join(dirpath, filename)
 
         for texture in pbu.get_textures(obj):
-            if texture not in textures:
+            if texture["image"] not in textures:
                 new_texture = pbu.get_unique_name(
-                    os.path.splitext(os.path.basename(texture))[0],
+                    texture["name"].replace(".", "_"),
                     ".tga",
                     31,
                     used_names,
@@ -134,20 +134,17 @@ def build_custom_map(context, filepath, global_scale):
                     continue
                 else:
                     used_files.add(new_texture)
-                    textures[texture] = new_texture
+                    texture["name"] = new_texture
+                    textures[texture["image"]] = texture
 
         if not cache.update_entity(filename, obj):
             continue
 
         mdl_exporter = MDLExporter(mdlpath, [obj], scale)
-        for texture, slot_idx in mdl_exporter.skins.copy().items():
-            if texture == "":
-                continue
-
-            if texture in textures:
-                new_texture = textures[texture]
-                mdl_exporter.skins.pop(texture)
-                mdl_exporter.skins[new_texture] = slot_idx
+        for texture, slot_idx in mdl_exporter.skins.copy().values():
+            if texture["image"] in textures:
+                new_texture = textures[texture["image"]]["name"]
+                mdl_exporter.skins[texture["image"]][0]["name"] = new_texture
         mdl_exporter.export()
 
     # colliders
@@ -189,8 +186,8 @@ def build_custom_map(context, filepath, global_scale):
 
     export_map_description(dirpath)
     export_map_image(dirpath, custom_map)
-    for texture, new_texture in textures.items():
-        export_texture(dirpath, new_texture, texture)
+    for texture in textures.values():
+        export_texture(dirpath, texture)
 
     files_in_dictionary = set([file for file in os.listdir(dirpath) if os.path.isfile(os.path.join(dirpath, file))])
     unused_files = files_in_dictionary.difference(used_files)
@@ -239,6 +236,12 @@ def export_map_image(dirpath, custom_map):
         print("Could not load or save map image!")
 
 
-def export_texture(dirpath, image_name, image_path):
-    img = Image.open(image_path)
-    img.save(os.path.join(dirpath, image_name), format='TGA')
+def export_texture(dirpath: str, texture: dict):
+    image = texture["image"]
+    image.reload()
+    filepath = os.path.join(dirpath, texture["name"])
+
+    old_format = image.file_format
+    image.file_format = 'TARGA_RAW'
+    image.save(filepath=filepath, save_copy=True)
+    image.file_format = old_format

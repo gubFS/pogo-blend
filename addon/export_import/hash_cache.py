@@ -121,7 +121,7 @@ class HashCache:
         bytes.store_32_buffer(ints)
 
     def _store_textures(self, obj, bytes: GubByteArray):
-        bytes.store_strings(pbu.get_textures(obj))
+        bytes.store_strings([texture["name"] for texture in pbu.get_textures(obj)])
 
     def _store_modifiers(self, obj, bytes: GubByteArray):
         bytes.store_32(len(obj.modifiers))

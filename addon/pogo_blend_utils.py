@@ -79,16 +79,23 @@ def get_unique_name(suggestion, required_suffix, max_length, used_names):
     return name
 
 
-def get_textures(obj) -> list[str]:
+def get_textures(obj) -> list[dict]:
     textures = []
     for mat_slot in obj.material_slots:
         if mat_slot.material and mat_slot.material.node_tree:
             for node in mat_slot.material.node_tree.nodes:
                 if node.type == 'TEX_IMAGE':
                     image = node.image
-                    full_path = bpy.path.abspath(image.filepath, library=image.library)
-                    image_path = os.path.normpath(full_path)
-                    textures.append(image_path)
+                    path = ""
+                    if image.filepath != "":
+                        full_path = bpy.path.abspath(image.filepath, library=image.library)
+                        image_path = os.path.normpath(full_path)
+                        if Path(image_path).exists():
+                            path = image_path
+                    name = image.name
+                    if path != "":
+                        name = os.path.splitext(os.path.basename(path))[0]
+                    textures.append({"image": image, "path": path, "name": name})
     return textures
 
 

@@ -1,5 +1,3 @@
-import os
-
 import bmesh
 import bpy
 from mathutils import Vector
@@ -50,11 +48,11 @@ class MDLExporter:
 
             textures = pbu.get_textures(obj)
             for i, texture in enumerate(textures):
-                if texture in self.skins:
-                    skin_dict[i] = self.skins[texture]
+                if texture["image"].name in self.skins:
+                    skin_dict[i] = self.skins[texture["image"]]
                 else:
-                    self.skins[texture] = len(self.skins)
-                    skin_dict[i] = self.skins[texture]
+                    self.skins[texture["image"]] = (texture, len(self.skins))
+                    skin_dict[i] = self.skins[texture["image"]]
             has_skin = len(textures) != 0
             self.has_skin = has_skin
 
@@ -93,7 +91,7 @@ class MDLExporter:
                 poly_idx = mesh.loop_triangle_polygons[i].value
                 skin_idx = 0
                 if has_skin and tri.material_index in skin_dict:
-                    skin_idx = skin_dict[tri.material_index]
+                    skin_idx = skin_dict[tri.material_index][1]
 
                 vert_indecies = []
                 uv_indecies = []
@@ -146,16 +144,15 @@ class MDLExporter:
 
         # Skin
         if self.has_skin:
-            for texture, skin_idx in self.skins.items():
-                texture = os.path.basename(texture)
-                if len(texture) > 31:
+            for texture, skin_idx in self.skins.values():
+                if len(texture["name"]) > 31:
                     print(f"WARNING: While MDL files can have skins with long filenames, it will crash when loaded in the A8 Engine if the filename is longer than 31 characters. Please use a shorter name than {texture}")
                 mdl.store_8(7)  # type?
                 mdl.store_8s(0, 3)  # unused
-                mdl.store_32(len(texture) + 1)
+                mdl.store_32(len(texture["name"]) + 1)
                 mdl.store_32(1)
                 mdl.store_string(f"Skin{skin_idx + 1}", 16)
-                mdl.store_string(texture)
+                mdl.store_string(texture["name"])
                 mdl.store_8(0)
 
         if self.has_skin:
