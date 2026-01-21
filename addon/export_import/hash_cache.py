@@ -156,3 +156,12 @@ class HashCache:
                     if modifier.use_edge_angle:
                         bytes.store_float(modifier.split_angle)
                     bytes.store_bool(modifier.use_edge_sharp)
+                case 'SUBSURF':
+                    bytes.store_string(modifier.subdivision_type)
+                    bytes.store_32(modifier.levels)
+                    bytes.store_bool(modifier.use_limit_surface)
+                    bytes.store_32(modifier.quality)
+                    bytes.store_string(modifier.uv_smooth)
+                    bytes.store_string(modifier.boundary_smooth)
+                    bytes.store_bool(modifier.use_creases)
+                    bytes.store_bool(modifier.use_custom_normals)
