@@ -20,11 +20,23 @@ class ContextError(Exception):
 class AltOperator(bpy.types.Operator):
     objs: list
 
+    def poll_obj(self, obj) -> bool:
+        return True
+
+    def execute_obj(self, obj):
+        pass
+
+    def execute(self, context):
+        for obj in self.objs:
+            self.execute_obj(obj)
+        return {'FINISHED'}
+
     def invoke(self, context, event):
         if event.alt:
             self.objs = context.selected_objects
         else:
             self.objs = [context.object]
+        self.objs = [obj for obj in self.objs if self.poll_obj(obj)]
         return self.execute(context)
 
 

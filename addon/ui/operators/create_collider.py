@@ -187,14 +187,18 @@ class CreatePogoCollider(pbu.AltOperator):
     bl_description = "Creates a collider around the selected objects, based on their sideview"
     bl_options = {'REGISTER', 'UNDO'}
 
+    def poll_obj(self, obj):
+        return obj.type == 'MESH'
+
     def execute(self, context):
-        self.objs = [obj for obj in self.objs if obj.type == 'MESH']
         if len(self.objs) == 0:
             self.report({'ERROR'}, "No mesh objects selected")
             return {'CANCELLED'}
+
         with CreateColliderContext() as ctx:
             for obj in self.objs:
                 ctx.create_collider(obj)
+
         return {'FINISHED'}
 
 

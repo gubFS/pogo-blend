@@ -9,12 +9,11 @@ class AddPogoEdgeSplit(pbu.AltOperator):
     bl_description = "Adds a Edge Split modifier that will make edges sharper in-game"
     bl_options = {'REGISTER', 'UNDO'}
 
-    def execute(self, context):
-        for obj in self.objs:
-            if obj.type == 'MESH':
-                self.add_edge_split(obj)
+    def poll_obj(self, obj):
+        return obj.type == 'MESH'
 
-        return {'FINISHED'}
+    def execute_obj(self, obj):
+        self.add_edge_split(obj)
 
     @classmethod
     def add_edge_split(cls, obj):
@@ -28,12 +27,11 @@ class AddPogoBevel(pbu.AltOperator):
     bl_description = "Adds a Bevel modifier that will make sharp edges appears softer in-game"
     bl_options = {'REGISTER', 'UNDO'}
 
-    def execute(self, context):
-        for obj in self.objs:
-            if obj.type == 'MESH':
-                self.add_bevel(obj)
+    def poll_obj(self, obj):
+        return obj.type == 'MESH'
 
-        return {'FINISHED'}
+    def execute_obj(self, obj):
+        self.add_bevel(obj)
 
     @classmethod
     def add_bevel(cls, obj):
@@ -49,13 +47,12 @@ class AddPogoBevelEdgeSplit(pbu.AltOperator):
     bl_description = "Adds a Bevel and Edge Split modifier that will make soft edges in-game"
     bl_options = {'REGISTER', 'UNDO'}
 
-    def execute(self, context):
-        for obj in self.objs:
-            if obj.type == 'MESH':
-                AddPogoBevel.add_bevel(obj)
-                AddPogoEdgeSplit.add_edge_split(obj)
+    def poll_obj(self, obj):
+        return obj.type == 'MESH'
 
-        return {'FINISHED'}
+    def execute_obj(self, obj):
+        AddPogoBevel.add_bevel(obj)
+        AddPogoEdgeSplit.add_edge_split(obj)
 
 
 def register():

@@ -8,11 +8,11 @@ class AddPogoPathData(pbu.AltOperator):
     bl_label = "Add Pogo Data"
     bl_options = {'REGISTER', 'UNDO'}
 
-    def execute(self, context):
-        for obj in self.objs:
-            if obj.type == 'CURVE':
-                obj.pogo_path
-        return {'FINISHED'}
+    def poll_obj(self, obj):
+        return obj.type == 'CURVE'
+
+    def execute_obj(self, obj):
+        obj.pogo_path
 
 
 class RemovePogoPathData(pbu.AltOperator):
@@ -20,11 +20,11 @@ class RemovePogoPathData(pbu.AltOperator):
     bl_label = "Remove Pogo Data"
     bl_options = {'REGISTER', 'UNDO'}
 
-    def execute(self, context):
-        for obj in self.objs:
-            if "pogo_path" in obj:
-                del obj["pogo_path"]
-        return {'FINISHED'}
+    def poll_obj(self, obj):
+        return "pogo_path" in obj
+
+    def execute_obj(self, obj):
+        del obj["pogo_path"]
 
 
 class AddPogoEntityData(pbu.AltOperator):
@@ -32,11 +32,11 @@ class AddPogoEntityData(pbu.AltOperator):
     bl_label = "Add Pogo Data"
     bl_options = {'REGISTER', 'UNDO'}
 
-    def execute(self, context):
-        for obj in self.objs:
-            if obj.type == 'MESH':
-                obj.pogo_entity
-        return {'FINISHED'}
+    def poll_obj(self, obj):
+        return obj.type == 'MESH'
+
+    def execute_obj(self, obj):
+        obj.pogo_entity
 
 
 class RemovePogoEntityData(pbu.AltOperator):
@@ -44,11 +44,11 @@ class RemovePogoEntityData(pbu.AltOperator):
     bl_label = "Remove Pogo Data"
     bl_options = {'REGISTER', 'UNDO'}
 
-    def execute(self, context):
-        for obj in self.objs:
-            if "pogo_entity" in obj:
-                del obj["pogo_entity"]
-        return {'FINISHED'}
+    def poll_obj(self, obj):
+        return "pogo_entity" in obj
+
+    def execute_obj(self, obj):
+        del obj["pogo_entity"]
 
 
 class PogoObjectPanel(bpy.types.Panel):
