@@ -3,22 +3,27 @@ mushroomFullObj_act:
   name: Mushroom
   description: Makes the entity bounce like a mushroom
 bgObject_act:
-  name: Parralax
+  name: Parallax
   description: Moves the entity based on the players position. Normally used to move background entities
   flags:
     flag_6:
       name: Stay on bottom
+      description: Fixes the entity to the bottom of the screen
     flag_7:
       name: Fixed X-axis
+      description: Fixes the entity to it's X-axis
     flag_8:
       name: Fixed Z-axis
+      description: Fixes the entity to it's Z-axis
   skills:
     skill_1:
       name: X-axis factor
       default: 1.0
+      description: How much the entity should parallax on the X-axis
     skill_2:
       name: Z-axis factor
       default: 1.0
+      description: How much the entity should parallax on the Y-axis
     skill_3:
       name: greyScale
       hidden: true
@@ -31,8 +36,10 @@ POI_act:
   flags:
     flag_6:
       name: Scary
+      description: Make the Pogo Dude make a scared face when looking at the POI
     flag_7:
-      name: Mega
+      name: Mega Eyes
+      description: Make the Pogo Dude make a face with large eyes when looking at the POI. Takes priority over 'Scary'
   skills:
     skill_1:
       name: vecsk41
@@ -62,24 +69,29 @@ coconutSlippery:
   description: Knocks the player over on contact. White particles
 boostjuice_act:
   name: Boost Juice
-  description: Gives the player a boost on contact
+  description: Gives the player a boost when jumping off this entity
 
 map3Wheel_act:
   name: Wheel
-  description: Spins the entity around it's center
+  description: Spins the entity around it's origin
   flags:
     flag_3:
       name: Continuous Rotation
+      description: Rotate the entity continously without being affected by the player
     flag_4:
       name: Sine Rotation
+      description: Rotate the back and forth based on a sine wave without being affected by the player. Takes priority over 'Continous Rotation'
   skills:
     skill_1:
       name: Rotate Speed
+      description: How fast the entity should spin
       default: 1.5
     skill_2:
       name: Sine Base
+      description: The base of the sine wave. Aka the offset
     skill_3:
       name: Sine Amount
+      description: How much the sine wave rotation should rotate (in degrees)
       default: 45.0
 
 moveSine_act:
@@ -88,30 +100,41 @@ moveSine_act:
   flags:
     flag_3:
       name: Y-axis changes brightness
+      description: If movement on the Y-axis should change the brightness of the object
   skills:
     skill_1:
       name: X-axis distance
+      description: How much the entity should be moved on the X-axis
     skill_2:
       name: Z-axis distance
+      description: How much the entity should be moved on the Z-axis
     skill_3:
       name: X-axis speed
+      description: How fast the entity should be moved on the X-axis
       default: 5.0
     skill_4:
       name: Z-axis speed
+      description: How fast the entity should be moved on the Z-axis
       default: 5.0
     skill_5:
-      name: X-axis offest
+      name: X-axis offset
+      description: How much the movement on the X-axis should be offset
     skill_6:
       name: Z-axis offset
+      description: How much the movement on the Z-axis should be offset
     skill_7:
       name: Y-axis distance
+      description: How much the entity should be moved on the Y-axis
     skill_8:
       name: Y-axis speed
+      description: How fast the entity should be moved on the Y-axis
       default: 5.0
     skill_9:
       name: Y-axis offset
+      description: How much the movement on the Y-axis should be offset
     skill_11:
-      name: Y-axis ambient factor
+      name: Y-axis brightness factor
+      description: How much the movement on the Y-axis should affect the brightness. Negative values reverses the effect
       default: 0.25
 moveLoop_act:
   name: Move Loop
@@ -119,13 +142,17 @@ moveLoop_act:
   skills:
     skill_1:
       name: X-axis distance
+      description: How much the entity should be moved on the X-axis
     skill_2:
       name: Z-axis distance
+      description: How much the entity should be moved on the Z-axis
     skill_3:
       name: Speed
+      description: The speed of the movement
       default: 5.0
     skill_5:
       name: Offset
+      description: The offset of the movement
 
 toggleBlock_act:
   name: Toggle Block
@@ -133,19 +160,25 @@ toggleBlock_act:
   flags:
     flag_3:
       name: Toggle only on boost
+      description: If the entity should only be toggled on boost, or on any jump
     flag_4:
       name: Group 2
+      description: If the entity is part of group 1 or 2. Changes which "cycle" it is on
     flag_5:
       name: Turn invisible
+      description: If the entity should turn invisible when it is toggled off
   skills:
     skill_1:
       name: Red/Blue tint
+      description: How much the entity should be tinted either red or blue. Entities in group 1 will be tinted red, and group 2 will be tinted blue
       default: 0.0
     skill_2:
       name: Dither amount
+      description: How many dithers the entity should have. Only works with the 'Toggle Block' material
       default: 1.0
     skill_3:
       name: Dither factor
+      description: How much the entity should be dithered. In a range of 0-1, a value of 0.5 gives half dithered look, lower values the dither is the parts where the entity is omitted, for higher values the dither is the parts where the entity is shown. Only works with the 'Toggle Block' material
       default: 0.65
 toggleSine_act:
   name: Toggle Sine
@@ -153,16 +186,21 @@ toggleSine_act:
   flags:
     flag_3:
       name: Toggle background
+      description: If the entity should be put in the background when toggled off
     flag_5:
       name: Toggle invisible
+      description: If the entity should be invisible when toggled off
   skills:
     skill_1:
       name: Speed
+      description: How often the entity should be toggled
       default: 5.0
     skill_2:
       name: Offset
+      description: The offset of which the entity is toggled
     skill_3:
       name: Brightness shift
+      description: How much the brightness should be shifted when toggled off
       default: -35.0
 runStateToggle:
   name: Run State Toggle
@@ -170,29 +208,39 @@ runStateToggle:
   flags:
     flag_3:
       name: Show before run
+      description: If the entity should be shown before the run
     flag_4:
       name: Show during run
+      description: If the entity should be shown during the run
     flag_5:
       name: Show after run
+      description: If the entity should be shown after the run
     flag_6:
       name: Only collide if shown
+      description: If the entities colliders should only be enabled if it is shown
     flag_7:
       name: Fade in
+      description: Fades in the entity by scaling it up from 0
   skills:
     skill_1:
       name: Fade in speed
+      description: How fast the fade in should be
       default: 10.0
     skill_2:
       name: dofade_sk41
       hidden: true
     skill_3:
       name: Do fade alpha
+      description: Fades in using transparency if the value of this skills is not 0. Only works on materials that support transparency
     skill_4:
       name: Do smooth step
+      description: Uses smooth step instead of linear fading if the value of this skills is not 0
     skill_5:
       name: Do overshoot
+      description: Overshoots the fade in if the value of this skills is not 0. Does not work with smooth step
     skill_6:
       name: Overshoot factor
+      description: How much the fade in should overshoot.
       default: 1.35
 
 water_act:
@@ -201,7 +249,7 @@ water_act:
 
 skillset_act:
   name: Skill set
-  description: Used to pass skills as variables to shaders
+  description: Used to pass skills as variables to shaders. Not documented at all, so don't expect this to do anything in most cases
   skills:
     skill_1:
       name: vecsk41
@@ -212,7 +260,7 @@ skillset_act:
     skill_4:
       name: vecsk44
     skill_5:
-      name: Greyscale
+      name: vecsk45 (greyScale)
     skill_6:
       name: vecsk46
     skill_7:
@@ -222,13 +270,15 @@ skillset_act:
 
 mushroom_act:
   name: Mushroom Bones
-  description: Used for mushrooms. Only works if the entity has bones
+  description: Makes the player bounce on the object. Used for mushrooms. Only works if the entity has bones
   flags:
     flag_5:
       name: Light Bounce
+      description: Produces a lighter bounce
   skills:
     skill_1:
       name: Power
+      description: The power of the bounce. A value of 0 or lower gives default power. Any other value takes priority over the 'Light Bounce' flag. Only works if the 'Mushroom Power' mode is enabled
 
 customMapSetup_act:
   hidden: true

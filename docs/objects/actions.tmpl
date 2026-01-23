@@ -1,0 +1,24 @@
+.. csv-table::
+    :header: "Name", "Description"
+    :align: left
+
+    {% for key, item in data.items() if item is none or not item.get("hidden", False)%}
+      {% if item is none %} {% set item = {} %} {% endif %}
+        "{{ item.get('name', key) }}", "
+    {{ item.get('description', "").replace("\"", "\"\"") }}
+      {% for key, flag in item.get('flags', {}).items() if flag is none or not flag.get("hidden", False) %}
+        {% if flag is none %} {% set flag = {} %} {% endif %}
+          {% if loop.first %}
+    **Flags**
+          {% endif %}
+      - **{{ flag.get('name', key) }}**{% if "description" in flag %}: {{ flag["description"].replace("\"", "\"\"") }} {% endif %}
+      {%- endfor %}
+
+      {% for key, skill in item.get('skills', {}).items() if skill is none or not skill.get("hidden", False) %}
+        {% if skill is none %} {% set skill = {} %} {% endif %}
+        {% if loop.first %}
+    **Skills**
+        {% endif %}
+      - **{{ skill.get('name', key) }}**{% if "description" in skill %}: {{ skill["description"].replace("\"", "\"\"") }} {% endif %}
+      {%- endfor %} "
+    {%- endfor %}

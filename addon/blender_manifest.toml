@@ -4,13 +4,11 @@ id = "pogo_blend"
 version = "0.0.1"
 name = "PogoBlend"
 tagline = "An extension for creating Pogostuck Custom Maps using Blender"
-maintainer = "gub"
-# Supported types: "add-on", "theme"
+maintainer = "gubFS"
+copyright = ["2026 gubFS"]
 type = "add-on"
 
-# # Optional: tag list defined by Blender and server, see:
-# # https://docs.blender.org/manual/en/dev/advanced/extensions/tags.html
-# tags = ["Animation", "Sequencer"]
+# website = "https://extensions.blender.org/add-ons/my-example-package/"
 
 blender_version_min = "4.5.0"
 
@@ -29,8 +27,6 @@ wheels = [
   "./wheels/pyyaml-6.0.3-cp311-cp311-win_amd64.whl"
 ]
 
-# License conforming to https://spdx.org/licenses/ (use "SPDX: prefix)
-# https://docs.blender.org/manual/en/dev/advanced/extensions/licenses.html
 license = [
   "SPDX:GPL-3.0-or-later",
 ]

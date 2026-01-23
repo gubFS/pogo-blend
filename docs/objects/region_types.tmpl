@@ -1,0 +1,6 @@
+.. csv-table::
+    :header: "Name", "Description"
+    :align: left
+
+    {% for item in data.values() %}
+    {{item['name']}}, {{item['description']}}{% endfor %}

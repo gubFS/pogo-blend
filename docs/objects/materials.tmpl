@@ -1,0 +1,9 @@
+.. csv-table::
+    :header: "Name", "Description"
+    :align: left
+
+    {% for key, item in data.items() %}
+      {%- if not item.get("hidden", False) %}
+        "{{ item.get('name', key) if item is not none else key}}", "{{ (item.get('description', "") if item is not none).replace("\"", "\"\"") }}"
+      {%- endif %}
+    {%- endfor %}

@@ -13,7 +13,7 @@ appAGeoDefault_mat:
   albedo: Greyscale
 cmFruitTex_mat:
   name: Fruit Tex
-  description: Like 'Geometry' but... fruit?
+  description: Like 'Geometry' but... fruit? Works well with textured entities
   ambient: Brightness
   albedo: Greyscale
 fruitTex_mat:
@@ -31,7 +31,7 @@ cmUnlit:
   albedo: Transparency
 cmPixelated:
   name: Pixelated
-  description: Shows the texture with no modificaitons
+  description: Shows the texture with no modificaitons. Specifically texture filtering, so this material is good for showing pixel art
   albedo: Transparency
 characterSimple_mat:
   name: Character
@@ -68,19 +68,19 @@ toggleBlock_mat:
 
 slime_mat:
   name: Sap
-  description: Used for regular sap. Transparent flag should be set when using this material. Scrolls the texture
+  description: Used for regular sap. Scrolls the texture. Use the 'Slime Bubbles' texture to get the regular sap look
   transparent: true
 pinkSap_mat:
   name: Pink Sap
-  description: Used for the pink sap. Transparent flag should be set when using this material. Scrolls the texture
+  description: Used for the pink sap. Scrolls the texture. Use the 'Slime Bubbles' texture to get the regular pink sap look
   transparent: true
 map3GoldSlime_mat:
   name: Boost Juice
-  description: Used for boost juice. Looks like gold. Scrolls the texture
+  description: Used for boost juice. Looks like gold. Scrolls the texture. Use the 'Slime Bubbles' texture to get the regular boost juice look
 
 snowFG_mat:
   name: Falling
-  description: Scrolls the multiple of the texture downwards. Can be used to make snow fall or other particles
+  description: Scrolls multiple copies of the texture downwards. Can be used to make snow fall or other particles
 cmNormalmapping:
   name: Normal Mapping
   description: Uses the second texture on the entity as a normal map.
@@ -100,6 +100,7 @@ egg_mat:
   description: Looks like the egg
   ambient: Brightness
 map3Chain_mat:
+  hidden: true
   name: Chain
   description: Used for Map 3 chains. Glossy metal-like material
   ambient: Brightness

@@ -3,3 +3,6 @@
 build.sh
 /addon/pogo_blend_asset_library/pogostuck.blend
 /app_templates/**/*.zip
+*.blend1
+*.txt~
+/docs/_build
