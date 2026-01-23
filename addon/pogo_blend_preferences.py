@@ -1,4 +1,6 @@
+import os
 from pathlib import Path
+from string import ascii_uppercase
 
 import bpy
 
@@ -104,14 +106,43 @@ def get_preferences():
     return bpy.context.preferences.addons[__package__].preferences
 
 
+def _get_custom_maps_path() -> str:
+    roots = []
+    places_to_search = []
+    match os.name:
+        case 'posix':
+            roots.extend(["/"])
+            roots.extend(str(path) for path in Path("/").glob("home/*/Drives/*"))
+            roots.extend(str(path) for path in Path("/").glob("home/*/Storage/*"))
+            roots.extend(str(path) for path in Path("/").glob("mnt/*"))
+            places_to_search.extend(["home/*/.local/share/Steam", "home/*/Library/Application Support/Steam"])
+        case 'nt':
+            roots.extend(f"{letter}:\\" for letter in ascii_uppercase if Path(f"{letter}:\\").exists())
+            places_to_search.extend(["Program Files (x86)/Steam"])
+    places_to_search.extend(["Steam", "Games", "SteamLibrary"])
+
+    cmp = ""
+    for root in roots:
+        for path in places_to_search:
+            path = Path(root).joinpath(path)
+            if not path.exists():
+                continue
+            cmp = str(next(path.rglob("steamapps/common/Pogostuck/CustomMaps"), ""))
+            if cmp != "":
+                break
+    return cmp
+
+
 def register():
     bpy.utils.register_class(SelectCustomMapsDir)
     bpy.utils.register_class(PogoBlendPrefrences)
 
     cmp = get_preferences().custom_maps_path
     if cmp is None or cmp == "":
-        cmp = next(Path("/").rglob("steamapps/common/Pogostuck/CustomMaps"), "")
-    get_preferences().custom_maps_path = str(cmp)
+        try:
+            get_preferences().custom_maps_path = _get_custom_maps_path()
+        except Exception as e:
+            print(f"WARNING: Exception while searching for Custom Maps path: {e}")
 
 
 def unregister():
