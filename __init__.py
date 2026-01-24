@@ -70,6 +70,10 @@ to_register = [
 ]
 
 
+def install_app_template():
+    bpy.ops.preferences.app_template_install(filepath=str(Path(__file__).parent.joinpath("app_template.zip")))
+
+
 def register():
     for module in to_register:
         module.register()
@@ -83,6 +87,8 @@ def register():
         )
         al.import_method = 'APPEND_REUSE'
         al.use_relative_path = True
+
+    bpy.app.timers.register(install_app_template, first_interval=0.01)
 
 
 def unregister():
