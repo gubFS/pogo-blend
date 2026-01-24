@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import bpy
 
 from .. import pogo_blend_utils as pbu
@@ -51,6 +53,41 @@ class RemovePogoEntityData(pbu.AltOperator):
         del obj["pogo_entity"]
 
 
+class EditCustomMaterial(bpy.types.Operator):
+    bl_idname = "pogo_blend.edit_custom_material"
+    bl_label = "Edit Custom Material"
+    bl_description = "Opens the Custom Material shader code in a text editor"
+    bl_options = {'REGISTER'}
+
+    material_idx: bpy.props.IntProperty(default=-1)
+
+    def execute(self, context):
+        if self.material_idx < 0 or self.material_idx > 5:
+            return {'CANCELLED'}
+
+        filename = f"customMaterial{self.material_idx}.fx"
+
+        bpy.ops.wm.window_new()
+        context.area.ui_type = 'TEXT_EDITOR'
+        if filename not in bpy.data.texts:
+            filepath = Path(bpy.path.abspath(bpy.path.relpath(filename)))
+            if filepath.exists():
+                bpy.ops.text.open(filepath=str(filepath))
+            else:
+                bpy.ops.text.new()
+                context.space_data.text.name = filename
+                bpy.data.texts[filename].from_string(CUSTOM_MATERIAL_TEMPLATE)
+        text_obj = bpy.data.texts[filename]
+        context.space_data.text = text_obj
+        if not text_obj.is_dirty and text_obj.is_modified:
+            with open(text_obj.filepath, "r") as f:
+                text_obj.from_string(f.read())
+            bpy.ops.text.save()
+        bpy.ops.text.move(type='FILE_TOP')
+
+        return {'FINISHED'}
+
+
 class PogoObjectPanel(bpy.types.Panel):
     bl_label = "PogoBlend"
     bl_idname = "OBJECT_PT_object_pogo_blend"
@@ -100,7 +137,10 @@ class PogoObjectPanel(bpy.types.Panel):
         layout.prop(obj, "scale")
 
         if entity.material_override == "":
-            layout.prop(entity, "material")
+            row = layout.row()
+            row.prop(entity, "material")
+            if entity.material.startswith("customMaterial"):
+                row.operator("pogo_blend.edit_custom_material", text="", icon='GREASEPENCIL').material_idx = int(entity.material[-1])
         else:
             row = layout.row()
             row.alignment = 'LEFT'
@@ -277,6 +317,7 @@ def register():
     bpy.utils.register_class(RemovePogoEntityData)
     bpy.utils.register_class(AddPogoPathData)
     bpy.utils.register_class(RemovePogoPathData)
+    bpy.utils.register_class(EditCustomMaterial)
     bpy.utils.register_class(PogoObjectPanel)
     bpy.utils.register_class(PogoObjectPanelOverrides)
 
@@ -286,5 +327,94 @@ def unregister():
     bpy.utils.unregister_class(RemovePogoEntityData)
     bpy.utils.unregister_class(AddPogoPathData)
     bpy.utils.unregister_class(RemovePogoPathData)
+    bpy.utils.unregister_class(EditCustomMaterial)
     bpy.utils.unregister_class(PogoObjectPanel)
     bpy.utils.unregister_class(PogoObjectPanelOverrides)
+
+
+CUSTOM_MATERIAL_TEMPLATE = """
+// Custom Material example template
+
+const float4x4 matWorldViewProj;
+const float4x4 matWorld;
+const float4x4 matView;
+const float4 vecViewDir;
+const float4 vecViewPos;
+
+// skills that can be used with the 'Skill Set' action. They contain 4 skills each, in their x, y, z and w variables.
+const float4 vecSkill41;
+const float4 vecSkill45;
+
+// the time
+// vecTime.x is "time_step", which is how long a step of time is, aka your FPS
+// vecTime.w is "total_ticks", aka how long the game has been running
+const float4 vecTime;
+
+const float fAmbient; // ambient value between 0..1
+const float fAlbedo; // albedo value between 0..1
+
+// mesh textures
+texture entSkin1;
+texture entSkin2;
+texture entSkin3;
+texture entSkin4;
+
+sampler TextureMapSampler = sampler_state
+{
+    Texture = <entSkin1>;
+    AddressU  = Wrap;
+    AddressV  = Wrap;
+};
+
+// some utilities provided by Superku
+// float4 DoKuShadow(float4 InDepth);
+// float4 DoKuDepth(flaot4 InPos);
+// float4 DoKuDepthFromWorldPos(float4 worldPos)
+#include "shadowIncl.fx"
+
+// Vertex Shader
+void ExampleVS(
+in float4 InPos: POSITION,
+in float3 InNormal: NORMAL,
+in float2 InTex: TEXCOORD0,
+out float4 OutPos: POSITION,
+out float2 OutTex: TEXCOORD0,
+out float3 OutNormal: TEXCOORD1)
+{
+    float time = vecTime.w*0.25;
+    float3 modulation = sin(time + InPos.yzx * 0.175)*7;
+    InPos.xyz += InNormal * modulation;
+    InNormal.xyz += modulation*0.05;
+    OutPos = mul(InPos, matWorldViewProj);
+    OutNormal = (mul(InNormal, matWorld));
+    OutTex.xy = InTex;
+}
+
+// Pixel Shader
+float4 ExamplePS(
+in float2 InTex: TEXCOORD0,
+in float3 InNormal: TEXCOORD1): COLOR
+{
+    InNormal = normalize(InNormal);
+
+    float3 InSunDir = -normalize(float3(4.75,-8,3));
+    float Diffuse = 0.7 + 0.5*saturate(dot(InSunDir, InNormal));
+
+    float4 Color = tex2D(TextureMapSampler, InTex.xy*2);
+    Color.rg += InNormal.xy*0.3;
+    float4 final = Color*Diffuse + InNormal.z*0.2;
+
+    return final;
+}
+
+technique ExampleTechnique
+{
+    pass P0
+    {
+        zWriteEnable = true;
+        alphaBlendEnable = false;
+        VertexShader = compile vs_3_0 ExampleVS();
+        PixelShader  = compile ps_3_0 ExamplePS();
+    }
+}
+"""

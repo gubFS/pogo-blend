@@ -18,7 +18,7 @@ Entities have materials, actions, and flags.
 Materials
 ---------
 
-The material on an entity determines how it will look in-game. It currently has not effect on how it is displayed inside Blender. Some materials allows changing the brightness, and some other value (greyscale, transparency).
+The material on an entity determines how it will look in-game. It currently has not effect on how it is displayed inside Blender. Some materials allows changing the brightness (technically it's "ambient", how much sunlight the material should reflect), and some other value (greyscale, transparency).
 
 Below is an in-game image of the available materials, aswell as a list of their names and descriptions which is also available in the add-on by hovering your mouse over each material.
 
@@ -29,6 +29,21 @@ Below is an in-game image of the available materials, aswell as a list of their 
 
 .. datatemplate:yaml:: ../../addon/pogo_classes/materials.yaml
     :template: ../objects/materials.tmpl
+
+Custom Materials
+^^^^^^^^^^^^^^^^
+
+You can make Custom Materials using HLSL and ``.fx`` files. There is 5 diffeerent slots for Custom Materials. When an entity has a Custom Material applied, there will be a button that will open a text editor where you can edit the shader. The first time you do this the file will be filled in with a template that you can delete or build out from. If you would like to edit the shader with an external editor simply save the text block in Blender to an external file, or create a file called 'customMaterialX.fx' (X is the custom material slot) in the same folder as your Blender file.
+
+When you edit/add a Custom Material, you might need to restart Pogostuck so it can setup auto reloading of that material. When that is setup, you just need to export the map and the shader will be updated instantly, you won't even have to reload the map! Once you are done mapping and editing Custom Materials, you might also want to restart Pogostuck again, because otherwise other Custom Maps using Custom Materials will use the ones you've made instead of theirs.
+
+.. caution::
+
+  If you make a mistake in the shader, a default shader will be used instead.
+
+.. admonition:: Help Wanted
+
+   Currrently there is no deeper guide on how to write Custom Materials. If you have some knowledge about it, consider :doc:`contributing <../contribution>` a guide! There might also be some useful information on the `Gamestudio A8 Manual <http://manual.conitec.net/>`__ under the "MATERIAL" section, or have a look at ``appAGeoDefault.fx``, the 'Geometry' material, in the BaseMap.
 
 Actions
 -------

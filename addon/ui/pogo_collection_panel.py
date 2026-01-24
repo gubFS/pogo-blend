@@ -18,6 +18,7 @@ class EditMapDescription(bpy.types.Operator):
             bpy.ops.text.new()
             context.space_data.text.name = "levelDescription.txt"
         context.space_data.text = bpy.data.texts["levelDescription.txt"]
+        bpy.ops.text.move(type='FILE_TOP')
         return {'FINISHED'}
 
 

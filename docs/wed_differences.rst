@@ -19,8 +19,8 @@ If you've made Custom Maps before using WED, here is a list of things that might
   - Passable is hidden and will be on unless collision is on.
   - Transparent will always be on, but everything has a default transparency of 100%.
   - Metal is now called 'Kill'.
-  - Flag 7 is now called 'Bonk'.
-  - Flag 8 is now called 'Ice'.
+  - Flag 7 is now called 'Ice'.
+  - Flag 8 is now called 'Bonk'.
   - The way you would normally make background objects with the shadow and cast flags, are now just one flag, 'Background'. There is still a 'Shadow' flag though that can be used to create a glow shadow. See :ref:`flags`.
   - All the actions and materials have more saying names, i'm not going to list them here, but hopefully you should be able to make the connection.
 - You can easily pick two actions, instead of having to use execString12acts. Also actions only show relevant flags and skills. These flags and skills also have more saying names.

@@ -49,8 +49,8 @@ class PogoEntity(bpy.types.PropertyGroup):
     flag_local: bpy.props.BoolProperty()  # = 25,
     flag_bbox: bpy.props.BoolProperty()  # = 29,
 
-    ambient: bpy.props.FloatProperty(name="Brightness", description="The brightness of the entity between -100% and 100% (does not work on some materials)", min=-100.0, max=100.0)
-    albedo: bpy.props.FloatProperty(name="Albedo", description="General purpose percentage slider. The effect changes depending on other settings", default=100.0, min=0.0, max=100.0)
+    ambient: bpy.props.FloatProperty(name="Brightness", description="The brightness of the entity between -100% and 100% (does not work on some materials)", soft_min=-100.0, soft_max=100.0)
+    albedo: bpy.props.FloatProperty(name="Albedo", description="General purpose percentage slider. The effect changes depending on other settings", default=100.0, soft_min=0.0, soft_max=100.0)
 
     action_enums = [("ndef", "", "No action", 0)]
     action_enums.extend(pbu.get_enum_list("pogo_classes/actions.yaml", False))  # pbu.get_preferences().show_all_actions))

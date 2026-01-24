@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import bpy
@@ -27,7 +28,6 @@ from .ui.operators import (
 
 # Uncomment the following for quick reloading of addon. Only for use in development.
 # import importlib
-# import os
 # for root, dirs, files in os.walk(os.path.dirname(__file__)):
 #     root.replace("\\", "/")  # Windows >:(
 #     if "__pycache__" in root or ".git" in root:
@@ -86,6 +86,13 @@ def register():
 
 
 def unregister():
+    # delete any remaining real-time custom material files
+    if pbu.get_preferences().custom_maps_path != "":
+        for i in range(1, 6):
+            path = Path(pbu.get_preferences().custom_maps_path).parent.joinpath(f"customMaterial{i}.fx")
+            if path.exists():
+                os.remove(path)
+
     for module in to_register:
         module.unregister()
 

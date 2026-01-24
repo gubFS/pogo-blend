@@ -145,4 +145,30 @@ mat_ushanka:
   hidden: true
 viking_mat:
   hidden: true
+
+customMaterial1:
+  name: Custom Material 1
+  description: A Custom Material
+  ambient: Ambient
+  albedo: Albedo
+customMaterial2:
+  name: Custom Material 2
+  description: A Custom Material
+  ambient: Ambient
+  albedo: Albedo
+customMaterial3:
+  name: Custom Material 3
+  description: A Custom Material
+  ambient: Ambient
+  albedo: Albedo
+customMaterial4:
+  name: Custom Material 4
+  description: A Custom Material
+  ambient: Ambient
+  albedo: Albedo
+customMaterial5:
+  name: Custom Material 5
+  description: A Custom Material
+  ambient: Ambient
+  albedo: Albedo
 ...

@@ -5,7 +5,6 @@ Here's a list of some thing that I'd like to add to the add-on, if possible, but
 
 - Allow multiple split regions to trigger the same split.
 - Exporting bones on models.
-- Add Custom Material support.
 - Allow text to be entities.
 - Add a visual to see which path a thorn action is connected to.
 - Add a visual to show the bounds of a Pogostuck map size.

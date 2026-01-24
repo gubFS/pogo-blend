@@ -80,6 +80,7 @@ def build_custom_map(context, filepath, global_scale):
         static_files.add(str(abspath))
         used_files.add(abspath.name)
         used_names.add(abspath.name)
+    custom_materials = set()
 
     for obj in custom_map_collection.all_objects:
         if obj in [spawn, path_progress, start_line]:
@@ -104,6 +105,8 @@ def build_custom_map(context, filepath, global_scale):
                     used_files.add(obj.pogo_entity.filename_override)
                 if obj.pogo_entity.path is not None and not obj.pogo_entity.flag_auto_collision:
                     paths_to_add.append((entity, obj.pogo_entity.path))
+                if entity.material.startswith("customMaterial"):
+                    custom_materials.add(entity.material)
                 wmb_objects.append(entity)
             case 'EMPTY':
                 if "pogo_region" not in obj:
@@ -204,6 +207,29 @@ def build_custom_map(context, filepath, global_scale):
 
     for static_file in static_files:
         shutil.copy(static_file, Path(dirpath).joinpath(Path(static_file).name))
+
+    for custom_material in custom_materials:
+        filename = f"{custom_material}.fx"
+        content = ""
+        if filename in bpy.data.texts:
+            text_obj = bpy.data.texts[filename]
+            if not text_obj.is_dirty and text_obj.is_modified:
+                with open(text_obj.filepath, "r") as f:
+                    content = f.read()
+            else:
+                content = text_obj.as_string()
+        elif Path(bpy.path.abspath(bpy.path.relpath(filename))).exists():
+            with open(Path(bpy.path.abspath(bpy.path.relpath(filename))), "r") as f:
+                content = f.read()
+        else:
+            continue
+
+        filepath = Path(dirpath).joinpath(f"{custom_material}.fx")
+        with open(filepath, "wb") as f:
+            f.write(content.encode())
+        used_files.add(filename)
+        pogostuck_path = Path(pbu.get_preferences().custom_maps_path).parent.joinpath(filename)
+        shutil.copy(filepath, pogostuck_path)
 
     files_in_dictionary = set([file for file in os.listdir(dirpath) if os.path.isfile(os.path.join(dirpath, file))])
     unused_files = files_in_dictionary.difference(used_files)
