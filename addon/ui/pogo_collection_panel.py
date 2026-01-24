@@ -43,6 +43,17 @@ class PogoSplitList(bpy.types.UIList):
             layout.label(text="", icon_value=icon)
 
 
+class StaticFilesList(bpy.types.UIList):
+    bl_idname = "POGO_UL_pogo_blend_static_files_list"
+
+    def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
+        if self.layout_type in {'DEFAULT', 'COMPACT'}:
+            layout.label(text=item.filepath, translate=False, icon_value=icon)
+        elif self.layout_type == 'GRID':
+            layout.alignment = 'CENTER'
+            layout.label(text="", icon_value=icon)
+
+
 class PogoCollectionPanel(bpy.types.Panel):
     bl_label = "PogoBlend"
     bl_idname = "COLLECTION_PT_collection_pogo_blend"
@@ -114,11 +125,30 @@ class PogoCollectionPanel(bpy.types.Panel):
             col.prop(custom_map, "no_bonk")
             col.prop(custom_map, "mushroom_power")
 
+        static_files_panel_header, static_files_panel = layout.panel("static_files_panel")
+        static_files_panel_header.label(text="Static Files")
+        if static_files_panel:
+            static_files_panel.label(text="Any files added to this list will be copied to the Custom Map folder.")
+            row = static_files_panel.row()
+            row.template_list(
+                "POGO_UL_pogo_blend_static_files_list",
+                "",
+                context.collection.custom_map,
+                "static_files",
+                context.collection.custom_map,
+                "active_static_file_idx",
+            )
+
+            col = row.column(align=True)
+            col.operator("pogo_blend.static_file_add", icon='ADD', text="")
+            col.operator("pogo_blend.static_file_remove", icon='REMOVE', text="")
+
 
 def register():
     bpy.utils.register_class(EditMapDescription)
     bpy.utils.register_class(RefreshSplits)
     bpy.utils.register_class(PogoSplitList)
+    bpy.utils.register_class(StaticFilesList)
     bpy.utils.register_class(PogoCollectionPanel)
 
 
@@ -126,4 +156,5 @@ def unregister():
     bpy.utils.unregister_class(EditMapDescription)
     bpy.utils.unregister_class(RefreshSplits)
     bpy.utils.unregister_class(PogoSplitList)
+    bpy.utils.unregister_class(StaticFilesList)
     bpy.utils.unregister_class(PogoCollectionPanel)

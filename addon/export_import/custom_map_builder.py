@@ -1,4 +1,6 @@
 import os
+import shutil
+from pathlib import Path
 
 import bpy
 
@@ -40,7 +42,6 @@ def build_custom_map(context, filepath, global_scale):
 
     dirpath = os.path.dirname(filepath)
     cache = HashCache(os.path.join(dirpath, ".pogo_blend"))
-    used_names.clear()
 
     wmb_objects = [
         WMBInfo(),
@@ -66,6 +67,19 @@ def build_custom_map(context, filepath, global_scale):
             "workshopPreview.png",
         ]
     )
+    global used_names
+    used_names = set(file for file in used_files)
+    static_files = set()
+    for file in custom_map.static_files:
+        abspath = Path(bpy.path.abspath(file.filepath)).resolve()
+        if not abspath.exists():
+            continue
+        if abspath.name in used_names:
+            continue
+
+        static_files.add(str(abspath))
+        used_files.add(abspath.name)
+        used_names.add(abspath.name)
 
     for obj in custom_map_collection.all_objects:
         if obj in [spawn, path_progress, start_line]:
@@ -188,13 +202,15 @@ def build_custom_map(context, filepath, global_scale):
     for texture in textures.values():
         export_texture(dirpath, texture)
 
+    for static_file in static_files:
+        shutil.copy(static_file, Path(dirpath).joinpath(Path(static_file).name))
+
     files_in_dictionary = set([file for file in os.listdir(dirpath) if os.path.isfile(os.path.join(dirpath, file))])
     unused_files = files_in_dictionary.difference(used_files)
     for file in unused_files:
-        for extension in [".mdl", ".tga", ".png"]:
-            if not file.startswith("_") and file.endswith(extension):
-                fullpath = os.path.join(dirpath, file)
-                os.remove(fullpath)
+        if not file.startswith("_"):
+            fullpath = os.path.join(dirpath, file)
+            os.remove(fullpath)
 
     cache.keep(used_files)
     cache.write()

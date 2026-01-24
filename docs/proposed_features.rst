@@ -3,7 +3,6 @@ Propsed Features
 
 Here's a list of some thing that I'd like to add to the add-on, if possible, but haven't gotten to do yet. Please note that there is no guarentees that any of this will be added, or if some of them are even possible.
 
-- Add feature for importing static files into the map folder.
 - Allow multiple split regions to trigger the same split.
 - Exporting bones on models.
 - Add Custom Material support.

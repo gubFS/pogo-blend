@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import bpy
 
 from .. import pogo_blend_utils as pbu
@@ -25,6 +27,69 @@ class ActiveSplitMove(bpy.types.Operator):
             new_idx = max(current_idx - 1, 0)
         custom_map.splits.move(current_idx, new_idx)
         custom_map.active_split_idx = new_idx
+
+        return {'FINISHED'}
+
+
+class StaticFile(bpy.types.PropertyGroup):
+    filepath: bpy.props.StringProperty()
+
+
+class StaticFileAdd(bpy.types.Operator):
+    bl_idname = "pogo_blend.static_file_add"
+    bl_label = "Add Static File"
+    bl_description = "Adds the selected Static Files"
+
+    allowed_formats: list[str] = ["mdl", "tga", "png", "jpg", "jpeg", "txt", "blend", "fx"]
+
+    filepath: bpy.props.StringProperty(subtype='FILE_PATH')
+    files: bpy.props.CollectionProperty(type=bpy.types.OperatorFileListElement)
+
+    filter_glob: bpy.props.StringProperty(default=''.join(f"*.{format};" for format in allowed_formats), options={'HIDDEN'})
+
+    def execute(self, context):
+        custom_map = pbu.get_custom_map()
+        dirpath = Path(self.filepath).parent
+        current_statics = set(static.filepath for static in custom_map.static_files)
+
+        for file in self.files:
+            abs_path = Path(dirpath).joinpath(file.name).absolute()
+            if not Path(abs_path).exists():
+                continue
+            if file.name.split(".")[-1] not in self.allowed_formats:
+                continue
+
+            rel_path = bpy.path.relpath(str(abs_path))
+            if rel_path in current_statics:
+                continue
+
+            new_file = custom_map.static_files.add()
+            new_file.filepath = rel_path
+
+        return {'FINISHED'}
+
+    def invoke(self, context, event):
+        context.window_manager.fileselect_add(self)
+        return {'RUNNING_MODAL'}
+
+
+class StaticFileRemove(bpy.types.Operator):
+    bl_idname = "pogo_blend.static_file_remove"
+    bl_label = "Removes Static File"
+    bl_description = "Remove the active Static File"
+
+    @classmethod
+    def poll(cls, context):
+        custom_map = pbu.get_custom_map()
+        current_idx = custom_map.active_static_file_idx
+        return current_idx < len(custom_map.static_files) and current_idx >= 0
+
+    def execute(self, context):
+        custom_map = pbu.get_custom_map()
+        current_idx = custom_map.active_static_file_idx
+
+        if self.poll(context):
+            custom_map.static_files.remove(current_idx)
 
         return {'FINISHED'}
 
@@ -85,16 +150,25 @@ class PogoCustomMap(bpy.types.PropertyGroup):
     )
     ice: bpy.props.BoolProperty(name="Ice", description="Enable Ice mode")
 
+    static_files: bpy.props.CollectionProperty(type=StaticFile, name="Static Files")
+    active_static_file_idx: bpy.props.IntProperty(name="Active Static File")
+
 
 def register():
     bpy.utils.register_class(PogoSplit)
+    bpy.utils.register_class(StaticFile)
     bpy.utils.register_class(PogoCustomMap)
     bpy.utils.register_class(ActiveSplitMove)
+    bpy.utils.register_class(StaticFileAdd)
+    bpy.utils.register_class(StaticFileRemove)
     bpy.types.Collection.custom_map = bpy.props.PointerProperty(type=PogoCustomMap)
 
 
 def unregister():
     bpy.utils.unregister_class(PogoSplit)
+    bpy.utils.unregister_class(StaticFile)
     bpy.utils.unregister_class(PogoCustomMap)
     bpy.utils.unregister_class(ActiveSplitMove)
+    bpy.utils.unregister_class(StaticFileAdd)
+    bpy.utils.unregister_class(StaticFileRemove)
     del bpy.types.Collection.custom_map

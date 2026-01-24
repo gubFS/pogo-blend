@@ -25,7 +25,6 @@ class SelectCustomMapsDir(bpy.types.Operator):
 
     def invoke(self, context, event):
         context.window_manager.fileselect_add(self)
-        # Tells Blender to hang on for the slow user input
         return {'RUNNING_MODAL'}
 
 

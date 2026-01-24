@@ -44,3 +44,10 @@ No Boost disabled boosting on the entire map.
 No Bonk kills the player whenever they bonk on anything.
 
 **Mushroom Power** chooses whether or not mushrooms can have a custom power value. This is only relevant for entities that has the 'Mushroom Bones' action. I don't know why you would tick it off, but you can.
+
+.. _static_files:
+
+Static Files
+------------
+
+Here you can add a list of files you want to be added to the Custom Map folder. This could be if you have a .mdl or texture files that the add-on cannot generate, or maybe you want to add a txt file with a note or lore.
