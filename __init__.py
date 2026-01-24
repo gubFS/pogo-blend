@@ -3,11 +3,11 @@ from pathlib import Path
 
 import bpy
 
-from . import make_asset_library
 from . import pogo_blend_preferences as pbu
 from .export_import import custom_map_builder_operator
 from .export_import.mdl_exporter import mdl_exporter_operator
 from .export_import.mdl_importer import mdl_importer_operator
+from .pogo_blend_asset_library import generate_pogo_assets
 from .pogo_classes import pogo_custom_map, pogo_entity, pogo_path, pogo_region
 from .ui import (
     add_pogo_menu,
@@ -66,7 +66,7 @@ to_register = [
     create_collider,
     modifiers,
     presets,
-    make_asset_library,
+    generate_pogo_assets,
 ]
 
 

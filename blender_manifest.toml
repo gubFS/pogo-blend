@@ -33,3 +33,17 @@ license = [
 
 [permissions]
 files = "Export files to Custom Maps folder"
+
+[build]
+paths_exclude_pattern = [
+  "__pycache__/",
+  ".*",
+   "*.zip",
+  "docs/",
+  "app_template/",
+  "!app_template.zip",
+  "pogo_blend_asset_library/pogostuck.blend",
+  "pogo_blend_asset_library/*.blend1",
+  "README.md",
+  "export_import/mdl_exporter/MDL7Format.txt",
+]

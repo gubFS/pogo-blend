@@ -13,5 +13,5 @@ Regions are rectangular areas that have an effect on the player in Pogostuck. In
 
 A region has the different types as shown in this table:
 
-.. datatemplate:yaml:: ../../addon/pogo_classes/region_types.yaml
-    :template: ../objects/region_types.tmpl
+.. datatemplate:yaml:: ../../pogo_classes/region_types.yaml
+    :template: ./objects/region_types.tmpl

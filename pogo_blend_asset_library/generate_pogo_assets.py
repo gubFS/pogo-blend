@@ -2,8 +2,8 @@ from pathlib import Path
 
 import bpy
 
-from . import pogo_blend_utils as pbu
-from .export_import.mdl_importer.mdl_importer_operator import import_mdl
+from .. import pogo_blend_utils as pbu
+from ..export_import.mdl_importer.mdl_importer_operator import import_mdl
 
 config = {
     "models": [
@@ -286,7 +286,7 @@ def go_back(filepath: str):
     bpy.context.window.cursor_set('WAIT')
     if bpy.app.is_job_running('RENDER_PREVIEW'):
         return 0.1
-    asset_libary_dir = Path(__file__).parent.joinpath("pogo_blend_asset_library")
+    asset_libary_dir = Path(__file__).parent
     pogostuck = Path(asset_libary_dir).joinpath("pogostuck.blend")
     bpy.ops.wm.save_mainfile(filepath=str(pogostuck))
     bpy.context.window.cursor_set('DEFAULT')
@@ -304,7 +304,7 @@ class MakeAssetLibraryOperator(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context) -> bool:
-        asset_libary_dir = Path(__file__).parent.joinpath("pogo_blend_asset_library")
+        asset_libary_dir = Path(__file__).parent
         pogostuck = Path(asset_libary_dir).joinpath("pogostuck.blend")
         if pogostuck.exists():
             return False

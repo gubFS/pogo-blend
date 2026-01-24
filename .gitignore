@@ -1,8 +1,5 @@
 **/__pycache__/**
-/build
-build.sh
-/addon/pogo_blend_asset_library/pogostuck.blend
-/app_templates/**/*.zip
+/pogo_blend_asset_library/pogostuck.blend
 *.blend1
 *.txt~
 /docs/_build
