@@ -14,7 +14,7 @@ If you've made Custom Maps before using WED, here is a list of things that might
 
   - The albedo value, has changed name to 'Brightness', and will only be shown on materials that support it.
   - The ambient value, will only be shown on materials that support it, and will change name depending on what it does. This is either Greyscale or Transparency. It has a default value of 100 now.
-  - Unlit, which will be on unless you are using no material.
+  - Unlit, which will always be on, unless you are using no material.
   - Polygon is now called 'Collision'.
   - Passable is hidden and will be on unless collision is on.
   - Transparent will always be on, but everything has a default transparency of 100%.

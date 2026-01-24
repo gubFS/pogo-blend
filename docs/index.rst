@@ -4,7 +4,7 @@ PogoBlend Documentation
 Welcome to the PogoBlend documentation!
 PogoBlend is a Blender add-on that allows you to create `Pogostuck <https://store.steampowered.com/app/688130/Pogostuck_Rage_With_Your_Friends/>`__ Custom Maps using `Blender <https://www.blender.org/>`__.
 
-This documentation will have written and recorded guides and information on the add-on aswell as general Pogostuck Custom Map making. The guides here assume that you know the basics of Blender and will not teach you how to use Blender for its normal usecase.
+This documentation will have written and recorded guides and information on the add-on, aswell as general Pogostuck Custom Map making. The guides here assume that you know the basics of Blender and will not teach you how to use Blender for its normal usecase.
 
 .. tip::
 

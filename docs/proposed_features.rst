@@ -1,13 +1,14 @@
 Propsed Features
 ================
 
-Here's a list of some thing that I'd like to add to the add-on, if possible, but haven't gotten to do yet. Please note that there is no guarentees that any of this will be added, or if some of them are even possible.
+Here's a list of some things that I'd like to add to the add-on, if possible, but haven't gotten to do yet. Please note that there is no guarentees that any of this will be added, or if some of them are even possible.
 
 - Allow multiple split regions to trigger the same split.
 - Exporting bones on models.
-- Allow text to be entities.
+- Allow Text objects to be entities.
+- Allow Grease Pencils to be entities.
 - Add a visual to see which path a thorn action is connected to.
-- Add a visual to show the bounds of a Pogostuck map size.
+- Add a visual to show the bounds of the Pogostuck map size.
 - Converting a curve to a smooth sap-like surface.
 - Add a Pogo Dude visualizer to Blender, to better convey scale while building the map.
 - Importing .wmp files.

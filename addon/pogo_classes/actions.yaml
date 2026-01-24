@@ -178,7 +178,7 @@ toggleBlock_act:
       default: 1.0
     skill_3:
       name: Dither factor
-      description: How much the entity should be dithered. In a range of 0-1, a value of 0.5 gives half dithered look, lower values the dither is the parts where the entity is omitted, for higher values the dither is the parts where the entity is shown. Only works with the 'Toggle Block' material
+      description: How much the entity should be dithered. In a range of 0-1, a value of 0.5 gives half dithered look, for lower values the dither is the parts where the entity is omitted, for higher values the dither is the parts where the entity is shown. Only works with the 'Toggle Block' material
       default: 0.65
 toggleSine_act:
   name: Toggle Sine

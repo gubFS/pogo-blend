@@ -8,16 +8,16 @@ Map Information
 
 Here you can select the name of your Custom Map.
 
-You can edit the map description which will be displayed in-game and on the Steam Workshop page for your map when you release it.
+You can edit the map description which will be displayed in-game and on the Steam Workshop page for your map when you :doc:`release <releasing_a_map>` it.
 
-You can select a map image which will be displayed in-game and on the Steam Workshop page for your map when you release it. It is recommended that image file should be below 150KB. The in-game resolution is 490x200 pixels, but you can choose up to 1024 pixels in any dimension in case you want higher resolution in the Steam Workshop.
+You can select a map image which will be displayed in-game and on the Steam Workshop page for your map when you release it. It is recommended that the image file should be below 150KB. The in-game resolution is 490x200 pixels, but you can choose up to 1024 pixels in any dimension in case you want a higher resolution in the Steam Workshop.
 
 Required Objects
 ----------------
 
-There are some required objects that you need inorder to get a working map.
+There are some required objects that you need in order to get a working map.
 
-The spawn location chooses where the player will spawn. This is just an empty object and only the location will be used.
+The Spawn Location chooses where the player will spawn. This is just an empty object and only the location will be used.
 
 The Progress Path is the path of progress in your map. This path will determine the percentage completion in the game.
 
@@ -37,11 +37,11 @@ Modes
 
 You can select which modes should be active on your map.
 
-Double Jump, Puzzle, and Ice is like the ones from the main game.
+**Double Jump**, **Puzzle**, and **Ice** is like the ones from the main game.
 
-No Boost disabled boosting on the entire map. 
+**No Boost** disables boosting on the entire map. 
 
-No Bonk kills the player whenever they bonk on anything.
+**No Bonk** kills the player whenever they bonk on anything.
 
 **Mushroom Power** chooses whether or not mushrooms can have a custom power value. This is only relevant for entities that has the 'Mushroom Bones' action. I don't know why you would tick it off, but you can.
 
@@ -50,4 +50,4 @@ No Bonk kills the player whenever they bonk on anything.
 Static Files
 ------------
 
-Here you can add a list of files you want to be added to the Custom Map folder. This could be if you have a .mdl or texture files that the add-on cannot generate, or maybe you want to add a txt file with a note or lore.
+Here you can add a list of files you want to be added to the Custom Map folder. This could be if you have .mdl or texture files that the add-on cannot generate, or maybe you want to add a txt file with a note or lore.

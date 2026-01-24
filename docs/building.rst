@@ -1,7 +1,7 @@
 "Building" Custom Maps
 ======================
 
-Whenever the Blender file needs to be converted to a Pogostuck Custom Map it will be "built". Building the Map includes writing all the objects to a shared WMB-file, exporting model files, generating collisions, and moving/converting image files. 
+Whenever the Blender file needs to be converted to a Pogostuck Custom Map it will be "built". Building the Map includes writing all the objects to a shared WMB-file, exporting model files, generating collisions, and moving/converting image files.
 
 Only objects in a collection called 'CustomMap' will be built.
 
