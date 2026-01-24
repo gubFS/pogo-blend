@@ -20,11 +20,12 @@ def draw_item(self, context):
     layout.menu(AddPogoMenu.bl_idname)
 
 
+classes = (AddPogoMenu,)
+
+
 def register():
-    bpy.utils.register_class(AddPogoMenu)
     bpy.types.VIEW3D_MT_add.append(draw_item)
 
 
 def unregister():
-    bpy.utils.unregister_class(AddPogoMenu)
     bpy.types.VIEW3D_MT_add.remove(draw_item)

@@ -40,8 +40,8 @@ def build_custom_map(context, filepath, global_scale):
     if start_line is None:
         raise pbu.ContextError("You MUST choose a starting line on the 'CustomMap' collection")
 
-    dirpath = os.path.dirname(filepath)
-    cache = HashCache(os.path.join(dirpath, ".pogo_blend"))
+    dirpath = Path(filepath).parent
+    cache = HashCache(Path(dirpath, ".pogo_blend"))
 
     wmb_objects = [
         WMBInfo(),
@@ -135,12 +135,12 @@ def build_custom_map(context, filepath, global_scale):
 
         for entity in entities:
             entity.filename = filename
-        mdlpath = os.path.join(dirpath, filename)
+        mdlpath = Path(dirpath, filename)
 
         for texture in pbu.get_textures(obj):
             if texture["image"] not in textures:
                 new_texture = pbu.get_unique_name(
-                    texture["name"].replace(".", "_"),
+                    Path(texture["name"]).stem.replace(".", "_"),
                     ".tga",
                     31,
                     used_names,
@@ -171,7 +171,7 @@ def build_custom_map(context, filepath, global_scale):
                 print("WARNING: could not find a unique filename")
                 continue
             used_files.add(filename)
-            mdlpath = os.path.join(dirpath, filename)
+            mdlpath = Path(dirpath, filename)
 
             if cache.update_collider(filename, obj):
                 collider = ctx.create_collider(obj, 64)
@@ -196,6 +196,8 @@ def build_custom_map(context, filepath, global_scale):
     for entity, path in paths_to_add:
         entity.path = paths.index(path) + 1
 
+    # exporting
+
     export_splits(dirpath, custom_map, splits_to_add)
 
     WMBExporter(filepath, wmb_objects).export()
@@ -206,7 +208,7 @@ def build_custom_map(context, filepath, global_scale):
         export_texture(dirpath, texture)
 
     for static_file in static_files:
-        shutil.copy(static_file, Path(dirpath).joinpath(Path(static_file).name))
+        shutil.copy(static_file, Path(dirpath, Path(static_file).name))
 
     for custom_material in custom_materials:
         filename = f"{custom_material}.fx"
@@ -224,18 +226,20 @@ def build_custom_map(context, filepath, global_scale):
         else:
             continue
 
-        filepath = Path(dirpath).joinpath(f"{custom_material}.fx")
+        filepath = Path(dirpath, f"{custom_material}.fx")
         with open(filepath, "wb") as f:
             f.write(content.encode())
         used_files.add(filename)
         pogostuck_path = Path(pbu.get_preferences().custom_maps_path).parent.joinpath(filename)
         shutil.copy(filepath, pogostuck_path)
 
-    files_in_dictionary = set([file for file in os.listdir(dirpath) if os.path.isfile(os.path.join(dirpath, file))])
+    # cleanup
+
+    files_in_dictionary = set([file for file in os.listdir(dirpath) if Path(dirpath, file).is_file()])
     unused_files = files_in_dictionary.difference(used_files)
     for file in unused_files:
         if not file.startswith("_"):
-            fullpath = os.path.join(dirpath, file)
+            fullpath = Path(dirpath, file)
             os.remove(fullpath)
 
     cache.keep(used_files)
@@ -243,7 +247,7 @@ def build_custom_map(context, filepath, global_scale):
 
 
 def export_splits(dirpath, custom_map, splits):
-    filepath = os.path.join(dirpath, "splitSetup.txt")
+    filepath = Path(dirpath, "splitSetup.txt")
     bytes = GubByteArray()
     for i, split in enumerate(custom_map.splits.values()):
         split = split.split_region
@@ -257,7 +261,7 @@ def export_map_description(dirpath):
     text = ""
     if "levelDescription.txt" in bpy.data.texts:
         text = bpy.data.texts["levelDescription.txt"].as_string()
-    filepath = os.path.join(dirpath, "levelDescription.txt")
+    filepath = Path(dirpath, "levelDescription.txt")
     with open(filepath, "wb") as f:
         f.write(0xFF.to_bytes())  # utf-16-le header aka 'BOM'
         f.write(0xFE.to_bytes())
@@ -271,14 +275,14 @@ def export_map_image(dirpath, custom_map):
 
     old_format = image.file_format
     image.file_format = 'PNG'
-    image.save(filepath=os.path.join(dirpath, "workshopPreview.png"), save_copy=True)
+    image.save(filepath=str(Path(dirpath, "workshopPreview.png")), save_copy=True)
     image.file_format = old_format
 
 
 def export_texture(dirpath: str, texture: dict):
     image = texture["image"]
     image.reload()
-    filepath = os.path.join(dirpath, texture["name"])
+    filepath = str(Path(dirpath, texture["name"]))
 
     old_format = image.file_format
     image.file_format = 'TARGA_RAW'

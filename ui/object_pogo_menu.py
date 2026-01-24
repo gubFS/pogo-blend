@@ -45,15 +45,16 @@ def draw_item(self, context):
     layout.menu(ObjectPogoMenu.bl_idname)
 
 
+classes = (
+    ObjectPogoMenu,
+    ModifiersMenu,
+    PresetsMenu,
+)
+
+
 def register():
-    bpy.utils.register_class(ObjectPogoMenu)
-    bpy.utils.register_class(ModifiersMenu)
-    bpy.utils.register_class(PresetsMenu)
     bpy.types.VIEW3D_MT_object.append(draw_item)
 
 
 def unregister():
-    bpy.utils.unregister_class(ObjectPogoMenu)
-    bpy.utils.unregister_class(ModifiersMenu)
-    bpy.utils.unregister_class(PresetsMenu)
     bpy.types.VIEW3D_MT_object.remove(draw_item)

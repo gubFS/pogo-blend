@@ -25,9 +25,4 @@ class AddBlock(bpy.types.Operator):
         return {'FINISHED'}
 
 
-def register():
-    bpy.utils.register_class(AddBlock)
-
-
-def unregister():
-    bpy.utils.unregister_class(AddBlock)
+classes = (AddBlock,)

@@ -145,17 +145,10 @@ class PogoCollectionPanel(bpy.types.Panel):
             col.operator("pogo_blend.static_file_remove", icon='REMOVE', text="")
 
 
-def register():
-    bpy.utils.register_class(EditMapDescription)
-    bpy.utils.register_class(RefreshSplits)
-    bpy.utils.register_class(PogoSplitList)
-    bpy.utils.register_class(StaticFilesList)
-    bpy.utils.register_class(PogoCollectionPanel)
-
-
-def unregister():
-    bpy.utils.unregister_class(EditMapDescription)
-    bpy.utils.unregister_class(RefreshSplits)
-    bpy.utils.unregister_class(PogoSplitList)
-    bpy.utils.unregister_class(StaticFilesList)
-    bpy.utils.unregister_class(PogoCollectionPanel)
+classes = (
+    EditMapDescription,
+    RefreshSplits,
+    PogoSplitList,
+    StaticFilesList,
+    PogoCollectionPanel,
+)

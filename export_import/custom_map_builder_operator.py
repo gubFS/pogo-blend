@@ -1,41 +1,13 @@
 import math
 import os
 import time
+from pathlib import Path
 
 import bpy
 from bpy.app.handlers import persistent
-from bpy_extras.io_utils import ExportHelper
 
 from .. import pogo_blend_utils as pbu
 from .custom_map_builder import build_custom_map
-
-
-class CustomMapBuilderFile(bpy.types.Operator, ExportHelper):
-    bl_idname = "pogo_blend.build_custom_map_file"
-    bl_label = "Export Project to a Pogostuck Map"
-    bl_description = "Exports this project to a Pogostuck Custom Map"
-
-    filename_ext = ".wmb"
-
-    filter_glob: bpy.props.StringProperty(
-        default="*.wmb",
-        options={"HIDDEN"},
-        maxlen=255,  # Max internal buffer length, longer would be clamped.
-    )
-
-    global_scale: bpy.props.FloatProperty(
-        name="Scale Multiplier",
-        description="Use this to scale on export",
-        min=0.0,
-        max=1000.0,
-    )
-
-    def execute(self, context):
-        return bpy.ops.pogo_blend.build_custom_map(filepath=self.filepath, global_scale=self.global_scale)
-
-    def invoke(self, context, event):
-        self.global_scale = pbu.get_preferences().map_scale
-        return ExportHelper.invoke(self, context, event)
 
 
 class CustomMapBuilder(bpy.types.Operator):
@@ -84,7 +56,7 @@ class CustomMapBuilder(bpy.types.Operator):
             )
             bpy.ops.pogo_blend.select_custom_maps_dir("INVOKE_DEFAULT")
             return {'CANCELLED'}
-        if not os.path.exists(self.filepath):
+        if not Path(self.filepath).exists():
             self.report(
                 {'ERROR'},
                 "The Custom Maps folder does not exist. Select a valid folder in the preferences for the PogoBlend addon",
@@ -94,10 +66,10 @@ class CustomMapBuilder(bpy.types.Operator):
             self.report({'ERROR'}, "The map name cannot be empty")
             return {'CANCELLED'}
 
-        self.filepath = os.path.join(self.filepath, pbu.get_custom_map().map_name)
-        if not os.path.exists(self.filepath):
+        self.filepath = str(Path(self.filepath, pbu.get_custom_map().map_name))
+        if not Path(self.filepath).exists():
             os.mkdir(self.filepath)
-            with open(os.path.join(self.filepath, ".pogo_blend"), "w"):
+            with open(Path(self.filepath, ".pogo_blend"), "w"):
                 pass
         elif ".pogo_blend" not in os.listdir(self.filepath):
             self.report(
@@ -105,7 +77,7 @@ class CustomMapBuilder(bpy.types.Operator):
                 f"The '{pbu.get_custom_map().map_name}' folder is not a PogoBlend folder. PogoBlend will delete files in the folder so either enter a new map name, safely delete the existing folder, or add a file named '.pogo_blend' in the folder.",
             )
             return {'CANCELLED'}
-        self.filepath = os.path.join(self.filepath, "customMap.wmb")
+        self.filepath = str(Path(self.filepath, "customMap.wmb"))
         self.global_scale = pbu.get_preferences().map_scale
         return self.execute(context)
 
@@ -126,9 +98,10 @@ def menu_func(self, context):
     self.layout.operator(CustomMapBuilder.bl_idname, text="Build Pogostuck Custom Map")
 
 
+classes = (CustomMapBuilder,)
+
+
 def register():
-    bpy.utils.register_class(CustomMapBuilder)
-    bpy.utils.register_class(CustomMapBuilderFile)
     bpy.types.TOPBAR_MT_file_export.append(menu_func)
 
     if pbu.get_preferences().build_on_save:
@@ -143,8 +116,6 @@ def register():
 
 
 def unregister():
-    bpy.utils.unregister_class(CustomMapBuilder)
-    bpy.utils.unregister_class(CustomMapBuilderFile)
     bpy.types.TOPBAR_MT_file_export.remove(menu_func)
 
     if post_save in bpy.app.handlers.save_post:

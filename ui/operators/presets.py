@@ -122,17 +122,10 @@ class ApplyBackgroundPreset(pbu.AltOperator):
         redraw_properties()
 
 
-def register():
-    bpy.utils.register_class(ApplyIcePreset)
-    bpy.utils.register_class(ApplySapPreset)
-    bpy.utils.register_class(ApplyPinkSapPreset)
-    bpy.utils.register_class(ApplyBoostJuicePreset)
-    bpy.utils.register_class(ApplyBackgroundPreset)
-
-
-def unregister():
-    bpy.utils.unregister_class(ApplyIcePreset)
-    bpy.utils.unregister_class(ApplySapPreset)
-    bpy.utils.unregister_class(ApplyPinkSapPreset)
-    bpy.utils.unregister_class(ApplyBoostJuicePreset)
-    bpy.utils.unregister_class(ApplyBackgroundPreset)
+classes = (
+    ApplyIcePreset,
+    ApplySapPreset,
+    ApplyPinkSapPreset,
+    ApplyBoostJuicePreset,
+    ApplyBackgroundPreset,
+)

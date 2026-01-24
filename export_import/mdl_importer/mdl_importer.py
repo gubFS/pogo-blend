@@ -1,4 +1,3 @@
-import os
 import struct
 from io import BufferedReader
 from pathlib import Path
@@ -114,8 +113,8 @@ def import_mdl(context, filepath, scale):
         if skin == "":
             bpy.ops.object.material_slot_add()
             continue
-        imagepath = os.path.join(os.path.dirname(filepath), skin)
-        if not os.path.exists(imagepath):
+        imagepath = str(Path(filepath).parent.joinpath(skin))
+        if not Path(imagepath).exists():
             print(f"Could not find {imagepath}!")
             continue
         mat = bpy.data.materials.new(name=Path(skin).stem)
@@ -194,9 +193,7 @@ class MDLImporterOperator(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
         try:
             import_mdl(context, self.filepath, self.global_scale)
         except BaseException as e:
-            error_type = {'ERROR'}
-            self.report(error_type, str(e))
-            raise e  # NOTE: Only for debugging purposes
+            self.report({'ERROR'}, str(e))
             return {'CANCELLED'}
         else:
             return {'FINISHED'}
@@ -207,11 +204,12 @@ def menu_func(self, context):
         self.layout.operator(MDLImporterOperator.bl_idname, text="MDL (.mdl)")
 
 
+classes = (MDLImporterOperator,)
+
+
 def register():
-    bpy.utils.register_class(MDLImporterOperator)
     bpy.types.TOPBAR_MT_file_import.append(menu_func)
 
 
 def unregister():
-    bpy.utils.unregister_class(MDLImporterOperator)
     bpy.types.TOPBAR_MT_file_import.remove(menu_func)

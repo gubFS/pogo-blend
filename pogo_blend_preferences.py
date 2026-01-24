@@ -28,7 +28,7 @@ class SelectCustomMapsDir(bpy.types.Operator):
         return {'RUNNING_MODAL'}
 
 
-class PogoBlendPrefrences(bpy.types.AddonPreferences):
+class PogoBlendPreferences(bpy.types.AddonPreferences):
     bl_idname = __package__
 
     mdl_importer: bpy.props.BoolProperty(
@@ -67,18 +67,6 @@ class PogoBlendPrefrences(bpy.types.AddonPreferences):
         description="Builds the Custom Map whenever the Blender file is saved. Reload Blender to apply",
     )
 
-    # show_all_materials: bpy.props.BoolProperty(
-    #     default=False,
-    #     name="Show all materials",
-    #     description="Some irrelevant materials are hidden, choose to show them here",
-    # )
-    #
-    # show_all_actions: bpy.props.BoolProperty(
-    #     default=False,
-    #     name="Show all actions",
-    #     description="Some irrelevant actions are hidden, choose to show them here",
-    # )
-
     def draw(self, context):
         layout = self.layout
 
@@ -97,8 +85,6 @@ class PogoBlendPrefrences(bpy.types.AddonPreferences):
         layout.prop(self, "show_overrides")
         if bpy.ops.pogo_blend.make_asset_library.poll():
             layout.operator("pogo_blend.make_asset_library")
-        # layout.prop(self, "show_all_materials")
-        # layout.prop(self, "show_all_actions")
 
 
 def get_preferences():
@@ -132,18 +118,16 @@ def _get_custom_maps_path() -> str:
     return cmp
 
 
-def register():
-    bpy.utils.register_class(SelectCustomMapsDir)
-    bpy.utils.register_class(PogoBlendPrefrences)
+classes = (
+    SelectCustomMapsDir,
+    PogoBlendPreferences,
+)
 
+
+def register():
     cmp = get_preferences().custom_maps_path
     if cmp is None or cmp == "":
         try:
             get_preferences().custom_maps_path = _get_custom_maps_path()
         except Exception as e:
             print(f"WARNING: Exception while searching for Custom Maps path: {e}")
-
-
-def unregister():
-    bpy.utils.unregister_class(SelectCustomMapsDir)
-    bpy.utils.unregister_class(PogoBlendPrefrences)

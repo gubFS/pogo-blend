@@ -53,9 +53,7 @@ class MDLExporterOperator(bpy.types.Operator, bpy_extras.io_utils.ExportHelper):
         try:
             export_to_mdl(context, self.filepath, self.selected_only, self.global_scale)
         except Exception as e:
-            error_type = {'ERROR'}
-            self.report(error_type, str(e))
-            raise e  # NOTE: Only for debugging purposes
+            self.report({'ERROR'}, str(e))
             return {'CANCELLED'}
         else:
             return {'FINISHED'}
@@ -66,11 +64,12 @@ def menu_func_export(self, context):
         self.layout.operator(MDLExporterOperator.bl_idname, text="MDL (.mdl)")
 
 
+classes = (MDLExporterOperator,)
+
+
 def register():
-    bpy.utils.register_class(MDLExporterOperator)
     bpy.types.TOPBAR_MT_file_export.append(menu_func_export)
 
 
 def unregister():
-    bpy.utils.unregister_class(MDLExporterOperator)
     bpy.types.TOPBAR_MT_file_export.remove(menu_func_export)

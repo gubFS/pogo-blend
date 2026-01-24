@@ -1,5 +1,3 @@
-import bpy
-
 from ... import pogo_blend_utils as pbu
 
 
@@ -55,13 +53,8 @@ class AddPogoBevelEdgeSplit(pbu.AltOperator):
         AddPogoEdgeSplit.add_edge_split(obj)
 
 
-def register():
-    bpy.utils.register_class(AddPogoEdgeSplit)
-    bpy.utils.register_class(AddPogoBevel)
-    bpy.utils.register_class(AddPogoBevelEdgeSplit)
-
-
-def unregister():
-    bpy.utils.unregister_class(AddPogoEdgeSplit)
-    bpy.utils.unregister_class(AddPogoBevel)
-    bpy.utils.unregister_class(AddPogoBevelEdgeSplit)
+classes = (
+    AddPogoEdgeSplit,
+    AddPogoBevel,
+    AddPogoBevelEdgeSplit,
+)

@@ -264,11 +264,12 @@ class PogoEntity(bpy.types.PropertyGroup):
         return flags
 
 
+classes = (PogoEntity,)
+
+
 def register():
-    bpy.utils.register_class(PogoEntity)
     bpy.types.Object.pogo_entity = bpy.props.PointerProperty(type=PogoEntity)
 
 
 def unregister():
-    bpy.utils.unregister_class(PogoEntity)
     del bpy.types.Object.pogo_entity

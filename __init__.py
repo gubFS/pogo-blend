@@ -6,7 +6,7 @@ import bpy
 from . import pogo_blend_preferences as pbu
 from .export_import import custom_map_builder_operator
 from .export_import.mdl_exporter import mdl_exporter_operator
-from .export_import.mdl_importer import mdl_importer_operator
+from .export_import.mdl_importer import mdl_importer
 from .pogo_blend_asset_library import generate_pogo_assets
 from .pogo_classes import pogo_custom_map, pogo_entity, pogo_path, pogo_region
 from .ui import (
@@ -28,13 +28,13 @@ from .ui.operators import (
 
 # Uncomment the following for quick reloading of addon. Only for use in development.
 # import importlib
-# for root, dirs, files in os.walk(os.path.dirname(__file__)):
+# for root, dirs, files in os.walk(Path(__file__).parent):
 #     root.replace("\\", "/")  # Windows >:(
 #     if "__pycache__" in root or ".git" in root:
 #         continue
 #     for file in files:
-#         filename, file_extension = os.path.splitext(file)
-#         if file_extension != ".py":
+#         filename = Path(file).stem
+#         if Path(file).suffix != ".py":
 #             continue
 #         if file == "__init__.py":
 #             continue
@@ -45,11 +45,11 @@ from .ui.operators import (
 #             rel = f"{rel}.{filename}"
 #             locals()[filename] = importlib.import_module(rel, package=__name__)
 
-to_register = [
+modules = [
     pbu,
     custom_map_builder_operator,
     mdl_exporter_operator,
-    mdl_importer_operator,
+    mdl_importer,
     pogo_custom_map,
     pogo_entity,
     pogo_path,
@@ -75,8 +75,11 @@ def install_app_template():
 
 
 def register():
-    for module in to_register:
-        module.register()
+    for module in modules:
+        for cls in module.classes:
+            bpy.utils.register_class(cls)
+        if hasattr(module, "register"):
+            module.register()
 
     asset_libraries = bpy.context.preferences.filepaths.asset_libraries
     lib_id = asset_libraries.find("PogoBlend")
@@ -99,10 +102,13 @@ def unregister():
             if path.exists():
                 os.remove(path)
 
-    for module in to_register:
-        module.unregister()
-
     asset_libraries = bpy.context.preferences.filepaths.asset_libraries
     lib_id = asset_libraries.find("PogoBlend")
     if lib_id != -1:
         asset_libraries.remove(asset_libraries[lib_id])
+
+    for module in reversed(modules):
+        if hasattr(module, "unregister"):
+            module.unregister()
+        for cls in reversed(module.classes):
+            bpy.utils.unregister_class(cls)

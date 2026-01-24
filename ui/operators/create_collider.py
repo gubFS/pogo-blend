@@ -202,9 +202,4 @@ class CreatePogoCollider(pbu.AltOperator):
         return {'FINISHED'}
 
 
-def register():
-    bpy.utils.register_class(CreatePogoCollider)
-
-
-def unregister():
-    bpy.utils.unregister_class(CreatePogoCollider)
+classes = (CreatePogoCollider,)

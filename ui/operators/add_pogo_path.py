@@ -26,9 +26,4 @@ class AddPogoPath(bpy.types.Operator):
         return {'FINISHED'}
 
 
-def register():
-    bpy.utils.register_class(AddPogoPath)
-
-
-def unregister():
-    bpy.utils.unregister_class(AddPogoPath)
+classes = (AddPogoPath,)

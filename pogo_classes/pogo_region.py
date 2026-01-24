@@ -21,11 +21,12 @@ class PogoRegion(bpy.types.PropertyGroup):
     gravity_power: bpy.props.IntProperty(name="Gravity power", default=100, min=0, max=999)
 
 
+classes = (PogoRegion,)
+
+
 def register():
-    bpy.utils.register_class(PogoRegion)
     bpy.types.Object.pogo_region = bpy.props.PointerProperty(type=PogoRegion)
 
 
 def unregister():
-    bpy.utils.unregister_class(PogoRegion)
     del bpy.types.Object.pogo_region

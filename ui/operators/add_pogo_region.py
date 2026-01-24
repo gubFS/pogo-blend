@@ -20,9 +20,4 @@ class AddPogoRegion(bpy.types.Operator):
         return {'FINISHED'}
 
 
-def register():
-    bpy.utils.register_class(AddPogoRegion)
-
-
-def unregister():
-    bpy.utils.unregister_class(AddPogoRegion)
+classes = (AddPogoRegion,)

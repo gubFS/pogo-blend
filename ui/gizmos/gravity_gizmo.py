@@ -63,11 +63,7 @@ class GravityRegionGroup(bpy.types.GizmoGroup):
         self.gz.matrix_basis = obj.matrix_world.normalized()
 
 
-def register():
-    bpy.utils.register_class(PogoGravityArrow)
-    bpy.utils.register_class(GravityRegionGroup)
-
-
-def unregister():
-    bpy.utils.unregister_class(PogoGravityArrow)
-    bpy.utils.unregister_class(GravityRegionGroup)
+classes = (
+    PogoGravityArrow,
+    GravityRegionGroup,
+)

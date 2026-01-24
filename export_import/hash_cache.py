@@ -1,6 +1,6 @@
 import json
-import os
 from collections.abc import Callable
+from pathlib import Path
 
 import xxhash
 
@@ -10,13 +10,13 @@ from .gub_byte_array import GubByteArray
 
 class HashCache:
     def __init__(self, filepath):
-        self.filepath = filepath
+        self.filepath = str(filepath)
         self.cache = {}
         self.temp_cache = {}
         self.load()
 
     def load(self):
-        if not os.path.exists(self.filepath):
+        if not Path(self.filepath).exists():
             return
 
         with open(self.filepath, "r") as f:

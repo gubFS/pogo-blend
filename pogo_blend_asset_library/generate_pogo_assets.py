@@ -3,7 +3,7 @@ from pathlib import Path
 import bpy
 
 from .. import pogo_blend_utils as pbu
-from ..export_import.mdl_importer.mdl_importer_operator import import_mdl
+from ..export_import.mdl_importer.mdl_importer import import_mdl
 
 config = {
     "models": [
@@ -330,9 +330,4 @@ class MakeAssetLibraryOperator(bpy.types.Operator):
         return {"FINISHED"}
 
 
-def register():
-    bpy.utils.register_class(MakeAssetLibraryOperator)
-
-
-def unregister():
-    bpy.utils.unregister_class(MakeAssetLibraryOperator)
+classes = (MakeAssetLibraryOperator,)

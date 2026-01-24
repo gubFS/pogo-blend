@@ -16,7 +16,7 @@ class MDLExporter:
         bake_rotation=False,
         bake_scale=False,
     ):
-        self.filepath = filepath
+        self.filepath = str(filepath)
         if len(objs) == 0:
             raise Exception("No objects selected")
         self.objs = objs

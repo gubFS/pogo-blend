@@ -154,21 +154,19 @@ class PogoCustomMap(bpy.types.PropertyGroup):
     active_static_file_idx: bpy.props.IntProperty(name="Active Static File")
 
 
+classes = (
+    PogoSplit,
+    StaticFile,
+    PogoCustomMap,
+    ActiveSplitMove,
+    StaticFileAdd,
+    StaticFileRemove,
+)
+
+
 def register():
-    bpy.utils.register_class(PogoSplit)
-    bpy.utils.register_class(StaticFile)
-    bpy.utils.register_class(PogoCustomMap)
-    bpy.utils.register_class(ActiveSplitMove)
-    bpy.utils.register_class(StaticFileAdd)
-    bpy.utils.register_class(StaticFileRemove)
     bpy.types.Collection.custom_map = bpy.props.PointerProperty(type=PogoCustomMap)
 
 
 def unregister():
-    bpy.utils.unregister_class(PogoSplit)
-    bpy.utils.unregister_class(StaticFile)
-    bpy.utils.unregister_class(PogoCustomMap)
-    bpy.utils.unregister_class(ActiveSplitMove)
-    bpy.utils.unregister_class(StaticFileAdd)
-    bpy.utils.unregister_class(StaticFileRemove)
     del bpy.types.Collection.custom_map

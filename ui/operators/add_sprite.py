@@ -22,9 +22,4 @@ class AddSprite(bpy.types.IMAGE_OT_import_as_mesh_planes):
         return ret_code
 
 
-def register():
-    bpy.utils.register_class(AddSprite)
-
-
-def unregister():
-    bpy.utils.unregister_class(AddSprite)
+classes = (AddSprite,)

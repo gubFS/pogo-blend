@@ -312,24 +312,15 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
                 layout.prop(entity, f"skill_{i}", text=f"skill_{i}")
 
 
-def register():
-    bpy.utils.register_class(AddPogoEntityData)
-    bpy.utils.register_class(RemovePogoEntityData)
-    bpy.utils.register_class(AddPogoPathData)
-    bpy.utils.register_class(RemovePogoPathData)
-    bpy.utils.register_class(EditCustomMaterial)
-    bpy.utils.register_class(PogoObjectPanel)
-    bpy.utils.register_class(PogoObjectPanelOverrides)
-
-
-def unregister():
-    bpy.utils.unregister_class(AddPogoEntityData)
-    bpy.utils.unregister_class(RemovePogoEntityData)
-    bpy.utils.unregister_class(AddPogoPathData)
-    bpy.utils.unregister_class(RemovePogoPathData)
-    bpy.utils.unregister_class(EditCustomMaterial)
-    bpy.utils.unregister_class(PogoObjectPanel)
-    bpy.utils.unregister_class(PogoObjectPanelOverrides)
+classes = (
+    AddPogoEntityData,
+    RemovePogoEntityData,
+    AddPogoPathData,
+    RemovePogoPathData,
+    EditCustomMaterial,
+    PogoObjectPanel,
+    PogoObjectPanelOverrides,
+)
 
 
 CUSTOM_MATERIAL_TEMPLATE = """

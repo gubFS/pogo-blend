@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 from string import ascii_lowercase
 
@@ -105,12 +104,12 @@ def get_textures(obj) -> list[dict]:
                     path = ""
                     if image.filepath != "":
                         full_path = bpy.path.abspath(image.filepath, library=image.library)
-                        image_path = os.path.normpath(full_path)
+                        image_path = str(Path(full_path).resolve())
                         if Path(image_path).exists():
                             path = image_path
                     name = image.name
                     if path != "":
-                        name = os.path.splitext(os.path.basename(path))[0]
+                        name = Path(path).name
                     textures.append({"image": image, "path": path, "name": name})
     return textures
 
