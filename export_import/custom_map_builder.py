@@ -279,7 +279,7 @@ def export_map_image(dirpath, custom_map):
     image.file_format = old_format
 
 
-def export_texture(dirpath: str, texture: dict):
+def export_texture(dirpath: str | Path, texture: dict):
     image = texture["image"]
     image.reload()
     filepath = str(Path(dirpath, texture["name"]))

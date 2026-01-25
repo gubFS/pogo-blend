@@ -272,8 +272,9 @@ def make_asset_library(context, filepath: str):
         ad.license = "Only to be used for the purposes of making Pogostuck Custom Maps"
         ad.catalog_id = catalog
 
-    view_3d_area = [area for area in bpy.context.screen.areas if area.type == 'VIEW_3D'][0]
-    view_3d_area.ui_type = 'ASSETS'
+    view_3d_area = next((area for area in bpy.context.screen.areas if area.type == 'VIEW_3D'), None)
+    if view_3d_area is not None:
+        view_3d_area.ui_type = 'ASSETS'
     bpy.app.timers.register(lambda: set_library(view_3d_area))  # the area params takes a frame to initialize so wait for that
     bpy.app.timers.register(lambda: go_back(filepath))
 

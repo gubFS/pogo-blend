@@ -114,6 +114,13 @@ def get_textures(obj) -> list[dict]:
     return textures
 
 
+def get_view_3d_context():
+    screen, area = next(((screen, area) for screen in bpy.data.screens for area in screen.areas if area.type == 'VIEW_3D'), (None, None))
+    if screen is None and area is None:
+        raise ContextError("Cannot find a VIEW_3D context")
+    return screen, area
+
+
 def parse_yaml(filepath: str):
     yaml_obj = None
     with open(Path(__file__).parent.joinpath(Path(filepath)), "r") as f:
