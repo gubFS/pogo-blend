@@ -164,7 +164,7 @@ def build_custom_map(context, filepath, global_scale):
         for texture, slot_idx in mdl_exporter.skins.copy().values():
             if texture["image"] in textures:
                 new_texture = textures[texture["image"]]["name"]
-                mdl_exporter.skins[texture["image"]][0]["name"] = new_texture
+                mdl_exporter.skins[texture["name"]][0]["name"] = new_texture
         mdl_exporter.export()
 
     # colliders

@@ -51,18 +51,28 @@ class MDLExporter:
 
             textures = pbu.get_textures(mesh)
             for i, texture in enumerate(textures):
-                if texture["image"].name in self.skins:
-                    skin_dict[i] = self.skins[texture["image"]]
+                if texture["name"] in self.skins:
+                    skin_dict[i] = self.skins[texture["name"]]
                 else:
-                    self.skins[texture["image"]] = (texture, len(self.skins))
-                    skin_dict[i] = self.skins[texture["image"]]
+                    self.skins[texture["name"]] = (texture, len(self.skins))
+                    skin_dict[i] = self.skins[texture["name"]]
             has_skin = len(textures) != 0
             self.has_skin = has_skin
 
             # y-axis is flipped in A8
+            uv_hash_map = {}
+            uv_idx_lookup = []
             if has_skin:
                 for uv in mesh.uv_layers[0].uv:
-                    self.uvs.append(Vector((uv.vector.x, 1 - uv.vector.y)))
+                    uv = Vector((uv.vector.x, 1 - uv.vector.y))
+                    uv.freeze()
+                    idx = len(uv_hash_map)
+                    if uv in uv_hash_map:
+                        idx = uv_hash_map[uv]
+                    else:
+                        uv_hash_map[uv] = idx
+                        self.uvs.append(uv)
+                    uv_idx_lookup.append(idx)
 
             loc = obj.matrix_world.translation
             rot = obj.matrix_world.to_euler()
@@ -82,13 +92,12 @@ class MDLExporter:
 
             uvkeys = {}
             if has_skin:
-                total_uvs = 0
+                uv_idx = 0
                 for poly in mesh.polygons:
                     uvkeys[poly.index] = {}
                     for vert_idx in poly.vertices:
-                        uv_idx = total_uvs
-                        uvkeys[poly.index][vert_idx] = uv_idx
-                        total_uvs += 1
+                        uvkeys[poly.index][vert_idx] = uv_idx_lookup[uv_idx]
+                        uv_idx += 1
 
             for i, tri in enumerate(mesh.loop_triangles):
                 poly_idx = mesh.loop_triangle_polygons[i].value
@@ -109,8 +118,8 @@ class MDLExporter:
             obj_verts_index = len(self.verts)
             uv_index = len(self.uvs)
 
-    # See MDLFormat.txt for documentation
-    def export(self):  # see MDL7Format.txt
+    # See MDL7Format.txt for documentation
+    def export(self):
         mdl = GubByteArray()
 
         mdl.store_string("MDL7")
