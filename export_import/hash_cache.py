@@ -60,7 +60,7 @@ class HashCache:
         self._store_buffer(mesh, self._store_uvs, bytes)
         # self._store_buffer(mesh, self._store_edges, bytes)
         self._store_buffer(mesh, self._store_polygons, bytes)
-        self._store_buffer(obj, self._store_textures, bytes)
+        self._store_buffer(mesh, self._store_textures, bytes)
         self._store_buffer(obj, self._store_modifiers, bytes)
 
         return self._hash_bytearray(bytes)
@@ -120,8 +120,8 @@ class HashCache:
             ints.append(polygon.material_index)
         bytes.store_32_buffer(ints)
 
-    def _store_textures(self, obj, bytes: GubByteArray):
-        bytes.store_strings([texture["name"] for texture in pbu.get_textures(obj)])
+    def _store_textures(self, mesh, bytes: GubByteArray):
+        bytes.store_strings([texture["name"] for texture in pbu.get_textures(mesh)])
 
     def _store_modifiers(self, obj, bytes: GubByteArray):
         bytes.store_32(len(obj.modifiers))

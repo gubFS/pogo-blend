@@ -46,7 +46,7 @@ class MDLExporter:
             bm.to_mesh(mesh)
             bm.free()
 
-            textures = pbu.get_textures(obj)
+            textures = pbu.get_textures(mesh)
             for i, texture in enumerate(textures):
                 if texture["image"].name in self.skins:
                     skin_dict[i] = self.skins[texture["image"]]

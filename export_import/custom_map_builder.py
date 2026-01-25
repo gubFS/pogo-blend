@@ -50,9 +50,9 @@ def build_custom_map(context, filepath, global_scale):
         PogoPathProgress(path_progress),
         PogoStartLine(start_line),
     ]
-    meshes = {}
+    entities = {}
     if start_line.pogo_entity.filename_override == "":
-        meshes[start_line.data] = ([wmb_objects[-1]], start_line, global_scale)
+        entities[cache.hash_entity(start_line)] = ([wmb_objects[-1]], start_line)
     textures = {}
     paths = [path_progress]
     paths_to_add = []
@@ -95,10 +95,11 @@ def build_custom_map(context, filepath, global_scale):
                 mesh = obj.data
                 path = None
                 if obj.pogo_entity.filename_override == "":
-                    if mesh not in meshes:
-                        meshes[mesh] = ([entity], obj, global_scale)
+                    hash = cache.hash_entity(obj)
+                    if hash not in entities:
+                        entities[hash] = ([entity], obj)
                     else:
-                        meshes[mesh][0].append(entity)
+                        entities[hash][0].append(entity)
                     if obj.pogo_entity.flag_auto_collision and obj.pogo_entity.flag_polygon:
                         colliders.append((obj, entity))
                 else:
@@ -126,18 +127,18 @@ def build_custom_map(context, filepath, global_scale):
                 wmb_objects.append(WMBPath(obj, global_scale))
 
     # export meshes
-    for entities, obj, scale in meshes.values():
+    for wmb_entities, obj in entities.values():
         filename = pbu.get_unique_name(obj.name.replace(".", "_"), ".mdl", 33, used_names)
         if filename is None:
             print("WARNING: could not find a unique filename")
             continue
         used_files.add(filename)
 
-        for entity in entities:
-            entity.filename = filename
+        for wmb_entity in wmb_entities:
+            wmb_entity.filename = filename
         mdlpath = Path(dirpath, filename)
 
-        for texture in pbu.get_textures(obj):
+        for texture in pbu.get_textures(obj.data):
             if texture["image"] not in textures:
                 new_texture = pbu.get_unique_name(
                     Path(texture["name"]).stem.replace(".", "_"),
@@ -156,7 +157,7 @@ def build_custom_map(context, filepath, global_scale):
         if not cache.update_entity(filename, obj):
             continue
 
-        mdl_exporter = MDLExporter(mdlpath, [obj], scale)
+        mdl_exporter = MDLExporter(mdlpath, [obj], global_scale)
         for texture, slot_idx in mdl_exporter.skins.copy().values():
             if texture["image"] in textures:
                 new_texture = textures[texture["image"]]["name"]
