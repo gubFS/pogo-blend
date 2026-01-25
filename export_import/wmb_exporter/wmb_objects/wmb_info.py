@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 gubFS
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from enum import Enum
 
 from ...gub_byte_array import GubByteArray
@@ -11,7 +14,6 @@ class LMapSize(Enum):
 
 class WMBInfo:
     def __init__(self):
-
         self.type = 5  # 5 is the type id for info
         self.origin = [0, 0, 0]
         self.azimuth = 0.0

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 gubFS
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 import struct
 from io import BufferedReader
 from pathlib import Path

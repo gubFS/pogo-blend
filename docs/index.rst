@@ -46,3 +46,4 @@ Start by following the :doc:`installation <install>` and :doc:`getting started <
    motivation
    contribution
    proposed_features
+   license

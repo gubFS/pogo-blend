@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 gubFS
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from mathutils import Vector
 
 from ...gub_byte_array import GubByteArray

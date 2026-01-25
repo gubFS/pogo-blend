@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 gubFS
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 import bpy
 
 from .. import pogo_blend_utils as pbu
