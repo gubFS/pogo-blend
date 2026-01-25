@@ -121,6 +121,28 @@ def get_view_3d_context():
     return screen, area
 
 
+def open_temp_text_editor():
+    bpy.ops.wm.window_new()
+
+    # delete old editors
+    _screen = bpy.context.screen
+    try:
+        screens_to_delete = (
+            screen  #
+            for screen in bpy.data.screens
+            if screen.name.startswith("pogo_blend_text_editor") and screen not in (window.screen for window in bpy.context.window_manager.windows)
+        )
+        for screen in screens_to_delete:
+            with bpy.context.temp_override(screen=screen):
+                bpy.ops.screen.delete()  # this sometimes doesnt do anything, but over time it should purge most of the unused screens. i cant find a better method
+    finally:
+        bpy.context.window.screen = _screen
+
+    bpy.context.window.screen.name = "pogo_blend_text_editor"
+    area = bpy.context.area
+    area.ui_type = 'TEXT_EDITOR'
+
+
 def parse_yaml(filepath: str):
     yaml_obj = None
     with open(Path(__file__).parent.joinpath(Path(filepath)), "r") as f:

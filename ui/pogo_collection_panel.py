@@ -12,8 +12,7 @@ class EditMapDescription(bpy.types.Operator):
     bl_options = {'REGISTER'}
 
     def execute(self, context):
-        bpy.ops.wm.window_new()
-        context.area.ui_type = 'TEXT_EDITOR'
+        pbu.open_temp_text_editor()
         if "levelDescription.txt" not in bpy.data.texts:
             bpy.ops.text.new()
             context.space_data.text.name = "levelDescription.txt"

@@ -67,8 +67,7 @@ class EditCustomMaterial(bpy.types.Operator):
 
         filename = f"customMaterial{self.material_idx}.fx"
 
-        bpy.ops.wm.window_new()
-        context.area.ui_type = 'TEXT_EDITOR'
+        pbu.open_temp_text_editor()
         if filename not in bpy.data.texts:
             filepath = Path(bpy.path.abspath(bpy.path.relpath(filename)))
             if filepath.exists():
