@@ -16,7 +16,7 @@ If you find any bugs in the add-on or mistakes in this documentaiton, please see
 
   This add-on is still in the early stages and lacks maturity, so please create copies of your map, especially before updating to new versions! I can't guarentee that everything works with no issues.
 
-Start by following the :doc:`installation <install>` and :doc:`getting started <getting_started>` guides.
+Start by following the :doc:`Installation <install>` and :doc:`Getting Started <getting_started>` guides.
 
 
 .. toctree::

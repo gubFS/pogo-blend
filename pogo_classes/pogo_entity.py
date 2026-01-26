@@ -41,7 +41,7 @@ class PogoEntity(bpy.types.PropertyGroup):
     flag_cast: bpy.props.BoolProperty(name="Background", description="Blurs the entity and places it in the background")
     flag_polygon: bpy.props.BoolProperty(name="Collision", description="Enable collsion with the entity. Collides where it's Y-position is 0")  # = 26, # collision. if polygon isn't set then its passable
 
-    flag_auto_collision: bpy.props.BoolProperty(name="Auto Collision", description="Create a collider for the entity that matches it's sideview no matter the Y-position")
+    flag_auto_collision: bpy.props.BoolProperty(name="Auto Collision", description="Automatically create a collider on export, that matches the entities sideview no matter the Y-position")
 
     flag_passable: bpy.props.BoolProperty()  # = 9,
     flag_overlay: bpy.props.BoolProperty()  # = 12,

@@ -1,6 +1,8 @@
 Getting Started
 ===============
 
+Before making your first Map, here is some basic information that you should know:
+
 Pogostucks coordinate systems looks toward the positive Y-axis. So to look in the Blender file as you would in Pogostuck, position the Camera to look into the Y-axis with a orthographic view, to simulate how it would look in-game. You can do this by clicking on the '-Y' on the Gimbal in the top right of the main view, or with a shortcut (default is NUMPAD1).
 
 .. tip::
@@ -19,9 +21,14 @@ Regular meshes can be :doc:`Entities <objects/entity>` and are the main building
 
    The :doc:`Objects <objects/object>` page for more information on entities, regions and paths.
 
-To make a custom map there is 3 required objects. A spawn postion, a start line, and a progress path. I reccomend using the provided Application Template, as new files using it will automatically create these. You can do this under ``File -> New -> PogoBlend``.
+Making a Map
+------------
 
-These objects will need to be set in the CustomMap collection. Select the 'CustomMap' collection and switch the Properties Inspector to show Collections. Here you will see a tab for configuring the settings of the Custom Map. Here you can change the Map name, description, image, splits and modes. The map will need a name, and the earlier mentioned required objects.
+To start making a Map, open Blender and make a new project. I recommend using the provided Application Template, under ``File -> New -> PogoBlend``. Save the Blender file to a folder where you will store all your project files, e.g ``Desktop/PoogstuckCustomMaps/MyMap/MyMap.blend``.
+
+To make a custom map there is 3 required objects. A Spawn Position, a Start Line, and a Progress Path. The provided Application Template, will automatically create and set these.
+
+These objects will need to be set in the CustomMap collection. Select the 'CustomMap' collection and switch the Properties Inspector to show Collections. Here you will see a tab for configuring the settings of the Custom Map. Here you can change the Map Name, Description, Image, Splits and Modes. The Map will need a name, and the earlier mentioned required objects.
 
 .. seealso::
 
@@ -31,7 +38,13 @@ Once the map has all the minimum requirements you can :doc:`build <building>` it
 
 Inside Pogostuck you can now go to your local Custom Maps and there should be a map with the name you chose! Edit your map in Blender, build it and hit F1 in Pogostuck and your changes will apply.
 
-I highly recommend you check out the other guides mentioned here on this page, and in the documentation.
+Add a cube under the Spawn Position and mark it as an Entity, using the Property Inspector. Turn on the collision flag, and build the Map again. You should now have a platform that the player can stand on.
+
+If you want to quickly add more platforms to outline your map, you can use ``Add -> PogoBlend -> Block`` to create a Block, which is just a flat plane that is an Entity with auto-collision turned on, that you can easily edit in edit mode.
+
+You can now continue making the your own Map by adding Entities, Regions and Paths.
+
+I **highly** recommend that you read the other guides mentioned here on this page, and in the documentation.
 
 Otherwise, enjoy making maps!
 

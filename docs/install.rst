@@ -3,6 +3,10 @@ Installation
 
 The add-on uses `Blender 4.5 LTS <https://www.blender.org/download/lts/4-5/>`__, so make sure you are using that version.
 
+.. note::
+
+   This add-on has support for Windows and Linux platforms. There is also a MacOS version, but it is untested.
+
 To install the add-on, download the `newest release <https://github.com/gubFS/pogo-blend/releases>`__ from the GitHub that matches your platform. It should be called something like ``pogo_blend-<version>-<platform>.zip``
 
 Open blender and in the top toolbar go to, ``Edit -> Prefrences -> Add-ons`` and in the top right there is an arrow that'll open a menu where you can choose 'Install from disk...'. Select the ZIP file you just downloaded. The add-on should now be installed and you can activate it.

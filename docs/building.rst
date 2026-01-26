@@ -5,11 +5,13 @@ Whenever the Blender file needs to be converted to a Pogostuck Custom Map it wil
 
 Only objects in a collection called 'CustomMap' will be built.
 
-Models and colliders can take some time to export, however after the first time they are exported, they will be saved and only re-exported when neccessary. 
+Models and colliders can take some time to export, however after the first time they are exported, they will be saved and only re-exported when neccessary.
+
+The building process does a lot of things, so performance is noticeable and **will** vary between systems. Models and auto-colliders have the biggest impact on performance, so if building is taking too long, consider lowering the mesh vertex/triangle count and manually creating colliders.
 
 .. tip::
 
-  If you are experiencing slowdowns because of very large meshes, you could manualy generate the collision and .mdl files, and then use the filename :ref:`override <overrides>`. But hopefully this shouldn't be necessary.
+  If you are experiencing slowdowns because of very large meshes, that you don't want/can minimize, you could manualy generate the collision and .mdl files, and then use the filename :ref:`override <overrides>`. But hopefully this shouldn't be necessary.
 
 The builder will only build into folders if there is a file named '.pogo_blend' present in the folder for the map. When the map is made for the first time, this file will automatically be created. This is in order to not accidentally delete or overwrite any unintenional files.
 

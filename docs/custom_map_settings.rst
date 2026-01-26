@@ -1,7 +1,7 @@
 Custom Map settings
 ===================
 
-The Custom Map settings can be accessed in the Collection panel in the Properties Inspector whenever the Collection named 'CustomMap' is selected.
+The Custom Map settings can be accessed in the Collection panel in the Properties Inspector whenever the Collection named 'CustomMap' is selected, or any of it's subcollections.
 
 Map Information
 ---------------
