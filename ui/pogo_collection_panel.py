@@ -66,10 +66,16 @@ class PogoCollectionPanel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
-        collection = context.collection
-        if collection.name != "CustomMap":
+
+        try:
+            custom_map_collection = pbu.get_custom_map_collection()
+            custom_map = pbu.get_custom_map()
+            collection = context.collection
+            if collection != custom_map_collection and collection not in custom_map_collection.children_recursive:
+                raise Exception()
+        except Exception:
+            layout.label(text="Select or make a collection named 'CustomMap'")
             return
-        custom_map = collection.custom_map
 
         layout.operator("pogo_blend.build_custom_map", text="Build Custom Map")
 
@@ -103,9 +109,9 @@ class PogoCollectionPanel(bpy.types.Panel):
             row.template_list(
                 "POGO_UL_pogo_blend_split_list",
                 "",
-                context.collection.custom_map,
+                custom_map,
                 "splits",
-                context.collection.custom_map,
+                custom_map,
                 "active_split_idx",
             )
 
@@ -136,9 +142,9 @@ class PogoCollectionPanel(bpy.types.Panel):
             row.template_list(
                 "POGO_UL_pogo_blend_static_files_list",
                 "",
-                context.collection.custom_map,
+                custom_map,
                 "static_files",
-                context.collection.custom_map,
+                custom_map,
                 "active_static_file_idx",
             )
 

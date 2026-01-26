@@ -28,11 +28,6 @@ class CustomMapBuilder(bpy.types.Operator):
         max=1000.0,
     )
 
-    @classmethod
-    def poll(cls, context):
-        custom_map_dir = pbu.get_preferences().custom_maps_path
-        return custom_map_dir is not None and custom_map_dir != "" and "CustomMap" in bpy.data.collections
-
     def execute(self, context):
         context.window.cursor_set('WAIT')
         start_time = time.time()
@@ -51,6 +46,12 @@ class CustomMapBuilder(bpy.types.Operator):
         return {'FINISHED'}
 
     def invoke(self, context, event):
+        try:
+            pbu.get_custom_map_collection()
+        except Exception as e:
+            self.report({'ERROR'}, str(e))
+            return {'CANCELLED'}
+
         self.filepath = pbu.get_preferences().custom_maps_path
         if self.filepath == "":
             self.report(
