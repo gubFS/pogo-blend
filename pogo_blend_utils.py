@@ -118,11 +118,12 @@ def get_textures(mesh) -> list[dict]:
     return textures
 
 
-def get_view_3d_context():
-    screen, area = next(((screen, area) for screen in bpy.data.screens for area in screen.areas if area.type == 'VIEW_3D'), (None, None))
-    if screen is None and area is None:
+def get_view_3d_context() -> tuple:
+    context = next(((screen, area) for screen in bpy.data.screens for area in screen.areas if area.type == 'VIEW_3D'), None)
+    if context is None:
         raise ContextError("Cannot find a VIEW_3D context")
-    return screen, area
+    window = next((window for window in bpy.context.window_manager.windows if window.screen == context[0]), None)
+    return (window, *context)
 
 
 def open_temp_text_editor():
