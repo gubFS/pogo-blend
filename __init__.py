@@ -89,6 +89,37 @@ modules = [
 ]
 
 
+def manual_map():
+    map = (
+        # entity
+        ("bpy.types.pogoentity.material", "/objects/entity.html#materials"),
+        ("bpy.types.pogoentity.action*", "/objects/entity.html#actions"),
+        ("bpy.types.pogoentity.skill*", "/objects/entity.html#actions"),
+        ("bpy.types.pogoentity.flag*", "/objects/entity.html#flags"),
+        ("bpy.types.pogoentity.*_override", "/objects/entity.html#overrides"),
+        ("bpy.types.pogoentity.*", "/objects/entity.html"),
+        ("bpy.ops.pogo_blend.*pogo_entity*", "/objects/entity.html"),
+        # region
+        ("bpy.types.pogoregion.*", "/objects/region.html"),
+        ("bpy.ops.pogo_blend.*pogo_region*", "/objects/region.html"),
+        # path
+        ("bpy.types.pogopath.*", "/objects/entity.html"),
+        ("bpy.ops.pogo_blend.*pogo_path*", "/objects/path.html"),
+        # custom map
+        ("bpy.ops.pogo_blend.build_custom_map", "/building.html"),
+        ("bpy.types.pogocustommap.*", "/custom_map_settings.html"),
+        ("bpy.ops.pogo_blend.*custom_map*", "/custom_map_settings.html"),
+        # object tools
+        ("bpy.ops.pogo_blend.create_collider", "/objects/object_tools.html"),
+        ("bpy.ops.pogo_blend.add*", "/objects/object_tools.html#modifiers"),
+        ("bpy.ops.pogo_blend.apply*", "/objects/object_tools.html#presets"),
+        # catch all
+        ("bpy.ops.pogo_blend.*", "/"),
+    )
+
+    return "https://gubfs.github.io/pogo-blend", map
+
+
 def install_app_template():
     bpy.ops.preferences.app_template_install(filepath=str(Path(__file__).parent.joinpath("app_template.zip")))
 
@@ -112,6 +143,8 @@ def register():
 
     bpy.app.timers.register(install_app_template, first_interval=0.01)
 
+    bpy.utils.register_manual_map(manual_map)
+
 
 def unregister():
     # delete any remaining real-time custom material files
@@ -131,3 +164,5 @@ def unregister():
             module.unregister()
         for cls in reversed(module.classes):
             bpy.utils.unregister_class(cls)
+
+    bpy.utils.unregister_manual_map(manual_map)

@@ -8,7 +8,7 @@ This documentation will have written and recorded guides and information on the 
 
 .. tip::
 
-  In the add-on inside Blender most things will have a description so you can hover your mouse over something if you are confused and it might explain further!
+  In the add-on inside Blender most things will have a description so you can hover your mouse over something if you are confused and it might explain further! This documentation is also linked in the add-on through the "Online Manual" feature.
 
 If you find any bugs in the add-on or mistakes in this documentaiton, please see the :doc:`contribution page <contribution>`. Also look at it if you are interested in contributing to either the add-on or if you would like to write/record guides for this documentation!
 

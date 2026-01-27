@@ -8,7 +8,7 @@ maintainer = "gubFS"
 copyright = ["2026 gubFS"]
 type = "add-on"
 
-# website = "https://extensions.blender.org/add-ons/my-example-package/"
+website = "https://gubfs.github.io/pogo-blend/"
 
 blender_version_min = "4.5.0"
 blender_version_max = "5.0.0"

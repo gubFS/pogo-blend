@@ -2,7 +2,7 @@
 
 PogoBlend is an extension for making Pogostuck Custom Maps using Blender.
 
-For guidance on installing and using the add-on see the [documentation](www.example.org).
+For guidance on installing and using the add-on see the [documentation](https://gubfs.github.io/pogo-blend/).
 
 # Contributing
 
