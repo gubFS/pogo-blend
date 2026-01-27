@@ -95,31 +95,29 @@ class HashCache:
         bytes.store_buffer(buffer)
 
     def _store_verts(self, mesh, bytes: GubByteArray):
-        verts = []
-        for vert in mesh.vertices:
-            verts.append(vert.co)
-            verts.append(vert.normal)
-        bytes.store_vec3f_buffer(verts)
-
-    def _store_uvs(self, mesh, bytes: GubByteArray):
         floats = []
-        for uv_layer in mesh.uv_layers:
-            for uv in uv_layer.uv:
-                floats.extend([uv.vector.x, uv.vector.y])
+        for vert in mesh.vertices:
+            floats.extend(vert.co)
+            floats.extend(vert.normal)
         bytes.store_float_buffer(floats)
 
+    def _store_uvs(self, mesh, bytes: GubByteArray):
+        # floats = []
+        # for uv_layer in mesh.uv_layers:
+        #     for uv in uv_layer.uv:
+        #         floats.extend(uv.vector)
+        bytes.store_float_buffer([f for uv_layer in mesh.uv_layers for uv in uv_layer.uv for f in uv.vector])
+
     def _store_edges(self, mesh, bytes: GubByteArray):
-        ints = []
-        for edge in mesh.edges:
-            for i in range(2):
-                ints.append(edge.vertices[i])
-        bytes.store_32_buffer(ints)
+        # ints = []
+        # for edge in mesh.edges:
+        #     ints.extend(edge.vertices)
+        bytes.store_32_buffer([i for edge in mesh.edges for i in edge.vertices])
 
     def _store_polygons(self, mesh, bytes: GubByteArray):
         ints = []
         for polygon in mesh.polygons:
-            for i in range(3):
-                ints.append(polygon.vertices[i])
+            ints.extend(polygon.vertices)
             ints.append(polygon.material_index)
         bytes.store_32_buffer(ints)
 

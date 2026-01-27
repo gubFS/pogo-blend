@@ -14,9 +14,7 @@ class WMBExporter:
         header = self.get_header_bytes()
 
         objects_header = GubByteArray()
-        encoded_objects_array = []
-        for obj in self.wmb_objects:
-            encoded_objects_array.append(obj.to_bytes())
+        encoded_objects_array = [obj.to_bytes() for obj in self.wmb_objects]
 
         # write the objects header which is number of objects and an array of offsets to each object from the start of the list
         objects_header.store_32(len(encoded_objects_array))
@@ -26,8 +24,8 @@ class WMBExporter:
             objects_header.store_32(object_header_size + len(encoded_objects))
             encoded_objects.store_buffer(encoded_object)
 
-        header.store_32_at(len(header), object_list_offset)
-        header.store_32_at(len(objects_header) + len(encoded_objects), object_list_offset + 4)
+        header.store_32_at(len(header), self.object_list_offset)
+        header.store_32_at(len(objects_header) + len(encoded_objects), self.object_list_offset + 4)
 
         with open(self.filepath, "wb") as f:
             f.write(header)
@@ -56,8 +54,7 @@ class WMBExporter:
         header.store_64(0)  # legacy7 WMB1..6 only
 
         # object list offset goes here but i will write it later
-        global object_list_offset
-        object_list_offset = header.get_position()
+        self.object_list_offset = header.get_position()
         header.store_64(0)  # write it for now to keep proper offsets
 
         header.store_64(0)  # lightmaps, not needed?

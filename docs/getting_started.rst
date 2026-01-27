@@ -24,7 +24,7 @@ Regular meshes can be :doc:`Entities <objects/entity>` and are the main building
 Making a Map
 ------------
 
-To start making a Map, open Blender and make a new project. I recommend using the provided Application Template, under ``File -> New -> PogoBlend``. Save the Blender file to a folder where you will store all your project files, e.g ``Desktop/PoogstuckCustomMaps/MyMap/MyMap.blend``.
+To start making a Map, open Blender and make a new project. I recommend using the provided Application Template, under ``File -> New -> PogoBlend``. Save the Blender file to a folder where you will store all your project files, e.g ``Desktop/CustomMapProjects/MyMap/MyMap.blend``.
 
 To make a custom map there is 3 required objects. A Spawn Position, a Start Line, and a Progress Path. The provided Application Template, will automatically create and set these.
 

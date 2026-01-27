@@ -169,8 +169,7 @@ class MDLExporter:
 
         if self.has_skin:
             for uv in self.uvs:
-                for i in range(2):
-                    mdl.store_float(uv[i])
+                mdl.store_float_buffer(uv)  # vec2f
 
         for tri, uv, skin_idx in self.tris:
             for i in range(3):
@@ -182,11 +181,9 @@ class MDLExporter:
             mdl.store_8s(0xFF, 4)
 
         for vert_idx in range(len(self.verts)):
-            for i in range(3):
-                mdl.store_float(self.verts[vert_idx][i])
+            mdl.store_vec3f(self.verts[vert_idx])
             mdl.store_16(0xFFFF)
-            for i in range(3):
-                mdl.store_float(self.vert_normals[vert_idx][i])
+            mdl.store_vec3f(self.vert_normals[vert_idx])
 
         mdl.store_32_at(mdl.get_position(), file_size_pos)
         mdl.store_32_at(mdl.get_position() - group_pos, group_size_pos)

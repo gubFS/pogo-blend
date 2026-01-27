@@ -10,7 +10,7 @@ class GubByteArray(bytearray):
         self.big_endian = False
 
     def pack(self, format: str, *args: Any):
-        format = ">" if self.big_endian else "<" + format
+        format = f"{'>' if self.big_endian else '<'}{format}"
         self.extend(struct.pack(format, *args))
 
     def get_position(self):
@@ -32,13 +32,13 @@ class GubByteArray(bytearray):
         self.pack("I", value)
 
     def store_32_at(self, value: int, offset: int):
-        format = ">" if self.big_endian else "<" + "I"
+        format = f"{'>' if self.big_endian else '<'}I"
         bytes = struct.pack(format, value)
         for i, byte in enumerate(bytes):
             self[offset + i] = byte
 
     def store_32s(self, value: int, amount: int):
-        self.pack(f"{amount}I", *[value for _ in range(amount)])
+        self.pack(f"{amount}I", *([value] * amount))
 
     def store_32_buffer(self, buffer: list[int]):
         self.pack(f"{len(buffer)}I", *buffer)
@@ -50,24 +50,19 @@ class GubByteArray(bytearray):
         self.pack("f", value)
 
     def store_float_buffer(self, floats: list[float], amount: int = -1):
-        if amount == -1:
-            amount = len(floats)
-        floats = floats[:amount]
-        for _ in range(amount - len(floats)):
-            floats.append(0.0)
-        self.pack(f"{amount}f", *floats)
+        if amount != -1:
+            floats = floats[:amount]
+            floats.extend([0.0] * (amount - len(floats)))
+        self.pack(f"{len(floats)}f", *floats)
 
     def store_buffer(self, buffer: list[int]):
         self.extend(buffer)
 
     def store_vec3f(self, vec: tuple[float, float, float]):
-        self.pack("3f", vec[0], vec[1], vec[2])
+        self.pack("3f", *vec)
 
     def store_vec3f_buffer(self, vecs: list[tuple[float, float, float]]):
-        floats = []
-        for vec in vecs:
-            floats.extend([vec[0], vec[1], vec[2]])
-        self.store_float_buffer(floats)
+        self.store_float_buffer([f for vec in vecs for f in vec])
 
     def store_string(self, value: str, size: int = -1):
         if size == -1:
@@ -75,7 +70,5 @@ class GubByteArray(bytearray):
         self.pack(f"{size}s", value.encode("utf-8"))
 
     def store_strings(self, strings: list[str]):
-        strbytes = bytearray()
-        for s in strings:
-            strbytes.extend(s.encode("utf-8"))
-        self.pack(f"{len(strbytes)}s", strbytes)
+        bytes = [byte for s in strings for byte in s.encode()]
+        self.pack(f"{len(bytes)}s", bytearray(bytes))
