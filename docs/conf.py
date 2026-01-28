@@ -15,8 +15,9 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_title = 'PogoBlend'
 html_theme = 'furo'
-html_static_path = ['_static']
 html_copy_source = False
+html_static_path = ['_static']
+html_css_files = ["video_admonition.css"]
 
 html_theme_options: dict[str, Any] = {
     "footer_icons": [

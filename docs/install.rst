@@ -9,6 +9,11 @@ The add-on uses `Blender 4.5 LTS <https://www.blender.org/download/lts/4-5/>`__,
 
 To install the add-on, download the `newest release <https://github.com/gubFS/pogo-blend/releases>`__ from the GitHub that matches your platform. It should be called something like ``pogo_blend-<version>-<platform>.zip``
 
+.. admonition:: Video
+   :class: video
+
+   There is a video of the Installation and Getting Started guides `here <https://www.youtube.com/watch?v=RjmvBSbCaFo>`__. This video is meant to be supplementary, and not a substitution, to the guides, so I suggest you still read them through.
+
 Open blender and in the top toolbar go to, ``Edit -> Prefrences -> Add-ons`` and in the top right there is an arrow that'll open a menu where you can choose 'Install from disk...'. Select the ZIP file you just downloaded. The add-on should now be installed and you can activate it.
 
 Whenever you activate the add-on it will search for the Custom Maps folder. Please expand the add-ons menu and check that the preference 'Custom Maps folder' contains the path to the CustomMaps folder in your Pogostuck Installation. If it does not, locate your Custom Maps folder and insert it here, it shold be something like ``<some_path>/Steam/steamapps/common/Pogostuck/CustomMaps``.

@@ -1,6 +1,11 @@
 Getting Started
 ===============
 
+.. admonition:: Video
+   :class: video
+
+   There is a video of the Getting Started guide `here <https://www.youtube.com/watch?v=RjmvBSbCaFo>`__. This video is meant to be supplementary, and not a substitution, to the guide, so I suggest you still read it through.
+
 Before making your first Map, here is some basic information that you should know:
 
 Pogostucks coordinate systems looks toward the positive Y-axis. So to look in the Blender file as you would in Pogostuck, position the Camera to look into the Y-axis with a orthographic view, to simulate how it would look in-game. You can do this by clicking on the '-Y' on the Gimbal in the top right of the main view, or with a shortcut (default is NUMPAD1).
@@ -37,6 +42,10 @@ These objects will need to be set in the CustomMap collection. Select the 'Custo
 Once the map has all the minimum requirements you can :doc:`build <building>` it from the Collection Inspector using the "Build Custom Map" button, or use F5 as a shortcut.
 
 Inside Pogostuck you can now go to your local Custom Maps and there should be a map with the name you chose! Edit your map in Blender, build it and hit F1 in Pogostuck and your changes will apply.
+
+.. tip::
+
+   You can fly in local Custom Maps by pressing and holding T.
 
 Add a cube under the Spawn Position and mark it as an Entity, using the Property Inspector. Turn on the collision flag, and build the Map again. You should now have a platform that the player can stand on.
 
