@@ -24,9 +24,10 @@ from .wmb_exporter.wmb_objects.wmb_path import PogoPathProgress, WMBPath
 from .wmb_exporter.wmb_objects.wmb_region import WMBRegion
 
 used_names = set()
+operator = None
 
 
-def build_custom_map(context, filepath, global_scale):
+def build_custom_map(context, filepath, global_scale, _operator):
     custom_map_collection = pbu.get_custom_map_collection()
     custom_map = pbu.get_custom_map()
     custom_map.update_splits()
@@ -70,6 +71,8 @@ def build_custom_map(context, filepath, global_scale):
             "workshopPreview.png",
         ]
     )
+    global operator
+    operator = _operator
     global used_names
     used_names = set(file for file in used_files)
     static_files = set()
@@ -276,19 +279,27 @@ def export_map_image(dirpath, custom_map):
     image = custom_map.map_image
     if image is None:
         return
-
-    old_format = image.file_format
-    image.file_format = 'PNG'
-    image.save(filepath=str(Path(dirpath, "workshopPreview.png")), save_copy=True)
-    image.file_format = old_format
+    export_image(image, Path(dirpath, "workshopPreview.png"), 'PNG')
 
 
 def export_texture(dirpath: str | Path, texture: dict):
-    image = texture["image"]
-    image.reload()
-    filepath = str(Path(dirpath, texture["name"]))
+    export_image(texture["image"], Path(dirpath, texture["name"]), 'TARGA_RAW')
 
-    old_format = image.file_format
-    image.file_format = 'TARGA_RAW'
-    image.save(filepath=filepath, save_copy=True)
-    image.file_format = old_format
+
+def export_image(image, filepath, format):
+    try:
+        image.reload()
+    except Exception:
+        pass
+
+    try:
+        old_format = image.file_format
+        image.file_format = format
+        image.save(filepath=str(filepath), save_copy=True)
+    except Exception:
+        operator.report({"WARNING"}, f"Could not export image ({image.name})")
+        image_path = pbu.get_image_path(image)
+        if not image_path.exists():
+            operator.report({"WARNING"}, f"'{str(image_path)}' does not exist")
+    finally:
+        image.file_format = old_format

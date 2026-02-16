@@ -105,17 +105,23 @@ def get_textures(mesh) -> list[dict]:
         for node in material.node_tree.nodes:
             if node.type == 'TEX_IMAGE':
                 image = node.image
+                if image is None:
+                    continue
+
                 path = ""
                 if image.filepath != "":
-                    full_path = bpy.path.abspath(image.filepath, library=image.library)
-                    image_path = str(Path(full_path).resolve())
-                    if Path(image_path).exists():
-                        path = image_path
+                    image_path = get_image_path(image)
+                    if image_path.exists():
+                        path = str(image_path)
                 name = image.name
                 if path != "":
                     name = Path(path).name
                 textures.append({"image": image, "path": path, "name": name})
     return textures
+
+
+def get_image_path(image) -> Path:
+    return Path(bpy.path.abspath(image.filepath, library=image.library)).resolve()
 
 
 def get_view_3d_context() -> tuple:
