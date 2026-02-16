@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
+import shutil
 from pathlib import Path
 
 import bpy
@@ -263,7 +264,25 @@ def make_asset_library(context, filepath: str):
         mat.node_tree.links.new(disp, image_node.outputs[0])
         if "name" in texture:
             mat.name = texture["name"]
+        materials[texture["filename"]] = [mat]
         assets.append((texture, mat, TEXTURE_CATALOG))
+
+    for mats in materials.values():
+        for material in mats:
+            for node in material.node_tree.nodes:
+                if node.type == 'TEX_IMAGE':
+                    image = node.image
+                    if image is None:
+                        continue
+
+                    image_path = pbu.get_image_path(image)
+                    textures = pbu.get_generated_library_path().parent.joinpath("textures")
+                    if not textures.exists():
+                        os.mkdir(textures)
+                    new_image_path = textures.joinpath(image_path.name)
+                    shutil.copy(image_path, new_image_path)
+
+                    image.filepath = str(new_image_path)
 
     for conf, asset, catalog in assets:
         asset.asset_mark()

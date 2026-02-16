@@ -1,5 +1,6 @@
 **/__pycache__/**
 /pogo_blend_asset_library/pogostuck.blend
+/pogo_blend_asset_library/textures/
 *.blend1
 *.txt~
 /docs/_build
