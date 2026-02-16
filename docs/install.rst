@@ -22,7 +22,7 @@ Whenever you activate the add-on it will search for the Custom Maps folder. Plea
 
    The :doc:`Add-on Preferences <preferences>` page for more information on the available preferences.
 
-If the path is correctly setup there will also be a button that says "Make asset library". This will open a new file and make an Asset Library containing some of the premade models by Superku. Go ahead and click it and wait until you return.
+If the path is correctly setup there will also be a button that says "Generate Pogostuck Asset Library". This will open a new file and make an Asset Library containing some of the premade models by Superku. Go ahead and click it and wait until you return.
 
 The add-on includes an Application Template that you can use to quickly get the skeleton of a Custom Map, and a more minimal Blender interface with most tools you don't need hidden. You can access this Application Template through ``File -> New -> PogoBlend``.
 
