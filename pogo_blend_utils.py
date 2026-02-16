@@ -8,11 +8,9 @@ import bpy
 import xxhash
 import yaml
 
-from .pogo_blend_preferences import get_preferences as gp
-
 
 def get_preferences() -> bpy.types.AddonPreferences:
-    return gp()
+    return bpy.context.preferences.addons[__package__].preferences
 
 
 class ContextError(Exception):
@@ -55,6 +53,10 @@ def get_custom_map_collection() -> bpy.types.Collection:
 
 def get_custom_map() -> bpy.types.PropertyGroup:
     return get_custom_map_collection().custom_map
+
+
+def get_generated_library_path() -> Path:
+    return Path(__file__).parent.joinpath("pogo_blend_asset_library/pogostuck.blend")
 
 
 def get_unique_name(suggestion, required_suffix, max_length, used_names):

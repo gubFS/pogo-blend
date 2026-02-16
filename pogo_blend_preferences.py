@@ -7,6 +7,8 @@ from string import ascii_uppercase
 
 import bpy
 
+from . import pogo_blend_utils as pbu
+
 
 class SelectCustomMapsDir(bpy.types.Operator):
     bl_idname = "pogo_blend.select_custom_maps_dir"
@@ -87,7 +89,7 @@ class PogoBlendPreferences(bpy.types.AddonPreferences):
 
         layout.prop(self, "show_overrides")
         if bpy.ops.pogo_blend.make_asset_library.poll():
-            layout.operator("pogo_blend.make_asset_library")
+            layout.operator("pogo_blend.make_asset_library", text=f"{'Reg' if pbu.get_generated_library_path().exists() else 'G'}enerate Pogostuck Asset Library")
 
 
 def get_preferences():

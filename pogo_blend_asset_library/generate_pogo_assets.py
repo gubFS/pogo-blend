@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2026 gubFS
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import os
 from pathlib import Path
 
 import bpy
@@ -290,9 +291,10 @@ def go_back(filepath: str):
     bpy.context.window.cursor_set('WAIT')
     if bpy.app.is_job_running('RENDER_PREVIEW'):
         return 0.1
-    asset_libary_dir = Path(__file__).parent
-    pogostuck = Path(asset_libary_dir).joinpath("pogostuck.blend")
-    bpy.ops.wm.save_mainfile(filepath=str(pogostuck))
+    pogostuck_assets = pbu.get_generated_library_path()
+    if pogostuck_assets.exists():
+        os.remove(pogostuck_assets)
+    bpy.ops.wm.save_mainfile(filepath=str(pogostuck_assets), check_existing=False)
     bpy.context.window.cursor_set('DEFAULT')
     if filepath != "":
         bpy.ops.wm.open_mainfile(filepath=filepath)
@@ -308,11 +310,6 @@ class MakeAssetLibraryOperator(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context) -> bool:
-        asset_libary_dir = Path(__file__).parent
-        pogostuck = Path(asset_libary_dir).joinpath("pogostuck.blend")
-        if pogostuck.exists():
-            return False
-
         custom_map_dir = Path(pbu.get_preferences().custom_maps_path)
         if not custom_map_dir.exists():
             return False
