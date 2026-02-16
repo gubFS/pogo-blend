@@ -136,7 +136,7 @@ def build_custom_map(context, filepath, global_scale, _operator):
     for wmb_entities, obj in entities.values():
         filename = pbu.get_unique_name(obj.name.replace(".", "_"), ".mdl", 33, used_names)
         if filename is None:
-            print("WARNING: could not find a unique filename")
+            operator.report({"WARNING"}, f"Could not find a unique filename ({obj.name})")
             continue
         used_files.add(filename)
 
@@ -153,7 +153,7 @@ def build_custom_map(context, filepath, global_scale, _operator):
                     used_names,
                 )
                 if new_texture is None:
-                    print("WARNING: could not find a unique filename")
+                    operator.report({"WARNING"}, f"Could not find a unique filename ({texture['name']})")
                     continue
                 else:
                     used_files.add(new_texture)
@@ -175,7 +175,7 @@ def build_custom_map(context, filepath, global_scale, _operator):
         for obj, entity in colliders:
             filename = pbu.get_unique_name(obj.name.replace(".", "_"), "_col.mdl", 33, used_names)
             if filename is None:
-                print("WARNING: could not find a unique filename")
+                operator.report({"WARNING"}, f"Could not find a unique filename ({obj.name})")
                 continue
             used_files.add(filename)
             mdlpath = Path(dirpath, filename)
