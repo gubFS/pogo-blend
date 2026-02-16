@@ -10,7 +10,7 @@ from ... import pogo_blend_utils as pbu
 class CreateColliderContext:
     def __enter__(self):
         window, screen, area = pbu.get_view_3d_context()
-        self.temp_override = bpy.context.temp_override(window=window, screen=screen, area=area)
+        self.temp_override = bpy.context.temp_override(screen=screen, area=area, **({"window": window} if window else {}))
         self.temp_override.__enter__()
 
         context = bpy.context
