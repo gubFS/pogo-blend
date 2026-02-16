@@ -91,11 +91,10 @@ keymaps = []
 
 @persistent
 def post_save(file: str):
-    if CustomMapBuilder.poll(bpy.context):
-        try:
-            bpy.ops.pogo_blend.build_custom_map('INVOKE_DEFAULT')
-        except Exception:
-            pass
+    try:
+        bpy.ops.pogo_blend.build_custom_map('INVOKE_DEFAULT')
+    except Exception:
+        pass
 
 
 def menu_func(self, context):
