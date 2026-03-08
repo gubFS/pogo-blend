@@ -151,24 +151,29 @@ customMaterial1:
   description: A Custom Material
   ambient: Ambient
   albedo: Albedo
+  transparent: true
 customMaterial2:
   name: Custom Material 2
   description: A Custom Material
   ambient: Ambient
   albedo: Albedo
+  transparent: true
 customMaterial3:
   name: Custom Material 3
   description: A Custom Material
   ambient: Ambient
   albedo: Albedo
+  transparent: true
 customMaterial4:
   name: Custom Material 4
   description: A Custom Material
   ambient: Ambient
   albedo: Albedo
+  transparent: true
 customMaterial5:
   name: Custom Material 5
   description: A Custom Material
   ambient: Ambient
   albedo: Albedo
+  transparent: true
 ...

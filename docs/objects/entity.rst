@@ -37,6 +37,8 @@ You can make Custom Materials using HLSL and ``.fx`` files. There is 5 different
 
 When you edit/add a Custom Material, you might need to restart Pogostuck so it can setup auto reloading of that material. When that is setup, you just need to export the map and the shader will be updated instantly, you won't even have to reload the map! Once you are done mapping and editing Custom Materials, you might also want to restart Pogostuck again, because otherwise other Custom Maps using Custom Materials will use the ones you've made instead of theirs.
 
+In order to use the alpha value in your pixel shader, you should set the 'alphaBlendEnable' value in the technique to true.
+
 .. caution::
 
   If you make a mistake in the shader, a default shader will be used instead.
