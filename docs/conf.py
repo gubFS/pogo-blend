@@ -3,7 +3,7 @@ from typing import Any
 project = 'PogoBlend'
 copyright = '2026, gubFS'
 author = 'gubFS'
-release = '1.0.1'
+release = '1.0.2'
 language = 'en'
 
 extensions = [
