@@ -118,7 +118,8 @@ def import_mdl(context, filepath, scale):
             continue
         imagepath = str(Path(filepath).parent.joinpath(skin))
         if not Path(imagepath).exists():
-            print(f"Could not find {imagepath}!")
+            if pbu.get_preferences().debug_mode:
+                print(f"Could not find {imagepath}!")
             continue
         mat = bpy.data.materials.new(name=Path(skin).stem)
         mat.use_nodes = True

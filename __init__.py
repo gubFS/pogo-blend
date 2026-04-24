@@ -45,25 +45,6 @@ from .ui.operators import (
     presets,
 )
 
-# Uncomment the following for quick reloading of addon. Only for use in development.
-# import importlib
-# for root, dirs, files in os.walk(Path(__file__).parent):
-#     root.replace("\\", "/")  # Windows >:(
-#     if "__pycache__" in root or ".git" in root:
-#         continue
-#     for file in files:
-#         filename = Path(file).stem
-#         if Path(file).suffix != ".py":
-#             continue
-#         if file == "__init__.py":
-#             continue
-#         if filename in locals():
-#             importlib.reload(locals()[filename])
-#         else:
-#             rel = root.split("/pogo_blend")[1].replace("/", ".")
-#             rel = f"{rel}.{filename}"
-#             locals()[filename] = importlib.import_module(rel, package=__name__)
-
 modules = [
     pbu,
     custom_map_builder_operator,
@@ -87,6 +68,35 @@ modules = [
     presets,
     generate_pogo_assets,
 ]
+
+
+def reload_all_modules():
+    import importlib
+
+    pogo_blend_dir = Path(__file__).parent
+    for root, dirs, files in os.walk(pogo_blend_dir):
+        root = Path(root)
+        for file in files:
+            file = Path(root, file)
+            filename = file.stem
+            if file.match("**/__pycache__/**") or file.match("**/.git/**") or file.match("**/docs/**"):
+                continue
+            if file.suffix != ".py":
+                continue
+            if file.name == "__init__.py":
+                continue
+            if filename in globals():
+                if pbu.get_preferences().debug_mode:
+                    print(f"Reloading: {filename}")
+                importlib.reload(globals()[filename])
+            else:
+                rel = file.relative_to(pogo_blend_dir)
+                rel = Path(rel.parent, rel.stem)
+                rel = str(rel).replace("/", ".")
+                rel = f".{rel}"
+                if pbu.get_preferences().debug_mode:
+                    print(f"Importing: {rel}")
+                globals()[filename] = importlib.import_module(rel, package=__name__)
 
 
 def manual_map():
@@ -124,12 +134,34 @@ def install_app_template():
     bpy.ops.preferences.app_template_install(filepath=str(Path(__file__).parent.joinpath("app_template.zip")))
 
 
-def register():
-    for module in modules:
-        for cls in module.classes:
+def register_module(module):
+    for cls in module.classes:
+        if not hasattr(cls, "is_registered") or not cls.is_registered:
             bpy.utils.register_class(cls)
-        if hasattr(module, "register"):
-            module.register()
+    if hasattr(module, "register"):
+        module.register()
+
+
+def unregister_module(module):
+    if hasattr(module, "unregister"):
+        module.unregister()
+    for cls in reversed(module.classes):
+        if not hasattr(cls, "is_registered") or cls.is_registered:
+            try:
+                bpy.utils.unregister_class(cls)
+            except RuntimeError:
+                pass
+
+
+def register():
+    register_module(pbu)
+
+    if pbu.get_preferences().debug_mode:
+        reload_all_modules()
+    unregister_module(pbu)
+
+    for module in modules:
+        register_module(module)
 
     asset_libraries = bpy.context.preferences.filepaths.asset_libraries
     lib_id = asset_libraries.find("PogoBlend")
@@ -160,9 +192,6 @@ def unregister():
         asset_libraries.remove(asset_libraries[lib_id])
 
     for module in reversed(modules):
-        if hasattr(module, "unregister"):
-            module.unregister()
-        for cls in reversed(module.classes):
-            bpy.utils.unregister_class(cls)
+        unregister_module(module)
 
     bpy.utils.unregister_manual_map(manual_map)

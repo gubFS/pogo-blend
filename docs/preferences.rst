@@ -11,5 +11,6 @@ The **Map Scale** value determines the scale that the Custom Map will be exporte
 
 The **MDL Exporter/Importer** options, enables exporting and importing MDL-files. The exporter and importer are used internally, but can be made accesible by enabling them here. MDL is the format of models that Pogostuck uses. If you haven't made maps using them before, you probably don't have to worry about these options.
 
-The **Enable overrides** options, allows you to change all values on an entity. This is mainly for development or for more technical tasks. You can read more about :ref:`overiddes here <overrides>`.
+The **Enable Overrides** option, allows you to change all values on an entity. This is mainly for development or for more technical tasks. You can read more about :ref:`overiddes here <overrides>`.
 
+The **Debug Mode** option enables more verbose outputs and options, allowing for easier debugging and development. It is not relevant for casual use cases.

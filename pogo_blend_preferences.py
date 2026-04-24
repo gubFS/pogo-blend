@@ -62,7 +62,7 @@ class PogoBlendPreferences(bpy.types.AddonPreferences):
 
     show_overrides: bpy.props.BoolProperty(
         default=False,
-        name="Enable overrides",
+        name="Enable Overrides",
         description="Adds a panel to entities that shows all editiable fields. Not relevant in most normal use cases",
     )
 
@@ -70,6 +70,12 @@ class PogoBlendPreferences(bpy.types.AddonPreferences):
         default=False,
         name="Build on save",
         description="Builds the Custom Map whenever the Blender file is saved. Reload Blender to apply",
+    )
+
+    debug_mode: bpy.props.BoolProperty(
+        default=False,
+        name="Debug Mode",
+        description="Enables more verbose outputs and options, allowing for easier debugging and development. Not relevant for casual use cases",
     )
 
     def draw(self, context):
@@ -87,7 +93,9 @@ class PogoBlendPreferences(bpy.types.AddonPreferences):
         row.prop(self, "mdl_importer")
         row.prop(self, "mdl_exporter")
 
-        layout.prop(self, "show_overrides")
+        row = layout.row()
+        row.prop(self, "show_overrides")
+        row.prop(self, "debug_mode")
         if bpy.ops.pogo_blend.make_asset_library.poll():
             layout.operator("pogo_blend.make_asset_library", text=f"{'Reg' if pbu.get_generated_library_path().exists() else 'G'}enerate Pogostuck Asset Library")
 

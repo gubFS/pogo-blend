@@ -19,8 +19,6 @@ To build the add-on to a ZIP file, you can use the command:\
 ``` blender --command extension build --source-dir pogo-blend --output-dir build --split-platforms ```\
 But that should only be necessary if you are releasing or sharing a final build.
 
-In the ```__init__.py``` file, there is some commented out text, that when uncommented will reload all modules in the add-on, when reloading scripts from Blender, so you don't have to restart Blender on every change. Blender will normally only reload the ```__init__.py``` file otherwise.
-
 ### Dependencies
 
 * **Blender 4.5 LTS**

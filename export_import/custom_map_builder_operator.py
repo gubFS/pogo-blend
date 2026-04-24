@@ -39,6 +39,8 @@ class CustomMapBuilder(bpy.types.Operator):
                 f"Custom Map built in {math.floor((time.time() - start_time) * 1000)}ms",
             )
         except Exception as e:
+            if pbu.get_preferences().debug_mode:
+                raise e
             error_type = {'ERROR'}
             if isinstance(type, pbu.ContextError):
                 error_type = {'ERROR_INVALID_CONTEXT'}
