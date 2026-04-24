@@ -24,99 +24,100 @@ class MDLExporter:
             raise Exception("No objects selected")
         self.objs = objs
 
-        center = Vector((0, 0, 0))
-        if not bake_location:
-            sum = Vector((0, 0, 0))
-            for obj in objs:
-                sum += obj.matrix_world.translation * scale
-            center = sum / len(objs)
+        with pbu.BlenderModeContext():
+            center = Vector((0, 0, 0))
+            if not bake_location:
+                sum = Vector((0, 0, 0))
+                for obj in objs:
+                    sum += obj.matrix_world.translation * scale
+                center = sum / len(objs)
 
-        self.skins = {}
-        self.uvs = []
-        self.tris = []
-        self.verts = []
-        self.vert_normals = []
+            self.skins = {}
+            self.uvs = []
+            self.tris = []
+            self.verts = []
+            self.vert_normals = []
 
-        obj_verts_index = 0
-        uv_index = 0
-        skin_dict = {}
-        dg = bpy.context.evaluated_depsgraph_get()
-        for obj in self.objs:
-            mesh = obj.to_mesh()
-            bm = bmesh.new()
-            bm.from_object(obj, dg)
-            bmesh.ops.triangulate(bm, faces=bm.faces)
-            bm.to_mesh(mesh)
-            bm.free()
+            obj_verts_index = 0
+            uv_index = 0
+            skin_dict = {}
+            dg = bpy.context.evaluated_depsgraph_get()
+            for obj in self.objs:
+                mesh = obj.to_mesh()
+                bm = bmesh.new()
+                bm.from_object(obj, dg)
+                bmesh.ops.triangulate(bm, faces=bm.faces)
+                bm.to_mesh(mesh)
+                bm.free()
 
-            textures = pbu.get_textures(mesh)
-            for i, texture in enumerate(textures):
-                if texture["name"] in self.skins:
-                    skin_dict[i] = self.skins[texture["name"]]
-                else:
-                    self.skins[texture["name"]] = (texture, len(self.skins))
-                    skin_dict[i] = self.skins[texture["name"]]
-            has_skin = len(textures) != 0
-            self.has_skin = has_skin
-
-            # y-axis is flipped in A8
-            uv_hash_map = {}
-            uv_idx_lookup = []
-            if has_skin:
-                for uv in mesh.uv_layers[0].uv:
-                    uv = Vector((uv.vector.x, 1 - uv.vector.y))
-                    uv.freeze()
-                    idx = len(uv_hash_map)
-                    if uv in uv_hash_map:
-                        idx = uv_hash_map[uv]
+                textures = pbu.get_textures(mesh)
+                for i, texture in enumerate(textures):
+                    if texture["name"] in self.skins:
+                        skin_dict[i] = self.skins[texture["name"]]
                     else:
-                        uv_hash_map[uv] = idx
-                        self.uvs.append(uv)
-                    uv_idx_lookup.append(idx)
+                        self.skins[texture["name"]] = (texture, len(self.skins))
+                        skin_dict[i] = self.skins[texture["name"]]
+                has_skin = len(textures) != 0
+                self.has_skin = has_skin
 
-            loc = obj.matrix_world.translation
-            rot = obj.matrix_world.to_euler()
-            scl = obj.matrix_world.to_scale()
-            for vert in mesh.vertices:
-                normal = vert.normal.copy()
-                vert = vert.co.copy()
-                vert *= scale
-                if bake_rotation:
-                    vert.rotate(rot)
-                    normal.rotate(rot)
-                if bake_scale:
-                    vert *= scl
-
-                self.verts.append((loc * scale - center) + vert)
-                self.vert_normals.append(normal * -1)  # GSA8 uses flipped normals or something
-
-            uvkeys = {}
-            if has_skin:
-                uv_idx = 0
-                for poly in mesh.polygons:
-                    uvkeys[poly.index] = {}
-                    for vert_idx in poly.vertices:
-                        uvkeys[poly.index][vert_idx] = uv_idx_lookup[uv_idx]
-                        uv_idx += 1
-
-            for i, tri in enumerate(mesh.loop_triangles):
-                poly_idx = mesh.loop_triangle_polygons[i].value
-                skin_idx = 0
-                if has_skin and tri.material_index in skin_dict:
-                    skin_idx = skin_dict[tri.material_index][1]
-
-                vert_indecies = []
-                uv_indecies = []
-                for i in range(2, -1, -1):  # loop in reverse because the normals are flipped in mdl files compared to blend
-                    vert_indecies.append(obj_verts_index + tri.vertices[i])
+                # y-axis is flipped in A8
+                uv_hash_map = {}
+                uv_idx_lookup = []
                 if has_skin:
-                    for vert_idx in tri.vertices:
-                        uv_indecies.append(uv_index + uvkeys[poly_idx][vert_idx])
-                    uv_indecies.reverse()
-                self.tris.append((vert_indecies, uv_indecies, skin_idx))
+                    for uv in mesh.uv_layers[0].uv:
+                        uv = Vector((uv.vector.x, 1 - uv.vector.y))
+                        uv.freeze()
+                        idx = len(uv_hash_map)
+                        if uv in uv_hash_map:
+                            idx = uv_hash_map[uv]
+                        else:
+                            uv_hash_map[uv] = idx
+                            self.uvs.append(uv)
+                        uv_idx_lookup.append(idx)
 
-            obj_verts_index = len(self.verts)
-            uv_index = len(self.uvs)
+                loc = obj.matrix_world.translation
+                rot = obj.matrix_world.to_euler()
+                scl = obj.matrix_world.to_scale()
+                for vert in mesh.vertices:
+                    normal = vert.normal.copy()
+                    vert = vert.co.copy()
+                    vert *= scale
+                    if bake_rotation:
+                        vert.rotate(rot)
+                        normal.rotate(rot)
+                    if bake_scale:
+                        vert *= scl
+
+                    self.verts.append((loc * scale - center) + vert)
+                    self.vert_normals.append(normal * -1)  # GSA8 uses flipped normals or something
+
+                uvkeys = {}
+                if has_skin:
+                    uv_idx = 0
+                    for poly in mesh.polygons:
+                        uvkeys[poly.index] = {}
+                        for vert_idx in poly.vertices:
+                            uvkeys[poly.index][vert_idx] = uv_idx_lookup[uv_idx]
+                            uv_idx += 1
+
+                for i, tri in enumerate(mesh.loop_triangles):
+                    poly_idx = mesh.loop_triangle_polygons[i].value
+                    skin_idx = 0
+                    if has_skin and tri.material_index in skin_dict:
+                        skin_idx = skin_dict[tri.material_index][1]
+
+                    vert_indecies = []
+                    uv_indecies = []
+                    for i in range(2, -1, -1):  # loop in reverse because the normals are flipped in mdl files compared to blend
+                        vert_indecies.append(obj_verts_index + tri.vertices[i])
+                    if has_skin:
+                        for vert_idx in tri.vertices:
+                            uv_indecies.append(uv_index + uvkeys[poly_idx][vert_idx])
+                        uv_indecies.reverse()
+                    self.tris.append((vert_indecies, uv_indecies, skin_idx))
+
+                obj_verts_index = len(self.verts)
+                uv_index = len(self.uvs)
 
     # See MDL7Format.txt for documentation
     def export(self):

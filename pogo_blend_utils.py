@@ -134,6 +134,30 @@ def get_view_3d_context() -> tuple:
     return (window, *context)
 
 
+class BlenderModeContext:
+    def __enter__(self):
+        self.mode = bpy.context.mode
+        try:
+            bpy.ops.object.mode_set(mode='OBJECT')
+        except RuntimeError:
+            pass
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if self.mode.startswith('EDIT') and self.mode != 'EDIT_GPENCIL':
+            self.mode = 'EDIT'
+        elif self.mode.startswith('PAINT'):
+            self.mode = "_".join(reversed(self.mode.split("_")))
+        elif self.mode == 'PARTICLE':
+            self.mode = f"{self.mode}_EDIT"
+        elif self.mode.endswith('GPENCIL') and self.mode != 'EDIT_GPENCIL':
+            self.mode = self.mode.replace('GPENCIL', 'GREASE_PENCIL')
+        try:
+            bpy.ops.object.mode_set(mode=self.mode)
+        except RuntimeError:
+            pass
+
+
 def open_temp_text_editor():
     bpy.ops.wm.window_new()
 

@@ -22,6 +22,9 @@ class CreateColliderContext:
         self.c_selected_objects = context.selected_objects
         self.c_active_object = context.view_layer.objects.active
 
+        self.blender_mode_context = pbu.BlenderModeContext()
+        self.blender_mode_context.__enter__()
+
         # add camera
         bpy.ops.object.camera_add(
             location=(0, 0, 0),
@@ -180,6 +183,7 @@ class CreateColliderContext:
         for obj in self.c_selected_objects:
             obj.select_set(True)
         context.view_layer.objects.active = self.c_active_object
+        self.blender_mode_context.__exit__(exc_type, exc_value, traceback)
 
         self.temp_override.__exit__()
 

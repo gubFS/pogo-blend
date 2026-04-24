@@ -32,7 +32,8 @@ class CustomMapBuilder(bpy.types.Operator):
         context.window.cursor_set('WAIT')
         start_time = time.time()
         try:
-            build_custom_map(context, self.filepath, self.global_scale, self)
+            with pbu.BlenderModeContext():
+                build_custom_map(context, self.filepath, self.global_scale, self)
             self.report(
                 {'INFO'},
                 f"Custom Map built in {math.floor((time.time() - start_time) * 1000)}ms",
