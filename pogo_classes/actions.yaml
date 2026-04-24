@@ -245,7 +245,7 @@ runStateToggle:
 
 water_act:
   name: Water Visual
-  description: Adds a flowing water visual to the entity
+  description: Adds a flowing water visual to the entity. The entity should have a texture (any texture) applied, otherwise it looks weird. Changing the UVs will change how the water flows (speed, angle, width, wobbliness)
 
 skillset_act:
   name: Skill set
