@@ -241,13 +241,16 @@ def build_custom_map(context, filepath, global_scale, _operator):
         shutil.copy(filepath, pogostuck_path)
 
     # cleanup
-
     files_in_dictionary = set([file for file in os.listdir(dirpath) if Path(dirpath, file).is_file()])
     unused_files = files_in_dictionary.difference(used_files)
     for file in unused_files:
-        if not file.startswith("_"):
-            fullpath = Path(dirpath, file)
-            os.remove(fullpath)
+        if file.startswith("_"):
+            continue
+        if file.endswith(".blend"):
+            continue
+
+        fullpath = Path(dirpath, file)
+        os.remove(fullpath)
 
     cache.keep(used_files)
     cache.write()

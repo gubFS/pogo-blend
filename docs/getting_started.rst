@@ -31,6 +31,9 @@ Making a Map
 
 To start making a Map, open Blender and make a new project. I recommend using the provided Application Template, under ``File -> New -> PogoBlend``. Save the Blender file to a folder where you will store all your project files, e.g ``Desktop/CustomMapProjects/MyMap/MyMap.blend``.
 
+.. danger::
+   Do **NOT** save your project files in the generated folder under your Pogostuck installation, as this is the output when :ref:`building <building_danger>` the map, and unexpected files will be deleted.
+
 To make a custom map there is 3 required objects. A Spawn Position, a Start Line, and a Progress Path. The provided Application Template, will automatically create and set these.
 
 These objects will need to be set in the CustomMap collection. Select the 'CustomMap' collection and switch the Properties Inspector to show Collections. Here you will see a tab for configuring the settings of the Custom Map. Here you can change the Map Name, Description, Image, Splits and Modes. The Map will need a name, and the earlier mentioned required objects.
