@@ -83,7 +83,10 @@ class StaticFileRemove(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        custom_map = pbu.get_custom_map()
+        try:
+            custom_map = pbu.get_custom_map()
+        except pbu.ContextError:
+            return False
         current_idx = custom_map.active_static_file_idx
         return current_idx < len(custom_map.static_files) and current_idx >= 0
 
