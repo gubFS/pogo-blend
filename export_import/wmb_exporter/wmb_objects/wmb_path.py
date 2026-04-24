@@ -11,13 +11,25 @@ class WMBPath:
 
         location = obj.matrix_world.translation
         scale = obj.matrix_world.to_scale().to_3d()
-        self.points = []
-        for point in obj.data.splines[0].points:
+        path_points = obj.data.splines[0].points
+
+        self.points = {}
+        for i, point in enumerate(path_points):
+            hash = self._hash_point(point)
             point = point.co.to_3d()
             point.rotate(obj.matrix_world.to_euler())
             point = point * scale + location
             point *= global_scale
-            self.points.append(point)
+            if hash not in self.points:
+                self.points[hash] = (len(self.points), point, [])
+                if i == 0:
+                    continue
+                prev_hash = self._hash_point(path_points[i - 1])
+                self.points[prev_hash][2].append(self.points[hash][0])
+        self.points = sorted(self.points.values(), key=lambda p: p[0])
+
+    def _hash_point(self, point):
+        return point.co.copy().freeze()
 
     def to_bytes(self) -> GubByteArray:
         bytes = GubByteArray()
@@ -29,23 +41,24 @@ class WMBPath:
 
         # number of edges, which is 3 + no_of_edges * 5, for some reason
         bytes.store_32(3 + (len(self.points) - 1) * 5)
-        bytes.store_vec3f_buffer(self.points)
+        bytes.store_vec3f_buffer([point for _, point, _ in self.points])
 
         # store skills (6 of em) per point? paths have no skills, what?
         bytes.store_32s(0, len(self.points) * 6)
 
-        # store which two points make an edge. For now its just the two next to eachother in the array, also as a float btw
-        for i in range(len(self.points) - 1):
-            bytes.store_float(i + 1)  # +1 cuz 1-indexed
-            bytes.store_float(i + 2)
+        # store which two points make an edge. also as a float btw
+        for idx, point, edges in self.points:
+            for edge in edges:
+                bytes.store_float(idx + 1)  # +1 cuz 1-indexed
+                bytes.store_float(edge + 1)
 
-            # store the length of the edge
-            distance = (self.points[i + 1] - self.points[i]).length
-            bytes.store_float(distance)
+                # store the length of the edge
+                distance = (self.points[edge][1] - point).length
+                bytes.store_float(distance)
 
-            bytes.store_float(0)  # beizer
-            bytes.store_float(0)  # weight
-            bytes.store_float(0)  # skill
+                bytes.store_float(0)  # beizer
+                bytes.store_float(0)  # weight
+                bytes.store_float(0)  # skill
 
         return bytes
 
