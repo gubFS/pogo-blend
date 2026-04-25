@@ -15,8 +15,10 @@ The add-on is written using Blenders Python API.
 In Blender under ```Edit -> Preferences -> Interface -> Display``` you can enable 'Developer Extras' and 'Python Tooltips'. Navigate to the add-ons preferences, and now there should be a button to go to the install location, which will have all the Python files.
 If you've cloned this repository, you might want to replace the add-on location with a symlink to the root of this project.
 
+I use ``` just ``` for common commands. They've only been tested on linux.
+
 To build the add-on to a ZIP file, you can use the command:\
-``` blender --command extension build --source-dir pogo-blend --output-dir build --split-platforms ```\
+``` just build-addon ```\
 But that should only be necessary if you are releasing or sharing a final build.
 
 ### Dependencies
@@ -25,14 +27,14 @@ But that should only be necessary if you are releasing or sharing a final build.
 * **xxHash**
 * **PyYAML**
 
-Python Wheels for xxHash and PyYAML is distributed along with the addon, so all you should need to start changing/adding to the codebase is Blender (and a text editor/IDE I suppose).
+Wheels for xxHash and PyYAML can be downloaded with:
+``` just download-wheels ```
 
 ## Documentation
 
 The documentation is generated using Sphinx, and written with ReStructuredText.
 
-To build the documentation to HTML, use the provided make file, or make.bat on Windows. I find it easiest to include ``` SPHINXOPTS="-E" ``` to remake all files, because otherwise the datatemplates or content tree might become unsynced:\
-``` make html SPHINXOPTS="-E" ```
+To build the documentation to HTML, you can use, ``` just build-docs ```, and ``` just open-docs ``` to open to documentation in your default browser or ``` just run-docs ``` to both build and open the documentation.
 
 ### Dependencies
 

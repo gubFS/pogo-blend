@@ -4,3 +4,5 @@
 *.blend1
 *.txt~
 /docs/_build
+/build
+/wheels

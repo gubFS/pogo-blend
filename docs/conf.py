@@ -1,9 +1,11 @@
+from os import getenv
 from typing import Any
 
 project = 'PogoBlend'
 copyright = '2026, gubFS'
 author = 'gubFS'
-release = '1.0.2'
+version = getenv("POGOBLEND_VERSION")
+release = version
 language = 'en'
 
 extensions = [

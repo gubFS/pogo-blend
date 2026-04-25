@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "pogo_blend"
-version = "1.0.2"
+version = "1.0.3"
 name = "PogoBlend"
 tagline = "An Add-on for creating Pogostuck Custom Maps using Blender"
 maintainer = "gubFS"
@@ -47,4 +47,6 @@ paths_exclude_pattern = [
   "pogo_blend_asset_library/*.blend1",
   "README.md",
   "export_import/mdl_exporter/MDL7Format.txt",
+  "build",
+  "justfile"
 ]
