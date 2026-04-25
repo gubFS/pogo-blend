@@ -64,7 +64,7 @@ class MDLExporter:
                 uv_hash_map = {}
                 uv_idx_lookup = []
                 if has_skin:
-                    for uv in mesh.uv_layers[0].uv:
+                    for uv in [uv for uv_layer in mesh.uv_layers[:2] for uv in uv_layer.uv]:
                         uv = Vector((uv.vector.x, 1 - uv.vector.y))
                         uv.freeze()
                         idx = len(uv_hash_map)
@@ -74,6 +74,7 @@ class MDLExporter:
                             uv_hash_map[uv] = idx
                             self.uvs.append(uv)
                         uv_idx_lookup.append(idx)
+                self.has_second_uv_set = len(mesh.uv_layers) >= 2
 
                 loc = obj.matrix_world.translation
                 rot = obj.matrix_world.to_euler()
@@ -97,7 +98,7 @@ class MDLExporter:
                     for poly in mesh.polygons:
                         uvkeys[poly.index] = {}
                         for vert_idx in poly.vertices:
-                            uvkeys[poly.index][vert_idx] = uv_idx_lookup[uv_idx]
+                            uvkeys[poly.index][vert_idx] = uv_idx
                             uv_idx += 1
 
                 for i, tri in enumerate(mesh.loop_triangles):
@@ -112,8 +113,12 @@ class MDLExporter:
                         vert_indecies.append(obj_verts_index + tri.vertices[i])
                     if has_skin:
                         for vert_idx in tri.vertices:
-                            uv_indecies.append(uv_index + uvkeys[poly_idx][vert_idx])
-                        uv_indecies.reverse()
+                            uv_indecies.append(uv_index + uv_idx_lookup[uvkeys[poly_idx][vert_idx]])
+                        uv_indecies = uv_indecies[::-1]
+                        if self.has_second_uv_set:
+                            for vert_idx in tri.vertices:
+                                uv_indecies.append(uv_index + uv_idx_lookup[uvkeys[poly_idx][vert_idx] + len(uv_idx_lookup) // 2])
+                            uv_indecies[3:6] = uv_indecies[3:6][::-1]
                     self.tris.append((vert_indecies, uv_indecies, skin_idx))
 
                 obj_verts_index = len(self.verts)
@@ -173,13 +178,20 @@ class MDLExporter:
                 mdl.store_float_buffer(uv)  # vec2f
 
         for tri, uv, skin_idx in self.tris:
-            for i in range(3):
-                mdl.store_16(tri[i])
-            for i in range(3):
-                mdl.store_16(uv[i] if self.has_skin else 0)
-            mdl.store_32(skin_idx)
-            mdl.store_8s(0xFF, 6)
-            mdl.store_8s(0xFF, 4)
+            for tri_idx in tri[:3]:
+                mdl.store_16(tri_idx)
+            if self.has_skin:
+                for uv_idx in uv[:3]:
+                    mdl.store_16(uv_idx)
+                mdl.store_32(skin_idx)
+                if self.has_second_uv_set:
+                    for uv_idx in uv[3:6]:
+                        mdl.store_16(uv_idx)
+                    mdl.store_32(skin_idx)
+                else:
+                    mdl.store_8s(0, 10 * 1)
+            else:
+                mdl.store_8s(0, 10 * 2)
 
         for vert_idx in range(len(self.verts)):
             mdl.store_vec3f(self.verts[vert_idx])

@@ -15,7 +15,6 @@ Here's a list of some things that I'd like to add to the add-on, if possible, bu
 - Add option for automatically making gravity regions have a gravity background.
 - Option to automatically add a "Teleport check split" at the start.
 - Add option to "Preload" a map by placing invisible versions of them at the start. In Custom Map X there was a problem with stutters because the models only loaded once you got close enough, so maybe this could fix it.
-- Add ability to add moss. (i saw this on the discord at some point)
 - Automatically bake Blender materials into textures.
 - Converting a curve to a wind path.
 - Making Custom Materials using Blender.

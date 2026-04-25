@@ -25,7 +25,7 @@ Below is an in-game image of the available materials, aswell as a list of their 
 .. figure:: materials.png
    :align: center
 
-   *In-game image of the available materials with a gradient texture applied. Note: the 'Sap', 'Pink Sap' and 'Boost Juice' materials have a bubbles texture instead. Also, the 'Normal Mapping' material is using a second texture, a normal map, and it will look different depedning on the normal map you are using.*
+   *In-game image of the available materials with a gradient texture applied. Note: the 'Sap', 'Pink Sap' and 'Boost Juice' materials have a bubbles texture instead. Also, the 'Normal Mapping' material is using a second texture, a normal map, and it will look different depedning on the normal map you are using. 'Moss' has a second UV Map that determines the location of the moss.*
 
 .. datatemplate:yaml:: ../../pogo_classes/materials.yaml
     :template: ./objects/materials.tmpl

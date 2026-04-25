@@ -48,3 +48,4 @@ The model format that Pogostuck uses supports a maximum of 65k vertices.
   :hidden:
 
   sap_like_meshes
+  moss

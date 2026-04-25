@@ -55,6 +55,9 @@ iceSnow_mat:
 map3ClothBee_mat:
   name: Bee
   description: Looks like the hair on the bees
+map3GrassFruit_mat:
+  name: Moss
+  description: Uses a second UV Map to add moss to the entity. Any UV-cordinate on the second UV Map, that has an X-value greater than 1 becomes mossy
 
 appAGeoXRay_mat:
   name: XRay Geometry
