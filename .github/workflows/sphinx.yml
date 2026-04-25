@@ -12,9 +12,11 @@ jobs:
       with:
         persist-credentials: false
     - name: Build HTML
-      uses: ammaraskar/sphinx-action@master
+      uses: gubfs/sphinx-action@master
       with:
         docs-folder: "docs/"
+        pre-build-command: "find /etc/apt/sources.list.d -name '*.sources' -exec sed -i 's/bookworm/trixie/g' {} \\; && apt-get update -y && apt-get install -y just"
+        build-command: "just build-docs"
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:

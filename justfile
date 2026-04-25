@@ -4,8 +4,8 @@ build-addon:
   mkdir build/{{POGOBLEND_VERSION}} -p
   blender --command extension build --source-dir ./ --output-dir build/{{POGOBLEND_VERSION}} --split-platforms
 
-build-docs:
-  POGOBLEND_VERSION={{POGOBLEND_VERSION}} sphinx-build -E -a -b html ./docs ./docs/_build/html
+build-docs *args="":
+  POGOBLEND_VERSION={{POGOBLEND_VERSION}} sphinx-build -E -a -b html {{ args }} ./docs ./docs/_build/html
 
 open-docs:
   xdg-open ./docs/_build/html/index.html
