@@ -1,11 +1,11 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="">
+<html class="no-js" lang="en" data-content_root="./">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Sap-like Meshes" href="sap_like_meshes.html" /><link rel="prev" title="Custom Map settings" href="custom_map_settings.html" />
 
-    <!-- Generated with Sphinx 7.1.2 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
         <title>Modeling - PogoBlend</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
@@ -220,6 +220,7 @@
 <li class="toctree-l1"><a class="reference internal" href="custom_map_settings.html">Custom Map settings</a></li>
 <li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Modeling</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Modeling</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="sap_like_meshes.html">Sap-like Meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moss.html">Moss</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="building.html">“Building” Custom Maps</a></li>
@@ -269,10 +270,10 @@
         </div>
         <article role="main" id="furo-main-content">
           <section id="modeling">
-<h1>Modeling<a class="headerlink" href="#modeling" title="Permalink to this heading">¶</a></h1>
+<h1>Modeling<a class="headerlink" href="#modeling" title="Link to this heading">¶</a></h1>
 <p>Modeling is done mainly as you would regularly do in Blender.</p>
 <section id="texturing">
-<h2>Texturing<a class="headerlink" href="#texturing" title="Permalink to this heading">¶</a></h2>
+<h2>Texturing<a class="headerlink" href="#texturing" title="Link to this heading">¶</a></h2>
 <p>You can texture your models. To use a texture on a model it must have a material that has an ‘Image Texture’ Node. You can easily do this by going to the materials on a mesh, adding a material, and on its ‘Base Color’ value you can select ‘Image Texture’ and then select an image. You can then edit how the texture is applied using UVs in the ‘UV Editing’ tab.</p>
 <img alt="_images/add_image_texture.png" src="_images/add_image_texture.png" />
 <p>Textures will tile when the UV points exceed the normal 0-1 boundary.</p>
@@ -286,19 +287,19 @@
 </div>
 </section>
 <section id="modifiers">
-<h2>Modifiers<a class="headerlink" href="#modifiers" title="Permalink to this heading">¶</a></h2>
+<h2>Modifiers<a class="headerlink" href="#modifiers" title="Link to this heading">¶</a></h2>
 <p>Modifers are automatically applied when a model is exported.</p>
 <p>When using materials, you may see in-game that models appear alot smoother than they do in Blender. In Blender you can use ‘shade smooth’ to see what it would roughly look like in Pogostuck. To get more defined edges you can use an ‘Edge Split’ modifier with an angle of 0 degrees. To get smoother edges you can also apply a ‘Bevel’ modifier first with 1-2 segments and a low amount e.g. 0.001m - 0.006m. Tools to do this fast is made available, see <a class="reference internal" href="objects/object_tools.html"><span class="doc">Object Tools</span></a></p>
 </section>
 <section id="reusing-models">
-<span id="assets"></span><h2>Reusing Models<a class="headerlink" href="#reusing-models" title="Permalink to this heading">¶</a></h2>
+<span id="assets"></span><h2>Reusing Models<a class="headerlink" href="#reusing-models" title="Link to this heading">¶</a></h2>
 <p>It is encouraged that when reusing models, you do it properly, so the exporting is faster, smaller file sizes, and so if you need to change all meshes you only need to change it once.</p>
 <p>By default there is already some models that you can use that Superku has made avaible in the use of making Custom Maps. You can access these models in the Asset Browser.</p>
 <p>To make your own Assets you can mark any mesh as an Asset and then use it through the Asset Browser. This can either be done within the same Blender file or you can make standalone Assets in different Blender files and then add your own Asset Library in Blender.
 You can also use the same mesh on two objects by duplicating the object with ALT-D instead of SHIFT-D, which duplicates the object but reuses the mesh data.</p>
 </section>
 <section id="limitations">
-<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this heading">¶</a></h2>
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">¶</a></h2>
 <p>The model format that Pogostuck uses supports a maximum of 65k vertices.</p>
 <div class="toctree-wrapper compound">
 </div>
@@ -383,9 +384,9 @@ You can also use the same mesh on two objects by duplicating the object with ALT
       
     </aside>
   </div>
-</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=109426cb"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+</div><script src="_static/documentation_options.js?v=0c7e45fb"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>
     </body>
 </html>

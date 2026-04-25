@@ -1,11 +1,11 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="">
+<html class="no-js" lang="en" data-content_root="../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Regions" href="region.html" /><link rel="prev" title="Object Types" href="object.html" />
 
-    <!-- Generated with Sphinx 7.1.2 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
         <title>Entities - PogoBlend</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
@@ -220,6 +220,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../custom_map_settings.html">Custom Map settings</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../modeling.html">Modeling</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Modeling</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../sap_like_meshes.html">Sap-like Meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../moss.html">Moss</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../building.html">“Building” Custom Maps</a></li>
@@ -269,7 +270,7 @@
         </div>
         <article role="main" id="furo-main-content">
           <section id="entities">
-<h1>Entities<a class="headerlink" href="#entities" title="Permalink to this heading">¶</a></h1>
+<h1>Entities<a class="headerlink" href="#entities" title="Link to this heading">¶</a></h1>
 <p>Entities include:</p>
 <ul class="simple">
 <li><p>Models (any regular Blender mesh)</p></li>
@@ -283,13 +284,13 @@
 </div>
 <p>Entities have materials, actions, and flags.</p>
 <section id="materials">
-<h2>Materials<a class="headerlink" href="#materials" title="Permalink to this heading">¶</a></h2>
+<h2>Materials<a class="headerlink" href="#materials" title="Link to this heading">¶</a></h2>
 <p>The material on an entity determines how it will look in-game. It currently has not effect on how it is displayed inside Blender. Some materials allows changing the brightness (technically it’s “ambient”, how much sunlight the material should reflect), and some other value (greyscale, transparency).</p>
 <p>Below is an in-game image of the available materials, aswell as a list of their names and descriptions which is also available in the add-on by hovering your mouse over each material.</p>
 <figure class="align-center" id="id4">
 <img alt="../_images/materials.png" src="../_images/materials.png" />
 <figcaption>
-<p><span class="caption-text"><em>In-game image of the available materials with a gradient texture applied. Note: the ‘Sap’, ‘Pink Sap’ and ‘Boost Juice’ materials have a bubbles texture instead. Also, the ‘Normal Mapping’ material is using a second texture, a normal map, and it will look different depedning on the normal map you are using.</em></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text"><em>In-game image of the available materials with a gradient texture applied. Note: the ‘Sap’, ‘Pink Sap’ and ‘Boost Juice’ materials have a bubbles texture instead. Also, the ‘Normal Mapping’ material is using a second texture, a normal map, and it will look different depedning on the normal map you are using. ‘Moss’ has a second UV Map that determines the location of the moss.</em></span><a class="headerlink" href="#id4" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <div class="table-wrapper docutils container">
@@ -339,62 +340,65 @@
 <tr class="row-even"><td><p>Bee</p></td>
 <td><p>Looks like the hair on the bees</p></td>
 </tr>
-<tr class="row-odd"><td><p>XRay Geometry</p></td>
+<tr class="row-odd"><td><p>Moss</p></td>
+<td><p>Uses a second UV Map to add moss to the entity. Any UV-cordinate on the second UV Map, that has an X-value greater than 1 becomes mossy</p></td>
+</tr>
+<tr class="row-even"><td><p>XRay Geometry</p></td>
 <td><p>Hiddes the entity when the players comes too close. Otherwise same as ‘Geometry’ material</p></td>
 </tr>
-<tr class="row-even"><td><p>Toggle Block</p></td>
+<tr class="row-odd"><td><p>Toggle Block</p></td>
 <td><p>Should be used with the ‘Toggle Block’ action. Dithers the entity</p></td>
 </tr>
-<tr class="row-odd"><td><p>Sap</p></td>
+<tr class="row-even"><td><p>Sap</p></td>
 <td><p>Used for regular sap. Scrolls the texture. Use the ‘Slime Bubbles’ texture to get the regular sap look</p></td>
 </tr>
-<tr class="row-even"><td><p>Pink Sap</p></td>
+<tr class="row-odd"><td><p>Pink Sap</p></td>
 <td><p>Used for the pink sap. Scrolls the texture. Use the ‘Slime Bubbles’ texture to get the regular pink sap look</p></td>
 </tr>
-<tr class="row-odd"><td><p>Boost Juice</p></td>
+<tr class="row-even"><td><p>Boost Juice</p></td>
 <td><p>Used for boost juice. Looks like gold. Scrolls the texture. Use the ‘Slime Bubbles’ texture to get the regular boost juice look</p></td>
 </tr>
-<tr class="row-even"><td><p>Falling</p></td>
+<tr class="row-odd"><td><p>Falling</p></td>
 <td><p>Scrolls multiple copies of the texture downwards. Can be used to make snow fall or other particles</p></td>
 </tr>
-<tr class="row-odd"><td><p>Normal Mapping</p></td>
+<tr class="row-even"><td><p>Normal Mapping</p></td>
 <td><p>Uses the second texture on the entity as a normal map.</p></td>
 </tr>
-<tr class="row-even"><td><p>Fruit1</p></td>
+<tr class="row-odd"><td><p>Fruit1</p></td>
 <td><p>Main material used in Map 1</p></td>
 </tr>
-<tr class="row-odd"><td><p>Fruit Tex Mirrored</p></td>
+<tr class="row-even"><td><p>Fruit Tex Mirrored</p></td>
 <td><p>Same as ‘Fruit Tex’ but mirrors tiling textures</p></td>
 </tr>
-<tr class="row-even"><td><p>Egg</p></td>
+<tr class="row-odd"><td><p>Egg</p></td>
 <td><p>Looks like the egg</p></td>
 </tr>
-<tr class="row-odd"><td><p>Anvil</p></td>
+<tr class="row-even"><td><p>Anvil</p></td>
 <td><p>Used for the anvil. Has a cast iron look</p></td>
 </tr>
-<tr class="row-even"><td><p>Cloud</p></td>
+<tr class="row-odd"><td><p>Cloud</p></td>
 <td><p>Used for the clouds. White material, with grey parts</p></td>
 </tr>
-<tr class="row-odd"><td><p>Custom Material 1</p></td>
+<tr class="row-even"><td><p>Custom Material 1</p></td>
 <td><p>A Custom Material</p></td>
 </tr>
-<tr class="row-even"><td><p>Custom Material 2</p></td>
+<tr class="row-odd"><td><p>Custom Material 2</p></td>
 <td><p>A Custom Material</p></td>
 </tr>
-<tr class="row-odd"><td><p>Custom Material 3</p></td>
+<tr class="row-even"><td><p>Custom Material 3</p></td>
 <td><p>A Custom Material</p></td>
 </tr>
-<tr class="row-even"><td><p>Custom Material 4</p></td>
+<tr class="row-odd"><td><p>Custom Material 4</p></td>
 <td><p>A Custom Material</p></td>
 </tr>
-<tr class="row-odd"><td><p>Custom Material 5</p></td>
+<tr class="row-even"><td><p>Custom Material 5</p></td>
 <td><p>A Custom Material</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <section id="custom-materials">
-<h3>Custom Materials<a class="headerlink" href="#custom-materials" title="Permalink to this heading">¶</a></h3>
+<h3>Custom Materials<a class="headerlink" href="#custom-materials" title="Link to this heading">¶</a></h3>
 <p>You can make Custom Materials using HLSL and <code class="docutils literal notranslate"><span class="pre">.fx</span></code> files. There is 5 different slots for Custom Materials. When an entity has a Custom Material applied, there will be a button that will open a text editor where you can edit the shader. The first time you do this the file will be filled in with a template that you can delete or build out from. If you would like to edit the shader with an external editor simply save the text block in Blender to an external file, or create a file called ‘customMaterialX.fx’ (X is the custom material slot) in the same folder as your Blender file.</p>
 <p>When you edit/add a Custom Material, you might need to restart Pogostuck so it can setup auto reloading of that material. When that is setup, you just need to export the map and the shader will be updated instantly, you won’t even have to reload the map! Once you are done mapping and editing Custom Materials, you might also want to restart Pogostuck again, because otherwise other Custom Maps using Custom Materials will use the ones you’ve made instead of theirs.</p>
 <p>In order to use the alpha value in your pixel shader, you should set the ‘alphaBlendEnable’ value in the technique to true.</p>
@@ -409,7 +413,7 @@
 </section>
 </section>
 <section id="actions">
-<h2>Actions<a class="headerlink" href="#actions" title="Permalink to this heading">¶</a></h2>
+<h2>Actions<a class="headerlink" href="#actions" title="Link to this heading">¶</a></h2>
 <p>Actions change the behavior of the entity. Some actions might have additional options that allow you to change the specifics of how the action should behave. An option is either a flag, an on or off option, or a ‘skill’ which is just a decimal number.</p>
 <p>An entity can have a maximum of two actions. If you are using two actions please note that some of the options might overlap and that using two actions might give inconsistent behavior.</p>
 <p>Below is a list of the avaiable actions. The descriptions for the actions will be available in the add-on, but unfortunately the descriptions for the options are currently not.</p>
@@ -636,7 +640,7 @@
 <td></td>
 </tr>
 <tr class="row-even"><td><p>Water Visual</p></td>
-<td><p>Adds a flowing water visual to the entity</p></td>
+<td><p>Adds a flowing water visual to the entity. The entity should have a texture (any texture) applied, otherwise it looks weird. Changing the UVs will change how the water flows (speed, angle, width, wobbliness)</p></td>
 </tr>
 <tr class="row-odd"><td></td>
 <td></td>
@@ -682,7 +686,7 @@
 </div>
 </section>
 <section id="flags">
-<span id="id1"></span><h2>Flags<a class="headerlink" href="#flags" title="Permalink to this heading">¶</a></h2>
+<span id="id1"></span><h2>Flags<a class="headerlink" href="#flags" title="Link to this heading">¶</a></h2>
 <p>Flags are on or off values, and change certain things about the entity.</p>
 <p><strong>Invisible</strong> makes the entity invisible.</p>
 <p><strong>Shadow</strong> gives a glow shadow around the entity. It does this by just adding a blurry version of it in the background, so this doesn’t work if the background is blocked or the background flag is on.</p>
@@ -695,7 +699,7 @@
 <p><strong>Bonk</strong> makes the player bonk on contact with the entity, even if it’s the pogostick that makes contact.</p>
 </section>
 <section id="collisions">
-<span id="id2"></span><h2>Collisions<a class="headerlink" href="#collisions" title="Permalink to this heading">¶</a></h2>
+<span id="id2"></span><h2>Collisions<a class="headerlink" href="#collisions" title="Link to this heading">¶</a></h2>
 <p>You can enable collision on any entity. When collisions is enabled the player will collide with the entity. The collision happens where the Y-position is equal to 0, so make sure that you position collideable entities on the XZ-plane.</p>
 <p>In case you just want the player to collide with an entity as it appears on it’s sideview you can enable <strong>Auto Collision</strong> which will auto-generate a collider for the entity and place it correctly. If you want to preview or modify this collision you can generate the collision yourself by selecting the entity that you want to create a collider for and under the ‘Object’ panel you can select <code class="docutils literal notranslate"><span class="pre">PogoBlend</span> <span class="pre">-&gt;</span> <span class="pre">Create</span> <span class="pre">a</span> <span class="pre">Pogostuck</span> <span class="pre">Collider</span></code>.</p>
 <div class="admonition note">
@@ -708,7 +712,7 @@
 </div>
 </section>
 <section id="overrides">
-<span id="id3"></span><h2>Overrides<a class="headerlink" href="#overrides" title="Permalink to this heading">¶</a></h2>
+<span id="id3"></span><h2>Overrides<a class="headerlink" href="#overrides" title="Link to this heading">¶</a></h2>
 <p>The auto-generated <a class="reference internal" href="../modeling.html#assets"><span class="std std-ref">assets</span></a> from Pogostuck will have some overrides applied to them. Overrides just tells the add-on to build the entity in a certain way. For these assets it is the filename that is overriden, and that means that the mesh will not be exported to a model and the entity will instead use the file with the name given by the override. The same goes for just about any field on an entity, like materials. For normal use cases you won’t have to set these overrides manually, but it’s good to know what they are. You can enable viewing all overrides in the <a class="reference internal" href="../preferences.html"><span class="doc">preferences</span></a>. If a field is overridden it will be shown no matter the option in your preferences.</p>
 </section>
 </section>
@@ -795,9 +799,9 @@
       
     </aside>
   </div>
-</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=109426cb"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+</div><script src="../_static/documentation_options.js?v=0c7e45fb"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
     </body>
 </html>

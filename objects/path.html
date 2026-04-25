@@ -1,11 +1,11 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="">
+<html class="no-js" lang="en" data-content_root="../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Object Tools" href="object_tools.html" /><link rel="prev" title="Regions" href="region.html" />
 
-    <!-- Generated with Sphinx 7.1.2 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
         <title>Paths - PogoBlend</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
@@ -220,6 +220,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../custom_map_settings.html">Custom Map settings</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../modeling.html">Modeling</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Modeling</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../sap_like_meshes.html">Sap-like Meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../moss.html">Moss</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../building.html">“Building” Custom Maps</a></li>
@@ -269,10 +270,11 @@
         </div>
         <article role="main" id="furo-main-content">
           <section id="paths">
-<h1>Paths<a class="headerlink" href="#paths" title="Permalink to this heading">¶</a></h1>
+<h1>Paths<a class="headerlink" href="#paths" title="Link to this heading">¶</a></h1>
 <p>Paths are a series of points connected by lines.</p>
 <p>The only uses for paths are for the progress path, and the paths used with the thorns action.</p>
 <p>To create a Path open the add menu and under PogoBlend you can select Path.</p>
+<p>You can create branching paths, by placing points on top of eachother but it’s not really supported in Blender or Pogostuck (for the progress on the Progress Path), so it’s best to just make a non-branching linear path.</p>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
 <p>Any Curve Object in Blender can become a Pogo Path but the builder only uses the points to create the path, so curves like Bezier Curves can have deceptive visuals that don’t convey what the path will actually look like in-game. So use the provided way of making paths in the <code class="docutils literal notranslate"><span class="pre">Add</span> <span class="pre">-&gt;</span> <span class="pre">PogoBlend</span> <span class="pre">-&gt;</span> <span class="pre">Path</span></code> or change the spline type of your Curve to ‘Poly’.</p>
@@ -335,9 +337,9 @@
       
     </aside>
   </div>
-</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=109426cb"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+</div><script src="../_static/documentation_options.js?v=0c7e45fb"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
     </body>
 </html>

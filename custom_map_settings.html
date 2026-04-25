@@ -1,11 +1,11 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="">
+<html class="no-js" lang="en" data-content_root="./">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Modeling" href="modeling.html" /><link rel="prev" title="Object Tools" href="objects/object_tools.html" />
 
-    <!-- Generated with Sphinx 7.1.2 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
         <title>Custom Map settings - PogoBlend</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
@@ -220,6 +220,7 @@
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Custom Map settings</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="modeling.html">Modeling</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Modeling</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="sap_like_meshes.html">Sap-like Meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moss.html">Moss</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="building.html">“Building” Custom Maps</a></li>
@@ -269,23 +270,23 @@
         </div>
         <article role="main" id="furo-main-content">
           <section id="custom-map-settings">
-<h1>Custom Map settings<a class="headerlink" href="#custom-map-settings" title="Permalink to this heading">¶</a></h1>
+<h1>Custom Map settings<a class="headerlink" href="#custom-map-settings" title="Link to this heading">¶</a></h1>
 <p>The Custom Map settings can be accessed in the Collection panel in the Properties Inspector whenever the Collection named ‘CustomMap’ is selected, or any of it’s subcollections.</p>
 <section id="map-information">
-<h2>Map Information<a class="headerlink" href="#map-information" title="Permalink to this heading">¶</a></h2>
+<h2>Map Information<a class="headerlink" href="#map-information" title="Link to this heading">¶</a></h2>
 <p>Here you can select the name of your Custom Map.</p>
 <p>You can edit the map description which will be displayed in-game and on the Steam Workshop page for your map when you <a class="reference internal" href="releasing_a_map.html"><span class="doc">release</span></a> it.</p>
 <p>You can select a map image which will be displayed in-game and on the Steam Workshop page for your map when you release it. It is recommended that the image file should be below 150KB. The in-game resolution is 490x200 pixels, but you can choose up to 1024 pixels in any dimension in case you want a higher resolution in the Steam Workshop.</p>
 </section>
 <section id="required-objects">
-<h2>Required Objects<a class="headerlink" href="#required-objects" title="Permalink to this heading">¶</a></h2>
+<h2>Required Objects<a class="headerlink" href="#required-objects" title="Link to this heading">¶</a></h2>
 <p>There are some required objects that you need in order to get a working map.</p>
 <p>The Spawn Location chooses where the player will spawn. This is just an empty object and only the location will be used.</p>
 <p>The Progress Path is the path of progress in your map. This path will determine the percentage completion in the game.</p>
 <p>The Start Line is a special object that will dissapear once the run is started. The run will start when the player leaves a circle around the Start Line location with a radius of roughly 475 pogo units in diameter.</p>
 </section>
 <section id="splits">
-<h2>Splits<a class="headerlink" href="#splits" title="Permalink to this heading">¶</a></h2>
+<h2>Splits<a class="headerlink" href="#splits" title="Link to this heading">¶</a></h2>
 <p>Whenever you add a region with the region type of ‘Split’, it will be added to the list here. You can order the splits to choose in which order they will appear in-game. The name of any given split is the name of the Region.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -293,7 +294,7 @@
 </div>
 </section>
 <section id="modes">
-<h2>Modes<a class="headerlink" href="#modes" title="Permalink to this heading">¶</a></h2>
+<h2>Modes<a class="headerlink" href="#modes" title="Link to this heading">¶</a></h2>
 <p>You can select which modes should be active on your map.</p>
 <p><strong>Double Jump</strong>, <strong>Puzzle</strong>, and <strong>Ice</strong> is like the ones from the main game.</p>
 <p><strong>No Boost</strong> disables boosting on the entire map.</p>
@@ -301,7 +302,7 @@
 <p><strong>Mushroom Power</strong> chooses whether or not mushrooms can have a custom power value. This is only relevant for entities that has the ‘Mushroom Bones’ action. I don’t know why you would tick it off, but you can.</p>
 </section>
 <section id="static-files">
-<span id="id1"></span><h2>Static Files<a class="headerlink" href="#static-files" title="Permalink to this heading">¶</a></h2>
+<span id="id1"></span><h2>Static Files<a class="headerlink" href="#static-files" title="Link to this heading">¶</a></h2>
 <p>Here you can add a list of files you want to be added to the Custom Map folder. This could be if you have .mdl or texture files that the add-on cannot generate, or maybe you want to add a txt file with a note or lore.</p>
 </section>
 </section>
@@ -385,9 +386,9 @@
       
     </aside>
   </div>
-</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=109426cb"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+</div><script src="_static/documentation_options.js?v=0c7e45fb"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>
     </body>
 </html>

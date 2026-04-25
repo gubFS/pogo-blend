@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Getting Started" href="getting_started.html" /><link rel="prev" title="PogoBlend Documentation" href="index.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="“Building” Custom Maps" href="building.html" /><link rel="prev" title="Sap-like Meshes" href="sap_like_meshes.html" />
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
-        <title>Installation - PogoBlend</title>
+        <title>Moss - PogoBlend</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
@@ -200,8 +200,8 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Starting out</span></p>
-<ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Installation</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="getting_started.html">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Getting Started</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="wed_differences.html">Differences from WED</a></li>
 </ul>
@@ -209,7 +209,7 @@
 <li class="toctree-l1"><a class="reference internal" href="preferences.html">Add-on Preferences</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1 has-children"><a class="reference internal" href="objects/object.html">Object Types</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Object Types</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="objects/entity.html">Entities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="objects/region.html">Regions</a></li>
@@ -218,9 +218,9 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="custom_map_settings.html">Custom Map settings</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="modeling.html">Modeling</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Modeling</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="modeling.html">Modeling</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Modeling</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="sap_like_meshes.html">Sap-like Meshes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="moss.html">Moss</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Moss</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="building.html">“Building” Custom Maps</a></li>
@@ -269,28 +269,23 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
-<p>The add-on uses <a class="reference external" href="https://www.blender.org/download/lts/4-5/">Blender 4.5 LTS</a>, so make sure you are using that version.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This add-on has support for Windows and Linux platforms. There is also a MacOS version, but it is untested.</p>
-</div>
-<p>To install the add-on, download the <a class="reference external" href="https://github.com/gubFS/pogo-blend/releases">newest release</a> from the GitHub that matches your platform. It should be called something like <code class="docutils literal notranslate"><span class="pre">pogo_blend-&lt;version&gt;-&lt;platform&gt;.zip</span></code></p>
-<div class="video admonition">
-<p class="admonition-title">Video</p>
-<p>There is a video of the Installation and Getting Started guides <a class="reference external" href="https://www.youtube.com/watch?v=RjmvBSbCaFo">here</a>. This video is meant to be supplementary, and not a substitution, to the guides, so I suggest you still read them through.</p>
-</div>
-<p>Open blender and in the top toolbar go to, <code class="docutils literal notranslate"><span class="pre">Edit</span> <span class="pre">-&gt;</span> <span class="pre">Prefrences</span> <span class="pre">-&gt;</span> <span class="pre">Add-ons</span></code> and in the top right there is an arrow that’ll open a menu where you can choose ‘Install from disk…’. Select the ZIP file you just downloaded. The add-on should now be installed and you can activate it.</p>
-<p>Whenever you activate the add-on it will search for the Custom Maps folder. Please expand the add-ons menu and check that the preference ‘Custom Maps folder’ contains the path to the CustomMaps folder in your Pogostuck Installation. If it does not, locate your Custom Maps folder and insert it here, it shold be something like <code class="docutils literal notranslate"><span class="pre">&lt;some_path&gt;/Steam/steamapps/common/Pogostuck/CustomMaps</span></code>.</p>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p>The <a class="reference internal" href="preferences.html"><span class="doc">Add-on Preferences</span></a> page for more information on the available preferences.</p>
-</div>
-<p>If the path is correctly setup there will also be a button that says “Generate Pogostuck Asset Library”. This will open a new file and make an Asset Library containing some of the premade models by Superku. Go ahead and click it and wait until you return.</p>
-<p>The add-on includes an Application Template that you can use to quickly get the skeleton of a Custom Map, and a more minimal Blender interface with most tools you don’t need hidden. You can access this Application Template through <code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">New</span> <span class="pre">-&gt;</span> <span class="pre">PogoBlend</span></code>.</p>
-<p>For updating the add-on, do the same as above and Blender will reinstall the add-on.</p>
-<p>Go to <a class="reference internal" href="getting_started.html"><span class="doc">Getting Started</span></a> to start making your first map!</p>
+          <section id="moss">
+<h1>Moss<a class="headerlink" href="#moss" title="Link to this heading">¶</a></h1>
+<p>Adding moss is a bit confusing so heres a guide.</p>
+<p>First make any model you want, add a texture and then add the “Moss” material.</p>
+<p>Then go to the objects data properties and under “UV Maps”, you can add another map.</p>
+<figure class="align-default">
+<img alt="_images/moss1.png" src="_images/moss1.png" />
+</figure>
+<p>Select the new UV Map and go to the UV editor. Here you can edit where the moss should appear.</p>
+<p>Moss will appear on any UV-cordinate that has an X-value greater than 1 (aka past the right edge of the bounds).</p>
+<figure class="align-default">
+<img alt="_images/moss2.png" src="_images/moss2.png" />
+</figure>
+<p>You can now use the first UV Map to change how your model is textured, and use the second UV Map to change where moss appears!</p>
+<figure class="align-default">
+<img alt="_images/moss3.png" src="_images/moss3.png" />
+</figure>
 </section>
 
         </article>
@@ -298,23 +293,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="getting_started.html">
+          <a class="next-page" href="building.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Getting Started</div>
+                <div class="title">“Building” Custom Maps</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="index.html">
+          <a class="prev-page" href="sap_like_meshes.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Home</div>
+                <div class="title">Sap-like Meshes</div>
                 
               </div>
             </a>

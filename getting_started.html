@@ -1,11 +1,11 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="">
+<html class="no-js" lang="en" data-content_root="./">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Differences from WED" href="wed_differences.html" /><link rel="prev" title="Installation" href="install.html" />
 
-    <!-- Generated with Sphinx 7.1.2 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
         <title>Getting Started - PogoBlend</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
@@ -220,6 +220,7 @@
 <li class="toctree-l1"><a class="reference internal" href="custom_map_settings.html">Custom Map settings</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="modeling.html">Modeling</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Modeling</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="sap_like_meshes.html">Sap-like Meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moss.html">Moss</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="building.html">“Building” Custom Maps</a></li>
@@ -269,7 +270,7 @@
         </div>
         <article role="main" id="furo-main-content">
           <section id="getting-started">
-<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h1>
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h1>
 <div class="video admonition">
 <p class="admonition-title">Video</p>
 <p>There is a video of the Getting Started guide <a class="reference external" href="https://www.youtube.com/watch?v=RjmvBSbCaFo">here</a>. This video is meant to be supplementary, and not a substitution, to the guide, so I suggest you still read it through.</p>
@@ -289,8 +290,12 @@
 <p>The <a class="reference internal" href="objects/object.html"><span class="doc">Objects</span></a> page for more information on entities, regions and paths.</p>
 </div>
 <section id="making-a-map">
-<h2>Making a Map<a class="headerlink" href="#making-a-map" title="Permalink to this heading">¶</a></h2>
+<h2>Making a Map<a class="headerlink" href="#making-a-map" title="Link to this heading">¶</a></h2>
 <p>To start making a Map, open Blender and make a new project. I recommend using the provided Application Template, under <code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">New</span> <span class="pre">-&gt;</span> <span class="pre">PogoBlend</span></code>. Save the Blender file to a folder where you will store all your project files, e.g <code class="docutils literal notranslate"><span class="pre">Desktop/CustomMapProjects/MyMap/MyMap.blend</span></code>.</p>
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>Do <strong>NOT</strong> save your project files in the generated folder under your Pogostuck installation, as this is the output when <a class="reference internal" href="building.html#building-danger"><span class="std std-ref">building</span></a> the map, and unexpected files will be deleted.</p>
+</div>
 <p>To make a custom map there is 3 required objects. A Spawn Position, a Start Line, and a Progress Path. The provided Application Template, will automatically create and set these.</p>
 <p>These objects will need to be set in the CustomMap collection. Select the ‘CustomMap’ collection and switch the Properties Inspector to show Collections. Here you will see a tab for configuring the settings of the Custom Map. Here you can change the Map Name, Description, Image, Splits and Modes. The Map will need a name, and the earlier mentioned required objects.</p>
 <div class="admonition seealso">
@@ -388,9 +393,9 @@
       
     </aside>
   </div>
-</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=109426cb"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+</div><script src="_static/documentation_options.js?v=0c7e45fb"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>
     </body>
 </html>
