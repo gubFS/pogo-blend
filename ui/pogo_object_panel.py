@@ -11,6 +11,7 @@ from .. import pogo_blend_utils as pbu
 class AddPogoPathData(pbu.AltOperator):
     bl_idname = "pogo_blend.add_pogo_path_data"
     bl_label = "Add Pogo Data"
+    bl_description = "Adds Pogo Data to the curve, allowing it to be used in the map"
     bl_options = {'REGISTER', 'UNDO'}
 
     def poll_obj(self, obj):
@@ -23,6 +24,7 @@ class AddPogoPathData(pbu.AltOperator):
 class RemovePogoPathData(pbu.AltOperator):
     bl_idname = "pogo_blend.remove_pogo_path_data"
     bl_label = "Remove Pogo Data"
+    bl_description = "Removes Pogo Data from the curve, turning it back into a regular Blender Curve that will not be included in the map"
     bl_options = {'REGISTER', 'UNDO'}
 
     def poll_obj(self, obj):
@@ -35,6 +37,7 @@ class RemovePogoPathData(pbu.AltOperator):
 class AddPogoEntityData(pbu.AltOperator):
     bl_idname = "pogo_blend.add_pogo_entity_data"
     bl_label = "Add Pogo Data"
+    bl_description = "Adds Pogo Data to the object, turning it into an entity that will be included in the map"
     bl_options = {'REGISTER', 'UNDO'}
 
     def poll_obj(self, obj):
@@ -47,6 +50,7 @@ class AddPogoEntityData(pbu.AltOperator):
 class RemovePogoEntityData(pbu.AltOperator):
     bl_idname = "pogo_blend.remove_pogo_entity_data"
     bl_label = "Remove Pogo Data"
+    bl_description = "Removes Pogo Data from the object, turning it back into a regular Blender Object that will not be included in the map"
     bl_options = {'REGISTER', 'UNDO'}
 
     def poll_obj(self, obj):
