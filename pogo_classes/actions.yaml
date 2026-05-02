@@ -71,6 +71,10 @@ boostjuice_act:
   name: Boost Juice
   description: Gives the player a boost when jumping off this entity
 
+map3FinaleBlock_act:
+  name: Break
+  description: Breaks the entity when the player jumps off it. Plays an animation of a cube breaking at the origin of the entity. The entity only reappears after breaking when the map is reloaded, and not when resetting. Does not work with Auto Collision
+
 map3Wheel_act:
   name: Wheel
   description: Spins the entity around it's origin
