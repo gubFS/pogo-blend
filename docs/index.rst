@@ -43,6 +43,7 @@ Start by following the :doc:`Installation <install>` and :doc:`Getting Started <
 
    guides/releasing_a_map
    guides/modeling_guides
+   guides/information
 
 .. toctree::
    :caption: Development
