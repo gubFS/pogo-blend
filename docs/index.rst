@@ -25,19 +25,24 @@ Start by following the :doc:`Installation <install>` and :doc:`Getting Started <
 
    install
    getting_started
+
+.. toctree::
+   :caption: Basics
+   :hidden:
+
    preferences
+   objects/object
+   custom_map_settings
+   modeling
+   building
+   tips
 
 .. toctree::
    :caption: Guides
    :hidden:
 
-   objects/object
-   custom_map_settings
-   modeling
-   building
-   releasing_a_map
-
-   tips
+   guides/releasing_a_map
+   guides/modeling_guides
 
 .. toctree::
    :caption: Development

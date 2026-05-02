@@ -8,7 +8,7 @@ Map Information
 
 Here you can select the name of your Custom Map.
 
-You can edit the map description which will be displayed in-game and on the Steam Workshop page for your map when you :doc:`release <releasing_a_map>` it.
+You can edit the map description which will be displayed in-game and on the Steam Workshop page for your map when you :doc:`release <guides/releasing_a_map>` it.
 
 You can select a map image which will be displayed in-game and on the Steam Workshop page for your map when you release it. It is recommended that the image file should be below 150KB. The in-game resolution is 490x200 pixels, but you can choose up to 1024 pixels in any dimension in case you want a higher resolution in the Steam Workshop.
 
