@@ -3,6 +3,7 @@
 
 import math
 
+from ....ui.gizmos.egg_gizmo import EGG_RESPAWN_MIN_Z
 from ...gub_byte_array import GubByteArray
 
 
@@ -53,6 +54,15 @@ class WMBEntity:
         self.path = 0
         self.entity2 = 0
         self.material = entity.material if entity.material_override == "" else entity.material_override
+
+    def post_init(self) -> bool:
+        if "egg_act" in [self.action, self.string1, self.string2]:
+            if self.origin.z <= EGG_RESPAWN_MIN_Z:
+                return False
+            angle = list(self.angle)
+            angle[0] = (angle[0] + 180) % 360
+            self.angle = tuple(angle)
+        return True
 
     def to_bytes(self) -> GubByteArray:
         is_old = self.is_old()  # 'old' entity types use less space

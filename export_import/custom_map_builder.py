@@ -98,6 +98,8 @@ def build_custom_map(context, filepath, global_scale, _operator):
                     continue
 
                 entity = WMBEntity(obj, global_scale)
+                if not entity.post_init():
+                    continue
                 mesh = obj.data
                 path = None
                 if obj.pogo_entity.filename_override == "":

@@ -34,7 +34,7 @@ from .ui import (
     pogo_collection_panel,
     pogo_object_panel,
 )
-from .ui.gizmos import gravity_gizmo
+from .ui.gizmos import egg_gizmo, gravity_gizmo
 from .ui.operators import (
     add_block,
     add_pogo_path,
@@ -59,6 +59,7 @@ modules = [
     pogo_collection_panel,
     pogo_object_panel,
     gravity_gizmo,
+    egg_gizmo,
     add_block,
     add_pogo_path,
     add_pogo_region,
