@@ -24,3 +24,7 @@ The red line shows the egg respawn boundary. If the egg falls below this point t
    All this information has been gathered through trial and error, so while it should be largely correct, it might not be 100% precise.
 
 The egg will not respawn when the player respawns. So if you are making speedrunning maps, the best solution might just be to make sure that the spawn point is outside the player bounds.
+
+.. tip::
+
+   If you are hitting the bounds of the map, since the egg location is so far out, have a look at the information on :doc:`Map Bounds <map_bounds>`.
