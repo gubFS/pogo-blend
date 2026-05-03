@@ -5,7 +5,7 @@ The egg isn't really meant to be used in Custom Maps, so working with it will be
 
 First off to add an egg you can simply drag it into your map from the Asset Browser. All the basic properties for the egg will already be set, so don't worry about them. In Blender a "proxy" model will be shown for the egg. In-game it will look like the one from Map 1.
 
-When selecting an egg, some bounds will be shown will be show in the upper right quadrant.
+When selecting an egg, some bounds will be shown in the upper right quadrant.
 
 .. figure:: egg_bounds.png
 
