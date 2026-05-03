@@ -139,10 +139,10 @@ class PogoObjectPanel(bpy.types.Panel):
         if entity.name_override == "":
             row.prop(obj, "name")
         else:
-            row.alignment = 'LEFT'
-            row.scale_x = 3.0
-            row.label(text="Name: ")
-            override_text = row.row()
+            row = layout.row()
+            row.column().label(text="Name: ")
+            override_text = row.column()
+            override_text.scale_x = 1.74
             override_text.enabled = False
             override_text.label(text=entity.name_override)
         row.operator("pogo_blend.remove_pogo_entity_data", text="", icon="X")
@@ -157,10 +157,9 @@ class PogoObjectPanel(bpy.types.Panel):
                 row.operator("pogo_blend.edit_custom_material", text="", icon='GREASEPENCIL').material_idx = int(entity.material[-1])
         else:
             row = layout.row()
-            row.alignment = 'LEFT'
-            row.scale_x = 3.0
-            row.label(text="Material: ")
-            override_text = row.row()
+            row.column().label(text="Material: ")
+            override_text = row.column()
+            override_text.scale_x = 1.8
             override_text.enabled = False
             override_text.label(text=entity.material_override)
 
@@ -197,10 +196,9 @@ class PogoObjectPanel(bpy.types.Panel):
                     self.draw_action_panel(entity, entity.action2, layout)
         else:
             row = layout.row()
-            row.alignment = 'LEFT'
-            row.scale_x = 3.0
-            row.label(text="Action: ")
-            override_text = row.row()
+            row.column().label(text="Action: ")
+            override_text = row.column()
+            override_text.scale_x = 1.76
             override_text.enabled = False
             override_text.label(text=entity.action_override)
 
