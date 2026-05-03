@@ -180,12 +180,21 @@ class PogoObjectPanel(bpy.types.Panel):
             col.prop(entity, "flag_7")
             col.prop(entity, "flag_8")
 
-        layout.row().prop(entity, "action1")
-        if entity.action1 in entity.actions:
-            self.draw_action_panel(entity, entity.action1, layout)
-            layout.row().prop(entity, "action2")
-            if entity.action2 in entity.actions:
-                self.draw_action_panel(entity, entity.action2, layout)
+        if entity.action_override == "":
+            layout.row().prop(entity, "action1")
+            if entity.action1 in entity.actions:
+                self.draw_action_panel(entity, entity.action1, layout)
+                layout.row().prop(entity, "action2")
+                if entity.action2 in entity.actions:
+                    self.draw_action_panel(entity, entity.action2, layout)
+        else:
+            row = layout.row()
+            row.alignment = 'LEFT'
+            row.scale_x = 3.0
+            row.label(text="Action: ")
+            override_text = row.row()
+            override_text.enabled = False
+            override_text.label(text=entity.action_override)
 
     def draw_action_panel(self, entity, action, layout):
         action_config = entity.actions[action]
