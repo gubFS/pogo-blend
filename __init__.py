@@ -23,6 +23,7 @@ from pathlib import Path
 import bpy
 
 from . import pogo_blend_preferences as pbu
+from . import pogo_blend_utils
 from .export_import import custom_map_builder_operator
 from .export_import.mdl_exporter import mdl_exporter_operator
 from .export_import.mdl_importer import mdl_importer
@@ -47,6 +48,7 @@ from .ui.operators import (
 
 modules = [
     pbu,
+    pogo_blend_utils,
     custom_map_builder_operator,
     mdl_exporter_operator,
     mdl_importer,

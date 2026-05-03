@@ -135,6 +135,9 @@ class PogoObjectPanel(bpy.types.Panel):
 
         entity = obj.pogo_entity
 
+        if entity.action_override == "egg_act":
+            layout.row().operator("pogo_blend.open_link", text="Open Egg Documentation").url = "https://gubfs.github.io/pogo-blend/guides/egg.html"
+
         row = layout.row()
         if entity.name_override == "":
             row.prop(obj, "name")

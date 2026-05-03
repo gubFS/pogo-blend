@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2026 gubFS
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import webbrowser
 from pathlib import Path
 from string import ascii_lowercase
 
@@ -42,6 +43,19 @@ class AltOperator(bpy.types.Operator):
             self.objs = [context.object]
         self.objs = [obj for obj in self.objs if self.poll_obj(obj)]
         return self.execute(context)
+
+
+class LinkOperator(bpy.types.Operator):
+    bl_idname = "pogo_blend.open_link"
+    bl_label = "Open a link"
+    bl_description = "Opens a link in the default browser"
+    bl_options = {'REGISTER'}
+
+    url: bpy.props.StringProperty(default="")
+
+    def execute(self, context):
+        webbrowser.open_new(self.url)
+        return {'FINISHED'}
 
 
 def get_custom_map_collection() -> bpy.types.Collection:
@@ -216,3 +230,6 @@ def get_enum_key(obj, prop_name: str, enum_list: list[tuple]) -> str | None:
         return "ndef"
     else:
         return key[0]
+
+
+classes = (LinkOperator,)
