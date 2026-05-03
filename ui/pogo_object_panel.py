@@ -136,7 +136,15 @@ class PogoObjectPanel(bpy.types.Panel):
         entity = obj.pogo_entity
 
         row = layout.row()
-        row.prop(obj, "name")
+        if entity.name_override == "":
+            row.prop(obj, "name")
+        else:
+            row.alignment = 'LEFT'
+            row.scale_x = 3.0
+            row.label(text="Name: ")
+            override_text = row.row()
+            override_text.enabled = False
+            override_text.label(text=entity.name_override)
         row.operator("pogo_blend.remove_pogo_entity_data", text="", icon="X")
         layout.prop(obj, "location")
         layout.prop(obj, "rotation_euler", text="Rotation")
