@@ -204,6 +204,9 @@ class PogoObjectPanel(bpy.types.Panel):
             override_text.enabled = False
             override_text.label(text=entity.action_override)
 
+        if entity.filename_override != "":
+            layout.label(text=f"Using \"{entity.filename_override}\". Model may appear different in game.", icon="WARNING_LARGE")
+
     def draw_action_panel(self, entity, action, layout):
         action_config = entity.actions[action]
 
