@@ -326,6 +326,9 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
             col.prop(entity, "flag_7", text="flag_7")
             col.prop(entity, "flag_8", text="flag_8")
 
+        if show_override:
+            layout.prop(entity, "path")
+
         if show_override or entity.string1_override != "":
             layout.prop(entity, "string1_override", text="string1")
         if show_override or entity.string2_override != "":
