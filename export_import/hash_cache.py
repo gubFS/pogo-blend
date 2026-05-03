@@ -166,3 +166,18 @@ class HashCache:
                     bytes.store_string(modifier.boundary_smooth)
                     bytes.store_bool(modifier.use_creases)
                     bytes.store_bool(modifier.use_custom_normals)
+                case "DECIMATE":
+                    bytes.store_string(modifier.decimate_type)
+                    match modifier.decimate_type:
+                        case "COLLAPSE":
+                            bytes.store_float(modifier.ratio)
+                            bytes.store_bool(modifier.use_symmetry)
+                            if modifier.use_symmetry:
+                                bytes.store_string(modifier.symmetry_axis)
+                            bytes.store_bool(modifier.use_collapse_triangulate)
+                        case "UNSUBDIV":
+                            bytes.store_16(modifier.iterations)
+                        case "DISSOLVE":
+                            bytes.store_float(modifier.angle_limit)
+                            bytes.store_strings(modifier.delimit)
+                            bytes.store_bool(modifier.use_dissolve_boundaries)
