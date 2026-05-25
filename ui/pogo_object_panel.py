@@ -255,7 +255,7 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
 
     @classmethod
     def poll(cls, context):
-        return ("pogo_entity" in context.object or "pogo_region" in context.object) and cls.is_overridden(context.object)
+        return ("pogo_entity" in context.object or "pogo_path" in context.object or "pogo_region" in context.object) and cls.is_overridden(context.object)
 
     @classmethod
     def is_overridden(cls, obj) -> bool:
@@ -269,6 +269,12 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
                 or entity.action_override != ""
                 or entity.string1_override != ""
                 or entity.string2_override != ""
+            )
+        if "pogo_path" in obj:
+            path = obj.pogo_path
+            return (
+                pbu.get_preferences().show_overrides  #
+                or path.name_override != ""
             )
         if "pogo_region" in obj:
             region = obj.pogo_region
@@ -285,8 +291,8 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
         match obj.type:
             case 'MESH':
                 self.draw_mesh_override(obj, layout)
-            # case 'CURVE':
-            #     self.draw_curve_panel(obj, layout)
+            case 'CURVE':
+                self.draw_curve_panel(obj, layout)
             case 'EMPTY':
                 self.draw_empty_override(obj, layout)
 
@@ -359,6 +365,14 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
         if show_override:
             for i in range(1, 21):
                 layout.prop(entity, f"skill_{i}", text=f"skill_{i}")
+
+    def draw_curve_panel(self, obj, layout):
+        if "pogo_path" not in obj:
+            return
+
+        path = obj.pogo_path
+
+        layout.prop(path, "name_override")
 
     def draw_empty_override(self, obj, layout):
         if "pogo_region" not in obj:

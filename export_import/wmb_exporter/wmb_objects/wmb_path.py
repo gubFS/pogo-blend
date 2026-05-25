@@ -7,7 +7,9 @@ from ...gub_byte_array import GubByteArray
 class WMBPath:
     def __init__(self, obj, global_scale: float = 50.0):
         self.type = 6  # 6 is the ID for path types
-        self.name = obj.name
+
+        path = obj.pogo_path
+        self.name = obj.name if path.name_override == "" else path.name_override
 
         location = obj.matrix_world.translation
         scale = obj.matrix_world.to_scale().to_3d()

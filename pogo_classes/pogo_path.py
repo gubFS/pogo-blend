@@ -5,7 +5,7 @@ import bpy
 
 
 class PogoPath(bpy.types.PropertyGroup):
-    pass
+    name_override: bpy.props.StringProperty(default="")
 
 
 classes = (PogoPath,)
