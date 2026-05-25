@@ -1,6 +1,12 @@
 name: "Sphinx: Render docs"
 
-on: push
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'docs/**'
+      - 'pogo_classes/**/**.yaml'
 
 jobs:
   build:
