@@ -2,28 +2,46 @@
 kill:
   name: Kill
   description: Kills the player
+  min_y: -64
+  max_y: 64
 CP_:
   name: Split
   description: Triggers a split. The split name is the name of the object
+  min_y: 256
+  max_y: 384
 modearea_double:
   name: Double Jump
   description: Enables Double Jump mode
+  min_y: -384
+  max_y: -256
 modearea_puzzle:
   name: Puzzle
   description: Enables Puzzle mode
+  min_y: -384
+  max_y: -256
 modearea_nobonk:
   name: No Bonk
   description: Kills the player if they bonk
+  min_y: -384
+  max_y: -256
 modearea_noboost:
   name: No Boost
   description: Disables boosting
+  min_y: -384
+  max_y: -256
 gravityReg_:
   name: Gravity Direction
   description: Changes the gravity direciton in the region
+  min_y: -64
+  max_y: 64
 gravityCircle:
   name: Gravity Center
   description: A gravity region that pulls the player to the center of the region
+  min_y: -64
+  max_y: 64
 reg_finish:
   name: Finish
   description: Finishes the map when entered
+  min_y: -64
+  max_y: 64
 ...

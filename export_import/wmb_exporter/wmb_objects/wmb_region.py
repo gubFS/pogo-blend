@@ -10,11 +10,18 @@ class WMBRegion:
     def __init__(self, obj, scale: float = 50.0):
         self.type = 8  # 8 is the ID of the type for regions
 
-        self.name = obj.pogo_region.region_type
-        match obj.pogo_region.region_type:
-            case "gravityReg_":
-                self.name += str(int(obj.pogo_region.gravity_angle))
-                self.name += "_" + str(int(obj.pogo_region.gravity_power))
+        region = obj.pogo_region
+
+        if region.region_type != "ndef":
+            self.name = region.region_type
+            match region.region_type:
+                case "gravityReg_":
+                    self.name += str(int(region.gravity_angle))
+                    self.name += "_" + str(int(region.gravity_power))
+        elif region.name_override == "":
+            self.name = obj.name
+        else:
+            self.name = region.name_override
 
         self.min_pos = Vector((-1, -1, -1))
         self.max_pos = Vector((1, 1, 1))
@@ -25,21 +32,8 @@ class WMBRegion:
         self.min_pos += obj.matrix_world.translation * scale
         self.max_pos += obj.matrix_world.translation * scale
 
-        match obj.pogo_region.region_type:
-            case (
-                "modearea_double"  #
-                | "modearea_puzzle"
-                | "modearea_nobonk"
-                | "moearea_noboost"
-            ):
-                self.min_pos.y = -384
-                self.max_pos.y = -256
-            case "kill" | "reg_finish" | "gravityReg_" | "gravityCircle":
-                self.min_pos.y = -64
-                self.max_pos.y = 64
-            case "CP_":
-                self.min_pos.y = 256
-                self.max_pos.y = 384
+        self.min_pos.y = region.get_min_y()
+        self.max_pos.y = region.get_max_y()
 
     def to_bytes(self) -> GubByteArray:
         bytes = GubByteArray()

@@ -120,8 +120,6 @@ def build_custom_map(context, filepath, global_scale, _operator):
             case 'EMPTY':
                 if "pogo_region" not in obj:
                     continue
-                if obj.pogo_region.region_type == "ndef":
-                    continue
 
                 region = WMBRegion(obj, global_scale)
                 if obj.pogo_region.region_type == "CP_":

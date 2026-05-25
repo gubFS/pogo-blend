@@ -255,23 +255,42 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
 
     @classmethod
     def poll(cls, context):
-        return "pogo_entity" in context.object and (pbu.get_preferences().show_overrides or cls.is_overridden(context.object))
+        return ("pogo_entity" in context.object or "pogo_region" in context.object) and cls.is_overridden(context.object)
 
     @classmethod
     def is_overridden(cls, obj) -> bool:
-        entity = obj.pogo_entity
-        return (
-            entity.name_override != ""  #
-            or entity.filename_override != ""
-            or entity.material_override != ""
-            or entity.action_override != ""
-            or entity.string1_override != ""
-            or entity.string2_override != ""
-        )
+        if "pogo_entity" in obj:
+            entity = obj.pogo_entity
+            return (
+                pbu.get_preferences().show_overrides  #
+                or entity.name_override != ""
+                or entity.filename_override != ""
+                or entity.material_override != ""
+                or entity.action_override != ""
+                or entity.string1_override != ""
+                or entity.string2_override != ""
+            )
+        if "pogo_region" in obj:
+            region = obj.pogo_region
+            return (
+                region.region_type == "ndef"  #
+                and (pbu.get_preferences().show_overrides or region.name_override != "")
+            )
+        return False
 
     def draw(self, context):
         layout = self.layout
         obj = context.object
+
+        match obj.type:
+            case 'MESH':
+                self.draw_mesh_override(obj, layout)
+            # case 'CURVE':
+            #     self.draw_curve_panel(obj, layout)
+            case 'EMPTY':
+                self.draw_empty_override(obj, layout)
+
+    def draw_mesh_override(self, obj, layout):
         if "pogo_entity" not in obj:
             return
 
@@ -340,6 +359,16 @@ class PogoObjectPanelOverrides(bpy.types.Panel):
         if show_override:
             for i in range(1, 21):
                 layout.prop(entity, f"skill_{i}", text=f"skill_{i}")
+
+    def draw_empty_override(self, obj, layout):
+        if "pogo_region" not in obj:
+            return
+
+        region = obj.pogo_region
+
+        layout.prop(region, "name_override")
+        layout.prop(region, "min_y_override")
+        layout.prop(region, "max_y_override")
 
 
 classes = (
