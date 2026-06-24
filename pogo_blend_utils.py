@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2026 gubFS
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import os
+import re
 import webbrowser
 from pathlib import Path
 from string import ascii_lowercase
@@ -71,6 +73,72 @@ def get_custom_map() -> bpy.types.PropertyGroup:
 
 def get_generated_library_path() -> Path:
     return Path(__file__).parent.joinpath("pogo_blend_asset_library/pogostuck.blend")
+
+
+class CustomMaterial:
+    def __init__(self, name: str, author: str, description: str, skills, filepath: Path | None = None):
+        self.name = name
+        self.author = author
+        self.description = description
+        self.skills = skills
+        self.filepath = filepath
+
+    @classmethod
+    def from_contents(cls, contents: str, default_name: str = ""):
+        name = re.findall(r"^\/\/ Name: (.*(?=\n))$", contents, flags=re.MULTILINE)
+        author = re.findall(r"^\/\/ Author: (.*(?=\n))$", contents, flags=re.MULTILINE)
+        description = re.findall(r"^\/\/ Description: (.*(?=\n))$", contents, flags=re.MULTILINE)
+        skills_re = re.findall(r"^\/\/ (skill[1-8])\D?;\s?(.+)\s?;[^\S\n]?(.*)\s?$", contents, flags=re.MULTILINE)
+
+        name = next(iter(name), default_name)
+        author = next(iter(author), "")
+        description = next(iter(description), "")
+        skills = {}
+        for skill, skill_name, skill_description in skills_re:
+            skills[skill] = (skill_name, skill_description)
+
+        return CustomMaterial(name, author, description, skills)
+
+    @classmethod
+    def from_file(cls, filepath: Path):
+        material = cls.from_contents(read_file(filepath), default_name=filepath.name)
+        material.filepath = filepath
+        return material
+
+    @classmethod
+    def from_index(cls, index: int):
+        if not does_custom_material_exist(index):
+            return None
+
+        filename = f"customMaterial{index}.fx"
+        filepath = Path(bpy.path.abspath(bpy.path.relpath(filename)))
+
+        if filename in bpy.data.texts:
+            return CustomMaterial.from_contents(bpy.data.texts[filename].as_string())
+        else:
+            return CustomMaterial.from_file(filepath)
+
+
+def does_custom_material_exist(idx: int) -> bool:
+    if idx < 0 or idx > 5:
+        return False
+    filename = f"customMaterial{idx}.fx"
+    filepath = Path(bpy.path.abspath(bpy.path.relpath(filename)))
+    return filename in bpy.data.texts or filepath.exists()
+
+
+def read_file(filepath: Path) -> str:
+    with open(filepath, "r") as f:
+        return f.read()
+
+
+def get_custom_material_templates() -> list[CustomMaterial]:
+    custom_materials_path = Path(__file__, "..", "custom_materials").resolve()
+    return [
+        CustomMaterial.from_file(Path(custom_materials_path, filename))  #
+        for filename in os.listdir(custom_materials_path)
+        if Path(custom_materials_path, filename).is_file() and filename.endswith(".fx")
+    ]
 
 
 def get_unique_name(suggestion, required_suffix, max_length, used_names):

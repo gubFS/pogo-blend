@@ -66,7 +66,12 @@ class EditCustomMaterial(bpy.types.Operator):
     bl_description = "Opens the Custom Material shader code in a text editor"
     bl_options = {'REGISTER'}
 
+    def get_templates(self, context):
+        templates = pbu.get_custom_material_templates()
+        return [(str(template.filepath.resolve().absolute()), template.name, template.description) for template in templates if template.filepath is not None]
+
     material_idx: bpy.props.IntProperty(default=-1)
+    template: bpy.props.EnumProperty(items=get_templates)
 
     def execute(self, context):
         if self.material_idx < 0 or self.material_idx > 5:
@@ -75,6 +80,7 @@ class EditCustomMaterial(bpy.types.Operator):
         filename = f"customMaterial{self.material_idx}.fx"
 
         pbu.open_temp_text_editor()
+
         if filename not in bpy.data.texts:
             filepath = Path(bpy.path.abspath(bpy.path.relpath(filename)))
             if filepath.exists():
@@ -82,13 +88,16 @@ class EditCustomMaterial(bpy.types.Operator):
             else:
                 bpy.ops.text.new()
                 context.space_data.text.name = filename
-                bpy.data.texts[filename].from_string(CUSTOM_MATERIAL_TEMPLATE)
+                content = pbu.read_file(Path(self.template))
+                bpy.data.texts[filename].from_string(content)
+
         text_obj = bpy.data.texts[filename]
         context.space_data.text = text_obj
         if not text_obj.is_dirty and text_obj.is_modified:
             with open(text_obj.filepath, "r") as f:
                 text_obj.from_string(f.read())
             bpy.ops.text.save()
+
         bpy.ops.text.move(type='FILE_TOP')
 
         return {'FINISHED'}
@@ -155,9 +164,37 @@ class PogoObjectPanel(bpy.types.Panel):
 
         if entity.material_override == "":
             row = layout.row()
-            row.prop(entity, "material")
-            if entity.material.startswith("customMaterial"):
-                row.operator("pogo_blend.edit_custom_material", text="", icon='GREASEPENCIL').material_idx = int(entity.material[-1])
+            if not entity.material.startswith("customMaterial"):
+                row.prop(entity, "material")
+            else:
+                material_idx = int(entity.material[-1])
+                custom_material = pbu.CustomMaterial.from_index(material_idx)
+
+                if custom_material is None or custom_material.name == "":
+                    row.prop(entity, "material")
+                else:
+                    idk = row.column()
+                    idk.label(text="Material: ")
+                    idk.scale_x = 0.34
+                    match material_idx:
+                        case 1:
+                            icon = "IPO_SINE"
+                        case 2:
+                            icon = "IPO_QUAD"
+                        case 3:
+                            icon = "IPO_CUBIC"
+                        case 4:
+                            icon = "IPO_QUART"
+                        case 5:
+                            icon = "IPO_QUINT"
+                        case _:
+                            icon = "NONE"
+                    row.prop(entity, "material", icon=icon, icon_only=True)
+
+                if custom_material is not None:
+                    row.operator("pogo_blend.edit_custom_material", text=custom_material.name, icon='GREASEPENCIL').material_idx = material_idx
+                else:
+                    row.operator_menu_enum("pogo_blend.edit_custom_material", "template", text="", icon="DOCUMENTS").material_idx = material_idx
         else:
             row = layout.row()
             row.column().label(text="Material: ")
@@ -225,11 +262,30 @@ class PogoObjectPanel(bpy.types.Panel):
 
         if len(action_config["skills"]) != 0:
             for i, (skill, skill_config) in enumerate(action_config["skills"].items()):
-                layout.prop(
-                    entity,
-                    skill,
-                    text=skill_config["name"],
-                )
+                if action != "skillset_act" or not entity.material.startswith("customMaterial"):
+                    layout.prop(
+                        entity,
+                        skill,
+                        text=skill_config["name"],
+                    )
+                else:
+                    material_idx = int(entity.material[-1])
+                    custom_material = pbu.CustomMaterial.from_index(material_idx)
+                    if custom_material is not None and len(custom_material.skills) != 0:
+                        skill_renamed = skill.replace("_", "")
+                        if skill_renamed in custom_material.skills:
+                            layout.prop(
+                                entity,
+                                skill,
+                                text=custom_material.skills[skill_renamed][0],
+                                placeholder=custom_material.skills[skill_renamed][1],
+                            )
+                    else:
+                        layout.prop(
+                            entity,
+                            skill,
+                            text=skill_config["name"],
+                        )
 
         if action_config["path"]:
             layout.prop(entity, "path", placeholder="Path", icon='OUTLINER_OB_CURVE')
@@ -394,91 +450,3 @@ classes = (
     PogoObjectPanel,
     PogoObjectPanelOverrides,
 )
-
-
-CUSTOM_MATERIAL_TEMPLATE = """
-// Custom Material example template
-
-const float4x4 matWorldViewProj;
-const float4x4 matWorld;
-const float4x4 matView;
-const float4 vecViewDir;
-const float4 vecViewPos;
-
-// skills that can be used with the 'Skill Set' action. They contain 4 skills each, in their x, y, z and w variables.
-const float4 vecSkill41;
-const float4 vecSkill45;
-
-// the time
-// vecTime.x is "time_step", which is how long a step of time is, aka your FPS
-// vecTime.w is "total_ticks", aka how long the game has been running
-const float4 vecTime;
-
-const float fAmbient; // ambient value between 0..1
-const float fAlbedo; // albedo value between 0..1
-
-// mesh textures
-texture entSkin1;
-texture entSkin2;
-texture entSkin3;
-texture entSkin4;
-
-sampler TextureMapSampler = sampler_state
-{
-    Texture = <entSkin1>;
-    AddressU  = Wrap;
-    AddressV  = Wrap;
-};
-
-// some utilities provided by Superku
-// float4 DoKuShadow(float4 InDepth);
-// float4 DoKuDepth(flaot4 InPos);
-// float4 DoKuDepthFromWorldPos(float4 worldPos)
-#include "shadowIncl.fx"
-
-// Vertex Shader
-void ExampleVS(
-in float4 InPos: POSITION,
-in float3 InNormal: NORMAL,
-in float2 InTex: TEXCOORD0,
-out float4 OutPos: POSITION,
-out float2 OutTex: TEXCOORD0,
-out float3 OutNormal: TEXCOORD1)
-{
-    float time = vecTime.w*0.25;
-    float3 modulation = sin(time + InPos.yzx * 0.175)*7;
-    InPos.xyz += InNormal * modulation;
-    InNormal.xyz += modulation*0.05;
-    OutPos = mul(InPos, matWorldViewProj);
-    OutNormal = (mul(InNormal, matWorld));
-    OutTex.xy = InTex;
-}
-
-// Pixel Shader
-float4 ExamplePS(
-in float2 InTex: TEXCOORD0,
-in float3 InNormal: TEXCOORD1): COLOR
-{
-    InNormal = normalize(InNormal);
-
-    float3 InSunDir = -normalize(float3(4.75,-8,3));
-    float Diffuse = 0.7 + 0.5*saturate(dot(InSunDir, InNormal));
-
-    float4 Color = tex2D(TextureMapSampler, InTex.xy*2);
-    Color.rg += InNormal.xy*0.3;
-    float4 final = Color*Diffuse + InNormal.z*0.2;
-
-    return final;
-}
-
-technique ExampleTechnique
-{
-    pass P0
-    {
-        zWriteEnable = true;
-        alphaBlendEnable = false;
-        VertexShader = compile vs_3_0 ExampleVS();
-        PixelShader  = compile ps_3_0 ExamplePS();
-    }
-}
-"""

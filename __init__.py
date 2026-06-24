@@ -31,6 +31,7 @@ from .pogo_blend_asset_library import generate_pogo_assets
 from .pogo_classes import pogo_custom_map, pogo_entity, pogo_path, pogo_region
 from .ui import (
     add_pogo_menu,
+    custom_material_templates,
     object_pogo_menu,
     pogo_collection_panel,
     pogo_object_panel,
@@ -57,6 +58,7 @@ modules = [
     pogo_path,
     pogo_region,
     add_pogo_menu,
+    custom_material_templates,
     object_pogo_menu,
     pogo_collection_panel,
     pogo_object_panel,

@@ -253,24 +253,24 @@ water_act:
 
 skillset_act:
   name: Skill set
-  description: Used to pass skills as variables to shaders. Not documented at all, so don't expect this to do anything with most normal materials
+  description: Used to pass skills as variables to shaders (materials). Not documented at all, so don't expect this to do anything with most normal materials. Can integrate with Custom Materials
   skills:
     skill_1:
-      name: vecSkill41.x
+      name: skill1
     skill_2:
-      name: vecSkill41.y
+      name: skill2
     skill_3:
-      name: vecSkill41.z
+      name: skill3
     skill_4:
-      name: vecSkill41.w
+      name: skill4
     skill_5:
-      name: vecSkill45.x
+      name: skill5
     skill_6:
-      name: vecSkill45.y
+      name: skill6
     skill_7:
-      name: vecSkill45.z
+      name: skill7
     skill_8:
-      name: vecSkill45.w
+      name: skill8
 
 mushroom_act:
   name: Mushroom Bones
