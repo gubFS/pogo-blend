@@ -241,10 +241,7 @@ class BlenderModeContext:
 
 
 def open_temp_text_editor():
-    bpy.ops.wm.window_new()
-
     # delete old editors
-    _screen = bpy.context.screen
     try:
         screens_to_delete = (
             screen  #
@@ -252,11 +249,12 @@ def open_temp_text_editor():
             if screen.name.startswith("pogo_blend_text_editor") and screen not in (window.screen for window in bpy.context.window_manager.windows)
         )
         for screen in screens_to_delete:
-            with bpy.context.temp_override(screen=screen):
-                bpy.ops.screen.delete()  # this sometimes doesnt do anything, but over time it should purge most of the unused screens. i cant find a better method
-    finally:
-        bpy.context.window.screen = _screen
+            screen.user_clear()  # there's really no easy way to delete screens or make them temporary, so instead I will mark old ones as not in-use anymore, and they will be delted on reloading the blender file
+    except Exception:
+        pass
 
+    # open new editor
+    bpy.ops.wm.window_new()
     bpy.context.window.screen.name = "pogo_blend_text_editor"
     area = bpy.context.area
     area.ui_type = 'TEXT_EDITOR'
