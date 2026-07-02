@@ -63,17 +63,16 @@ class MDLExporter:
                 # y-axis is flipped in A8
                 uv_hash_map = {}
                 uv_idx_lookup = []
-                if has_skin:
-                    for uv in [uv for uv_layer in mesh.uv_layers[:2] for uv in uv_layer.uv]:
-                        uv = Vector((uv.vector.x, 1 - uv.vector.y))
-                        uv.freeze()
-                        idx = len(uv_hash_map)
-                        if uv in uv_hash_map:
-                            idx = uv_hash_map[uv]
-                        else:
-                            uv_hash_map[uv] = idx
-                            self.uvs.append(uv)
-                        uv_idx_lookup.append(idx)
+                for uv in [uv for uv_layer in mesh.uv_layers[:2] for uv in uv_layer.uv]:
+                    uv = Vector((uv.vector.x, 1 - uv.vector.y))
+                    uv.freeze()
+                    idx = len(uv_hash_map)
+                    if uv in uv_hash_map:
+                        idx = uv_hash_map[uv]
+                    else:
+                        uv_hash_map[uv] = idx
+                        self.uvs.append(uv)
+                    uv_idx_lookup.append(idx)
                 self.has_second_uv_set = len(mesh.uv_layers) >= 2
 
                 loc = obj.matrix_world.translation
@@ -93,13 +92,12 @@ class MDLExporter:
                     self.vert_normals.append(normal * -1)  # GSA8 uses flipped normals or something
 
                 uvkeys = {}
-                if has_skin:
-                    uv_idx = 0
-                    for poly in mesh.polygons:
-                        uvkeys[poly.index] = {}
-                        for vert_idx in poly.vertices:
-                            uvkeys[poly.index][vert_idx] = uv_idx
-                            uv_idx += 1
+                uv_idx = 0
+                for poly in mesh.polygons:
+                    uvkeys[poly.index] = {}
+                    for vert_idx in poly.vertices:
+                        uvkeys[poly.index][vert_idx] = uv_idx
+                        uv_idx += 1
 
                 for i, tri in enumerate(mesh.loop_triangles):
                     poly_idx = mesh.loop_triangle_polygons[i].value
@@ -155,7 +153,7 @@ class MDLExporter:
         mdl.store_32(0)  # size of group, store later
         mdl.store_string("Group", 16)
         mdl.store_32(len(self.skins) if self.has_skin else 0)
-        mdl.store_32(len(self.uvs) if self.has_skin else 0)
+        mdl.store_32(len(self.uvs))
         mdl.store_32(len(self.tris))
         mdl.store_32(len(self.verts))
         mdl.store_32(0)
@@ -173,9 +171,8 @@ class MDLExporter:
                 mdl.store_string(texture["name"])
                 mdl.store_8(0)
 
-        if self.has_skin:
-            for uv in self.uvs:
-                mdl.store_float_buffer(uv)  # vec2f
+        for uv in self.uvs:
+            mdl.store_float_buffer(uv)  # vec2f
 
         for tri, uv, skin_idx in self.tris:
             for tri_idx in tri[:3]:
