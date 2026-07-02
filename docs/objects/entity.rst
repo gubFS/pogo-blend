@@ -33,19 +33,32 @@ Below is an in-game image of the available materials, aswell as a list of their 
 Custom Materials
 ^^^^^^^^^^^^^^^^
 
-You can make Custom Materials using HLSL and ``.fx`` files. There is 5 different slots for Custom Materials. When an entity has a Custom Material applied, there will be a button that will open a text editor where you can edit the shader. The first time you do this the file will be filled in with a template that you can delete or build out from. If you would like to edit the shader with an external editor simply save the text block in Blender to an external file, or create a file called 'customMaterialX.fx' (X is the custom material slot) in the same folder as your Blender file.
+You can make Custom Materials using High-level Shader Language (HLSL) and ``.fx`` files. There is 5 different slots for Custom Materials. When an entity has a Custom Material applied, there will be a button that will open a text editor where you can edit the shader. The first time you do this you can choose from a set of premade templates that will be used, that you can then delete or build out from. 
+
+If you would like to edit the shader with an external editor simply save the text block in Blender to an external file, or create a file called 'customMaterialX.fx' (X is the custom material slot) in the same folder as your Blender file.
 
 When you edit/add a Custom Material, you might need to restart Pogostuck so it can setup auto reloading of that material. When that is setup, you just need to export the map and the shader will be updated instantly, you won't even have to reload the map! Once you are done mapping and editing Custom Materials, you might also want to restart Pogostuck again, because otherwise other Custom Maps using Custom Materials will use the ones you've made instead of theirs.
 
-In order to use the alpha value in your pixel shader, you should set the 'alphaBlendEnable' value in the technique to true.
+Making Custom Materials
+"""""""""""""""""""""""
 
-.. caution::
+As mentioned before Custom Materials are written in HLSL, which is a common shader langauge. If you know nothing about programming or shaders, it might be helpful to learn a bit about them first before working on your own Custom Materials. HLSL and shaders are a huge topic, so I can't write all the details you need here, luckily there is many resources about them online that you can lookup. If you are following a tutorial you might even want to try to complete the exercises inside of Pogostuck by setting up a flat plane with a Custom Material ('Empty' template), and then editing it!
 
-  If you make a mistake in the shader, a default shader will be used instead.
+To get a better idea of what a Custom Material includes, you should look at the 'Example' template, that is available in the Add-on. Read all the comments and try to understand what each part of the file is doing and contributing. After that you can also try looking at the 'Geometry' template for further reference, as this is a material written by Superku and is used in the base game!
 
-.. admonition:: Help Wanted
+.. tip::
 
-   Currrently there is no deeper guide on how to write Custom Materials. If you have some knowledge about it, consider :doc:`contributing <../contribution>` a guide! There might also be some useful information on the `Gamestudio A8 Manual <http://manual.conitec.net/>`__ under the "MATERIAL" section, or have a look at ``appAGeoDefault.fx``, the 'Geometry' material, in the BaseMap.
+  In order to use the alpha value in your pixel shader, you should set the 'alphaBlendEnable' value in the technique to true.
+
+.. tip::
+
+  If you make a syntax error in the shader, a default shader will be used instead. This shader shows the model geometry with very little light. If you see this you now know that you made a syntax mistake!
+
+It is possible to pass variables to the Custom Material using the 'Skill set' action. To make it easier to know which variables you are setting, it is possible to name them in the Custom Material file with a comment, and they will then be named so in the Add-on aswell! They follow the structure ``// {skillNr}; {name}; {description}``. You can also give a name to your Custom Material to better reference it. Look at the 'Example' and 'AnimUV' templates, for further reference/examples on this.
+
+.. note::
+
+   It is also possible to give your Custom Material a description and author. However, these and the skill description are not shown in the Add-on, because of technical limitation with Blender.
 
 Actions
 -------
