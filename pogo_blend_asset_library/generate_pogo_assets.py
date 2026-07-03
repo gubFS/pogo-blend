@@ -194,7 +194,28 @@ MODEL_CATALOG = "cb8ca03c-b0b7-495a-a4fb-4c29c2d25432"
 TEXTURE_CATALOG = "d95305f4-7ef9-4fe3-a98c-073a52a7dfce"
 
 
-def make_asset_library(context, filepath: str):
+def set_library(area):
+    area.spaces.active.params.asset_library_reference = 'LOCAL'
+
+
+def setup_layout():
+    bpy.context.workspace.name = "Please Wait"
+    for workspace in [workspace for workspace in bpy.data.workspaces if workspace != bpy.context.workspace]:
+        with bpy.context.temp_override(workspace=workspace):
+            bpy.ops.workspace.delete()
+
+    window = bpy.context.window
+    screen = bpy.context.screen
+    for area in screen.areas[1:]:
+        with bpy.context.temp_override(window=window, screen=screen, area=area):
+            bpy.ops.screen.area_close()
+
+    area = screen.areas[0]
+    area.ui_type = 'ASSETS'
+    bpy.app.timers.register(lambda: set_library(area))  # the area params takes a frame to initialize so wait for that
+
+
+def make_asset_library(context, filepath: str, app_template: str):
     custom_maps_path = pbu.get_preferences().custom_maps_path
     if custom_maps_path == "":
         return
@@ -202,12 +223,14 @@ def make_asset_library(context, filepath: str):
     if base_map is None or base_map == "":
         return
 
+    context.window.cursor_set('WAIT')
+    setup_layout()
+
     assets = []
     materials = {}
     for mdl in config["models"]:
         path = Path(base_map).joinpath("Models", mdl["filename"])
-        import_mdl(context, path, 1 / 50)
-        obj = context.object
+        obj = import_mdl(context, path, 1 / 50)
         obj.pogo_entity
         obj.pogo_entity.filename_override = mdl["filename"]
         if "name" in mdl:
@@ -295,18 +318,10 @@ def make_asset_library(context, filepath: str):
         ad.license = "Only to be used for the purposes of making Pogostuck Custom Maps"
         ad.catalog_id = catalog
 
-    view_3d_area = next((area for area in bpy.context.screen.areas if area.type == 'VIEW_3D'), None)
-    if view_3d_area is not None:
-        view_3d_area.ui_type = 'ASSETS'
-    bpy.app.timers.register(lambda: set_library(view_3d_area))  # the area params takes a frame to initialize so wait for that
-    bpy.app.timers.register(lambda: go_back(filepath))
+    bpy.app.timers.register(lambda: go_back(filepath, app_template))
 
 
-def set_library(area):
-    area.spaces.active.params.asset_library_reference = 'LOCAL'
-
-
-def go_back(filepath: str):
+def go_back(filepath: str, app_template: str):
     bpy.context.window.cursor_set('WAIT')
     if bpy.app.is_job_running('RENDER_PREVIEW'):
         return 0.1
@@ -318,7 +333,7 @@ def go_back(filepath: str):
     if filepath != "":
         bpy.ops.wm.open_mainfile(filepath=filepath)
     else:
-        bpy.ops.wm.read_homefile()
+        bpy.ops.wm.read_homefile(app_template=app_template)
 
 
 class MakeAssetLibraryOperator(bpy.types.Operator):
@@ -345,8 +360,9 @@ class MakeAssetLibraryOperator(bpy.types.Operator):
                 return {'CANCELLED'}
             bpy.ops.wm.save_mainfile()
         filepath = bpy.data.filepath
-        bpy.ops.wm.read_homefile(app_template="", use_empty=True)
-        bpy.app.timers.register(lambda: make_asset_library(context, filepath), first_interval=0.01)
+        app_template = bpy.context.preferences.app_template
+        bpy.ops.wm.read_homefile(app_template="", use_factory_startup=True, use_factory_startup_app_template_only=True, use_empty=True)
+        bpy.app.timers.register(lambda: make_asset_library(context, filepath, app_template), first_interval=0.01)
         return {"FINISHED"}
 
 

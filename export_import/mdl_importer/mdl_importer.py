@@ -131,10 +131,13 @@ def import_mdl(context, filepath, scale):
         obj.data.materials.append(mat)
 
     if len(empty_faces) != 0:
-        bpy.ops.object.material_slot_add()
+        with bpy.context.temp_override(object=obj):
+            bpy.ops.object.material_slot_add()
         face_idx = len(obj.material_slots) - 1
         for face in empty_faces:
             face.material_index = face_idx
+
+    return obj
 
 
 def skip(bytes: int) -> None:
