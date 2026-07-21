@@ -74,6 +74,9 @@ boostjuice_act:
 map3FinaleBlock_act:
   name: Break
   description: Breaks the entity when the player jumps off it. Plays an animation of a cube breaking at the origin of the entity. Does not work with Auto Collision
+appAPumpkin_act:
+  name: Collectable
+  description: Makes the entity disapear, with explosion particles, when the player collides with it. Does not work with Auto Collision
 
 map3Wheel_act:
   name: Wheel
