@@ -44,4 +44,9 @@ reg_finish:
   description: Finishes the map when entered
   min_y: -64
   max_y: 64
+water:
+  name: Water
+  description: Makes the player swim when they are inside the region. Like the water in Map 3
+  min_y: -64
+  max_y: 64
 ...
