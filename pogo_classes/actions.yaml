@@ -2,6 +2,10 @@
 mushroomFullObj_act:
   name: Mushroom
   description: Makes the entity bounce like a mushroom
+  skills:
+    skill_1:
+      name: Power
+      description: The power of the bounce. A value of 0 or lower gives default power. Only works if the 'Mushroom Power' mode is enabled
 bgObject_act:
   name: Parallax
   description: Moves the entity based on the players position. Normally used to move background entities
