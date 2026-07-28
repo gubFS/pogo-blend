@@ -61,6 +61,7 @@ def build_custom_map(context, filepath, global_scale, _operator):
     paths = [path_progress]
     paths_to_add = []
     splits_to_add = {}
+    gravityCircles = []
     colliders = []
     used_files = set(
         [
@@ -122,8 +123,11 @@ def build_custom_map(context, filepath, global_scale, _operator):
                     continue
 
                 region = WMBRegion(obj, global_scale)
-                if obj.pogo_region.region_type == "CP_":
-                    splits_to_add[obj] = region
+                match obj.pogo_region.region_type:
+                    case "CP_":
+                        splits_to_add[obj] = region
+                    case "gravityCircle":
+                        gravityCircles.append(region)
                 wmb_objects.append(region)
             case 'CURVE':
                 if "pogo_path" not in obj:
@@ -202,6 +206,9 @@ def build_custom_map(context, filepath, global_scale, _operator):
 
     for entity, path in paths_to_add:
         entity.path = paths.index(path) + 1
+
+    for i, region in enumerate(gravityCircles):
+        region.name += f"_{i}"
 
     # exporting
 
