@@ -57,8 +57,11 @@ class MDLExporter:
                     else:
                         self.skins[texture["name"]] = (texture, len(self.skins))
                         skin_dict[i] = self.skins[texture["name"]]
+
                 has_skin = len(textures) != 0
                 self.has_skin = has_skin
+                has_uvs = len(mesh.uv_layers) != 0
+                self.has_uvs = has_uvs
 
                 # y-axis is flipped in A8
                 uv_hash_map = {}
@@ -109,7 +112,7 @@ class MDLExporter:
                     uv_indecies = []
                     for i in range(2, -1, -1):  # loop in reverse because the normals are flipped in mdl files compared to blend
                         vert_indecies.append(obj_verts_index + tri.vertices[i])
-                    if has_skin:
+                    if has_uvs:
                         for vert_idx in tri.vertices:
                             uv_indecies.append(uv_index + uv_idx_lookup[uvkeys[poly_idx][vert_idx]])
                         uv_indecies = uv_indecies[::-1]
@@ -177,7 +180,7 @@ class MDLExporter:
         for tri, uv, skin_idx in self.tris:
             for tri_idx in tri[:3]:
                 mdl.store_16(tri_idx)
-            if self.has_skin:
+            if self.has_uvs:
                 for uv_idx in uv[:3]:
                     mdl.store_16(uv_idx)
                 mdl.store_32(skin_idx)
