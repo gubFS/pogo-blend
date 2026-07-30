@@ -58,6 +58,14 @@ map3ClothBee_mat:
 map3GrassFruit_mat:
   name: Moss
   description: Uses a second UV Map to add moss to the entity. Any UV-cordinate on the second UV Map, that has an X-value greater than 1 becomes mossy
+kuXGravity_mat:
+  name: Gravity
+  description: Uses two UV Maps to display a gravity material as seen in Custom Map X. The first UV Map chooses the direction flow and speed of the particles. It looks best when all the UV Points are in the same position. The particles will be pulled towards the top left corner of the UV Map, but the Y-axis is flipped. The second UV Map determines how the galaxy background and colors appear
+  transparent: true
+gravityPull_mat:
+  name: Gravity Pull
+  description: Pulls the texture (needs a texture!) towards the center of the UV Map with a purple hue. Like Plums in Map 2
+  transparent: true
 waterFG_mat:
   name: Water
   description: Looks like reflective water. It mirrors where Z=0. To have the mirror-axis occur at the top of the entity, use the "Water Visual" action
