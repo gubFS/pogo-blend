@@ -58,6 +58,9 @@ map3ClothBee_mat:
 map3GrassFruit_mat:
   name: Moss
   description: Uses a second UV Map to add moss to the entity. Any UV-cordinate on the second UV Map, that has an X-value greater than 1 becomes mossy
+waterFG_mat:
+  name: Water
+  description: Looks like reflective water. It mirrors where Z=0. To have the mirror-axis occur at the top of the entity, use the "Water Visual" action
 
 appAGeoXRay_mat:
   name: XRay Geometry
