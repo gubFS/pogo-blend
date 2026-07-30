@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "pogo_blend"
-version = "1.0.8"
+version = "1.0.9"
 name = "PogoBlend"
 tagline = "An Add-on for creating Pogostuck Custom Maps using Blender"
 maintainer = "gubFS"
