@@ -228,6 +228,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../guides/modeling_guides.html">Modeling Guides</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Modeling Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../guides/moss.html">Moss</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/sap_like_meshes.html">Sap-like Meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/gravity_material.html">Gravity</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/egg.html">Egg</a></li>
@@ -351,6 +352,18 @@
 </tr>
 <tr class="row-odd"><td><p>Moss</p></td>
 <td><p>Uses a second UV Map to add moss to the entity. Any UV-cordinate on the second UV Map, that has an X-value greater than 1 becomes mossy</p></td>
+</tr>
+<tr class="row-even"><td><p>Gravity</p></td>
+<td><p>Uses two UV Maps to display a gravity material as seen in Custom Map X. The first UV Map chooses the direction flow and speed of the particles. It looks best when all the UV Points are in the same position. The particles will be pulled towards the top left corner of the UV Map, but the Y-axis is flipped. The second UV Map determines how the galaxy background and colors appear</p></td>
+</tr>
+<tr class="row-odd"><td><p>Gravity Pull</p></td>
+<td><p>Pulls the texture (needs a texture!) towards the center of the UV Map with a purple hue. Like Plums in Map 2</p></td>
+</tr>
+<tr class="row-even"><td><p>Water</p></td>
+<td><p>Looks like reflective water. It mirrors where Z=0. To have the mirror-axis occur at the top of the entity, use the “Water Visual” action</p></td>
+</tr>
+<tr class="row-odd"><td><p>Fog</p></td>
+<td><p>Turns the texture transparent and greyscale, with a stack of the texture moving across it slowly</p></td>
 </tr>
 <tr class="row-even"><td><p>XRay Geometry</p></td>
 <td><p>Hiddes the entity when the players comes too close. Otherwise same as ‘Geometry’ material</p></td>
@@ -678,7 +691,14 @@
 <td></td>
 </tr>
 <tr class="row-even"><td><p>Water Visual</p></td>
-<td><p>Adds a flowing water visual to the entity. The entity should have a texture (any texture) applied, otherwise it looks weird. Changing the UVs will change how the water flows (speed, angle, width, wobbliness)</p></td>
+<td><p>Adds a flowing water visual to the entity. Changing the UVs will change how the water flows (speed, angle, width, wobbliness)</p>
+<p><strong>Flags</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Reflective</strong>: Makes the entity reflective, by mirroring at it’s highest point. Looks like the water at the start of Map 1</p></li>
+</ul>
+</div></blockquote>
+</td>
 </tr>
 <tr class="row-odd"><td></td>
 <td></td>
@@ -840,7 +860,7 @@
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=31b2bb95"></script>
+</div><script src="../_static/documentation_options.js?v=557d6bd1"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
