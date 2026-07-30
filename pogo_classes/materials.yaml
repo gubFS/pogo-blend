@@ -69,6 +69,10 @@ gravityPull_mat:
 waterFG_mat:
   name: Water
   description: Looks like reflective water. It mirrors where Z=0. To have the mirror-axis occur at the top of the entity, use the "Water Visual" action
+appAFog_mat:
+  name: Fog
+  description: Turns the texture transparent and greyscale, with a stack of the texture moving across it slowly
+  transparent: true
 
 appAGeoXRay_mat:
   name: XRay Geometry
