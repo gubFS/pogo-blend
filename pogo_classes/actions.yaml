@@ -81,6 +81,9 @@ map3FinaleBlock_act:
 appAPumpkin_act:
   name: Collectable
   description: Makes the entity disapear, with explosion particles, when the player collides with it. Does not work with Auto Collision
+noBoostHelper_act:
+  name: Boostless
+  description: Makes the entity only active if the current run is at 0 boosts
 
 map3Wheel_act:
   name: Wheel
